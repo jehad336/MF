@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — الفواتير</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0066CC;--blue-d:#004D99;--blue-l:#EBF4FF;--blue-m:#CCE0F5;--green:#00875A;--green-l:#E3FCEF;--amber:#FF8B00;--amber-l:#FFF4E5;--red:#DE350B;--red-l:#FFEBE6;--purple:#6554C0;--purple-l:#EAE6FF;--ink:#0A1628;--ink2:#3D4E6B;--ink3:#7A8BA8;--bg:#F0F2F5;--w:#fff;--s2:#F7F8FA;--s3:#EEF0F4;--brd:#D8DCE6;--brd-l:#EAEDF3;--sh:0 1px 3px rgba(10,22,40,.08),0 1px 2px rgba(10,22,40,.06);--sh-md:0 4px 6px rgba(10,22,40,.07);--sh-lg:0 10px 15px rgba(10,22,40,.07);--r:10px;--rl:14px;--rx:20px;--rf:9999px;--sw:240px;--th:60px;--font:'IBM Plex Sans Arabic',system-ui,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--font);border:none}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:99px}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(--sw);background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:200;transition:transform .3s}
+.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.06);gap:10px;flex-shrink:0}
+.sb-logo{width:32px;height:32px;background:var(--blue);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-name{font-size:16px;font-weight:700;color:#fff}.sb-tag{font-size:9px;color:rgba(255,255,255,.3);margin-top:1px}
+.ng{padding:20px 10px 4px}.ngl{font-size:9px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
+.na{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);color:rgba(255,255,255,.5);font-size:12.5px;font-weight:500;margin-bottom:1px;transition:all .12s;position:relative}
+.na:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}.na.on{background:rgba(0,102,204,.25);color:#fff;font-weight:600}
+.na.on::before{content:'';position:absolute;right:0;top:20%;bottom:20%;width:3px;background:var(--blue);border-radius:0 99px 99px 0}
+.nico{width:15px;height:15px;flex-shrink:0;opacity:.7}.na.on .nico{opacity:1}
+.nb{margin-right:auto;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;min-width:18px;text-align:center}.nb.am{background:var(--amber)}
+.sb-ft{margin-top:auto;padding:12px 10px;border-top:1px solid rgba(255,255,255,.06)}
+.urow{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r);cursor:pointer}.urow:hover{background:rgba(255,255,255,.06)}
+.uav{width:34px;height:34px;border-radius:var(--r);background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.uname{font-size:12px;font-weight:600;color:#fff}.urole{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:var(--th);background:var(--w);border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 24px;gap:10px;flex-shrink:0;box-shadow:0 1px 2px rgba(10,22,40,.05)}
+.tb-t{font-size:15px;font-weight:700;color:var(--ink)}.tb-s{font-size:11px;color:var(--ink3);margin-top:1px}.sp{flex:1}
+.ham{display:none;width:36px;height:36px;border-radius:var(--r);background:var(--s2);border:1px solid var(--brd);align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:12px;font-weight:600;transition:all .12s;white-space:nowrap;border:none;font-family:var(--font)}
+.bb{background:var(--blue);color:#fff}.bb:hover{background:var(--blue-d);box-shadow:var(--sh-md)}.bg_{background:var(--green);color:#fff}.br_{background:var(--red);color:#fff}
+.bo{background:transparent;border:1px solid var(--brd);color:var(--ink2)}.bo:hover{background:var(--s2)}.bgh{background:transparent;border:none;color:var(--ink3)}.bgh:hover{background:var(--s3)}
+.bsm{padding:5px 11px;font-size:11px}.bxs{padding:3px 9px;font-size:10px}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap}
+.ph-t{font-size:18px;font-weight:800;color:var(--ink);margin-bottom:2px}.ph-s{font-size:12px;color:var(--ink3)}.ph-a{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--sh)}
+.stat-val{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:3px}.stat-lbl{font-size:11px;color:var(--ink3)}.stat-chg{font-size:10px;font-weight:700;margin-top:4px}
+.gn{color:var(--green)}.rd{color:var(--red)}.am_{color:var(--amber)}
+.tabs{display:flex;border-bottom:1px solid var(--brd-l);margin-bottom:20px}
+.tab{padding:9px 16px;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--ink2)}.tab.on{color:var(--blue);font-weight:700;border-bottom-color:var(--blue)}
+.tn{background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px}.tn.am{background:var(--amber)}.tn.rd{background:var(--red)}
+.card{background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh)}
+.ch{padding:14px 18px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ct{font-size:13px;font-weight:700;color:var(--ink)}.cs{font-size:11px;color:var(--ink3);margin-top:1px}
+.tw{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:var(--s2);color:var(--ink2);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;text-align:right;border-bottom:1px solid var(--brd-l);white-space:nowrap}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--brd-l);color:var(--ink2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}.tbl tbody tr:hover td{background:var(--s2);cursor:pointer}
+.tp{font-weight:600;color:var(--ink)}.tm{font-size:10px;color:var(--blue);direction:ltr;display:inline-block;font-family:monospace}
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:var(--rf);font-size:10px;font-weight:700;white-space:nowrap}
+.bdg::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7;flex-shrink:0}
+.bg2{background:var(--green-l);color:var(--green)}.ba2{background:var(--amber-l);color:var(--amber)}.br2{background:var(--red-l);color:var(--red)}.bb2{background:var(--blue-l);color:var(--blue)}.bx2{background:var(--s3);color:var(--ink2)}.bnd::before{display:none}
+/* PRINT INVOICE */
+.inv-wrap{display:none;position:fixed;inset:0;background:rgba(10,22,40,.6);z-index:2000;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.inv-wrap.on{display:flex}
+.invoice{background:#fff;width:100%;max-width:720px;border-radius:var(--rl);box-shadow:0 20px 60px rgba(0,0,0,.3);padding:36px 40px;font-family:var(--font)}
+.inv-ctrl{position:fixed;top:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:2001}
+.inv-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid var(--brd)}
+.inv-logo{display:flex;align-items:center;gap:10px}
+.inv-logo-ic{width:40px;height:40px;background:var(--blue);border-radius:var(--r);display:flex;align-items:center;justify-content:center}
+.inv-logo-name{font-size:18px;font-weight:800;color:var(--ink)}
+.inv-logo-sub{font-size:10px;color:var(--ink3);margin-top:1px}
+.inv-title h1{font-size:20px;font-weight:900;color:var(--ink);margin-bottom:4px;text-align:left}
+.inv-title p{font-size:11px;color:var(--ink3);text-align:left}
+.inv-info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;background:var(--s2);border-radius:var(--r);padding:16px;margin-bottom:20px}
+.inv-info-lbl{font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.inv-info-val{font-size:11px;font-weight:600;color:var(--ink);line-height:1.6}
+.inv-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px}
+.inv-tbl th{background:var(--ink);color:#fff;padding:9px 12px;text-align:right;font-size:10px;font-weight:700}
+.inv-tbl td{padding:9px 12px;border-bottom:1px solid var(--brd-l)}
+.inv-tbl tr:last-child td{border-bottom:none}.inv-tbl tr:nth-child(even) td{background:var(--s2)}
+.inv-totals{display:flex;justify-content:flex-end}
+.inv-totals-box{width:260px}
+.inv-tot-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--brd-l);font-size:12px}
+.inv-tot-row:last-child{border-bottom:none;font-size:14px;font-weight:800;padding-top:10px}
+.inv-stamp{background:var(--green);color:#fff;border-radius:var(--r);padding:7px 14px;font-size:11px;font-weight:700;display:inline-block;margin-top:16px}
+@media print{.inv-ctrl{display:none!important}.inv-wrap{position:static;background:none;padding:0;display:block!important}.invoice{box-shadow:none;border-radius:0;padding:20mm}}
+.mov{position:fixed;inset:0;background:rgba(10,22,40,.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.mov.on{display:flex}
+.modal{background:var(--w);border-radius:var(--rx);width:100%;max-width:440px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,.2)}
+.mh{padding:18px 20px 14px;border-bottom:1px solid var(--brd-l);display:flex;align-items:flex-start;gap:12px}
+.mic{width:38px;height:38px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.mtitle{font-size:15px;font-weight:800;color:var(--ink)}.msub{font-size:11px;color:var(--ink3);margin-top:2px}
+.mcl{width:28px;height:28px;border-radius:6px;background:var(--s2);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink3);cursor:pointer;margin-right:auto;transition:all .12s}
+.mcl:hover{background:var(--s3);color:var(--ink)}
+.mbody{padding:18px 20px}.mfoot{padding:12px 20px;border-top:1px solid var(--brd-l);display:flex;gap:8px;justify-content:flex-end;background:var(--s2);border-radius:0 0 var(--rx) var(--rx)}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.fl{font-size:11px;font-weight:700;color:var(--ink)}
+.fc{border:1px solid var(--brd);border-radius:var(--r);padding:8px 11px;font-size:12px;color:var(--ink);background:var(--s2);outline:none;font-family:var(--font);width:100%;transition:all .12s}
+.fc:focus{border-color:var(--blue);background:var(--w);box-shadow:0 0 0 3px var(--blue-l)}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:12px;font-weight:600;box-shadow:var(--sh-lg);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+.mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:var(--ink);border-top:1px solid rgba(255,255,255,.06);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
+.mni{display:flex;justify-content:space-around}
+.mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:var(--r);text-decoration:none;transition:all .12s}
+.mna.on{background:rgba(0,102,204,.2)}.mnic{font-size:19px;line-height:1}.mnlbl{font-size:9px;font-weight:600;color:rgba(255,255,255,.4)}.mna.on .mnlbl{color:#60A5FA}
+.mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190;display:none}.mob-ov.on{display:block}
+@media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;right:0;bottom:0;transform:translateX(100%);transition:transform .3s;z-index:500}
+  .sidebar.on{transform:translateX(0)}.main{width:100%}.content{padding:14px;padding-bottom:72px}.topbar{padding:0 14px}
+  .mob-nav{display:block}.ham{display:flex}.stats{grid-template-columns:1fr 1fr}
+  .modal,.inv-wrap .invoice{max-width:100%;border-radius:var(--rx) var(--rx) 0 0}
+  .mov{align-items:flex-end;padding:0}.inv-info{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){.stats{grid-template-columns:1fr}}
+
+/* ── DARK MODE ── */
+body.dark{
+  --blue:#4D9FFF;--blue-d:#3388EE;--blue-l:rgba(77,159,255,.12);--blue-m:rgba(77,159,255,.25);
+  --green:#34D399;--green-l:rgba(52,211,153,.12);
+  --amber:#FBBF24;--amber-l:rgba(251,191,36,.12);
+  --red:#F87171;--red-l:rgba(248,113,113,.12);
+  --purple:#A78BFA;--purple-l:rgba(167,139,250,.12);
+  --teal:#2DD4BF;--teal-l:rgba(45,212,191,.12);
+  --ink:#F1F5F9;--ink2:#94A3B8;--ink3:#64748B;
+  --bg:#0F172A;--w:#1E293B;--s2:#162032;--s3:#1E293B;
+  --brd:#2D3F55;--brd-l:#253347;
+  --sh:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  --sh-md:0 4px 12px rgba(0,0,0,.4);--sh-lg:0 10px 30px rgba(0,0,0,.5);
+}
+body.dark .sidebar{background:#0A1628;border-left:1px solid #1E293B}
+body.dark .sb-brand{border-bottom-color:rgba(255,255,255,.04)}
+body.dark .topbar{background:#1E293B;border-bottom-color:#253347}
+body.dark .rfq-hero,body.dark .stepper{background:#1E293B;border-color:#253347}
+body.dark .card{background:#1E293B;border-color:#253347}
+body.dark .ch{border-bottom-color:#253347}
+body.dark .cf{background:#162032;border-top-color:#253347}
+body.dark .tbl th{background:#162032}
+body.dark .tbl td{border-bottom-color:#253347}
+body.dark .tbl tbody tr:hover td{background:#253347}
+body.dark .stat{background:#1E293B;border-color:#253347}
+body.dark .fc{background:#162032;border-color:#2D3F55;color:#F1F5F9}
+body.dark .fc:focus{background:#1E293B;border-color:var(--blue)}
+body.dark .role-tabs,.dark .ptabs{background:#162032;border-color:#2D3F55}
+body.dark .role-tab.on,.dark .pt.on{background:#1E293B}
+body.dark .modal{background:#1E293B}
+body.dark .mh{border-bottom-color:#253347}
+body.dark .mfoot{background:#162032;border-top-color:#253347}
+body.dark .qcard{background:#1E293B;border-color:#253347}
+body.dark .qcard.best{background:rgba(52,211,153,.08);border-color:#34D399}
+body.dark .escrow-box{background:linear-gradient(135deg,rgba(77,159,255,.1),rgba(45,212,191,.08));border-color:rgba(77,159,255,.2)}
+body.dark .demo-hint{background:rgba(77,159,255,.1);border-color:rgba(77,159,255,.2)}
+body.dark .status-banner.transit{background:linear-gradient(135deg,rgba(77,159,255,.1),rgba(45,212,191,.08));border-color:rgba(77,159,255,.25)}
+body.dark .status-banner.delivered{background:rgba(52,211,153,.1);border-color:#34D399}
+body.dark .hero{background:linear-gradient(135deg,#060D1A 0%,#0D1F3C 100%)}
+body.dark .hkpi{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
+body.dark .set-nav{background:#1E293B;border-color:#253347}
+body.dark .sn-item{border-bottom-color:#253347;color:#94A3B8}
+body.dark .sn-item.on{background:rgba(77,159,255,.12);color:var(--blue)}
+body.dark .set-panel{background:#1E293B;border-color:#253347}
+body.dark .map-ph{background:linear-gradient(135deg,rgba(77,159,255,.08),rgba(45,212,191,.06))}
+body.dark .tabs{border-bottom-color:#253347}
+body.dark .tab{color:#64748B}
+body.dark .tab.on{color:var(--blue);border-bottom-color:var(--blue)}
+body.dark .fbar .fsel{background:#1E293B;border-color:#2D3F55;color:#94A3B8}
+body.dark .apexcharts-canvas{filter:brightness(.9)}
+body.dark .left{background:#060D1A}
+body.dark .right{background:#0F172A}
+body.dark .form-wrap .form-title{color:#F1F5F9}
+body.dark .form-wrap .form-sub{color:#64748B}
+body.dark .btn-demo{background:transparent;border-color:#2D3F55;color:#94A3B8}
+body.dark .btn-demo:hover{border-color:var(--blue);color:var(--blue)}
+body.dark .check-lbl{color:#94A3B8}
+body.dark .client-chip{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.06)}
+body.dark .uchip{background:#162032;border-color:#2D3F55}
+body.dark #toast{background:#334155}
+body.dark .ib{background:#1E293B;border-color:#2D3F55;color:#94A3B8}
+body.dark .ib:hover{background:#253347}
+body.dark .mob-nav{background:#0A1628}
+body.dark .sav{background:rgba(52,211,153,.08);border-color:#34D399}
+body.dark .savp{color:#34D399}
+body.dark .savl{color:#34D399}
+body.dark .irfq{background:#1E293B;border-color:#253347}
+body.dark .esc{background:#1E293B;border-color:#253347}
+body.dark .appr{background:#1E293B;border-color:#253347}
+body.dark .appr.urg{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.3)}
+body.dark .tw{border-color:#253347}
+body.dark .hkpi-val{color:#F1F5F9}
+
+</style>
+</head>
+
+<script>
+(function(){
+  const user = JSON.parse(localStorage.getItem('mf_user')||'null');
+  if(!user) { window.location.href='login.html'; return; }
+  // Update user display
+  document.addEventListener('DOMContentLoaded',()=>{
+    document.querySelectorAll('.uname').forEach(el=>{if(el.textContent.includes('جهاد')||el.textContent.includes('صيدلية')) el.textContent=user.name;});
+    document.querySelectorAll('.uav').forEach(el=>{if(el.textContent.length<=2) el.textContent=user.name.substring(0,2);});
+  });
+})();
+</script>
+<body>
+<div class="app">
+<aside class="sidebar" id="sb">
+  <div class="sb-brand">
+    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2Z" fill="rgba(255,255,255,.12)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><div class="sb-name">ميدفلو</div><div class="sb-tag">Medical Procurement</div></div>
+  </div>
+  <div class="ng"><div class="ngl">الرئيسية</div>
+    <a href="dashboard.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>لوحة التحكم</a>
+    <a href="analytics.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 12l3-4 3 2 3-5 3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>التحليلات</a>
+  </div>
+  <div class="ng"><div class="ngl">المشتريات</div>
+    <a href="rfq.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 7h10M2 10h8M2 13h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>سوق الطلبيات — RFQ<span class="nb">23</span></a>
+    <a href="orders.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M1 3h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3Z" stroke="currentColor" stroke-width="1.2"/><path d="M1 3l2-2h10l2 2" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>أوامر الشراء</a>
+    <a href="dashboard.html" class="na on"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الفواتير<span class="nb am">5</span></a>
+    <a href="delivery.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M1 10h10V4H1v6ZM11 6l3 2v2h-3V6Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>تتبع الشحنات</a>
+  </div>
+  <div class="ng"><div class="ngl">الشبكة</div>
+    <a href="supplier.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الموردون</a>
+    <a href="buyer.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="6" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.2"/></svg>المشترون</a>
+  </div>
+  <div class="ng"><div class="ngl">النظام</div>
+    <a href="settings.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الإعدادات</a>
+  </div>
+  <div class="sb-ft"><div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مدير المستودع · مكة</div></div></div></div>
+</aside>
+<div class="mob-ov" id="mo" onclick="cSB()"></div>
+<div class="main">
+  <header class="topbar">
+    <button onclick="localStorage.removeItem('mf_user');window.location.href='login.html'" style="width:28px;height:28px;border-radius:8px;background:transparent;border:1px solid var(--brd);color:var(--ink3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;font-family:var(--font)" title="تسجيل الخروج">⏏</button>
+    <button class="ham" onclick="oSB()">☰</button>
+    <div><div class="tb-t">الفواتير — Invoices</div><div class="tb-s">5 فواتير بانتظار الموافقة · إجمالي 129,725 ر.س</div></div>
+    <div class="sp"></div>
+<!-- DARK MODE TOGGLE -->
+<button id="darkBtn" onclick="toggleDark()" title="تبديل الوضع" style="width:36px;height:36px;border:1px solid var(--brd);border-radius:var(--r);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .12s;color:var(--ink2);flex-shrink:0" class="ib">
+  <span id="darkIco">🌙</span>
+</button>
+    <button class="btn bo bsm">📤 تصدير</button>
+    <button class="btn bb bsm" onclick="toast('رفع فاتورة جديدة...')">＋ رفع فاتورة</button>
+  </header>
+  <div class="content">
+    <div class="ph">
+      <div><div class="ph-t">الفواتير الضريبية</div><div class="ph-s">جميع الفواتير مربوطة بـ GLN الموثق</div></div>
+      <div class="ph-a">
+        <button class="btn bo bsm">📤 تصدير Excel</button>
+        <button class="btn bb bsm" onclick="openPrint()">🖨️ طباعة فاتورة</button>
+      </div>
+    </div>
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat"><div class="stat-val">129.7K</div><div class="stat-lbl">إجمالي هذا الشهر (ر.س)</div><div class="stat-chg gn">↑ 18%</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--amber)">5</div><div class="stat-lbl">بانتظار الموافقة</div><div class="stat-chg" style="color:var(--amber)">⚠️ اتخاذ إجراء</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--red)">2</div><div class="stat-lbl">متأخرة الدفع</div><div class="stat-chg" style="color:var(--red)">⛔ تجاوزت الموعد</div></div>
+      <div class="stat"><div class="stat-val">94%</div><div class="stat-lbl">نسبة الفواتير الموثقة GLN</div><div class="stat-chg gn">↑ متوافق مع SFDA</div></div>
+    </div>
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab on" onclick="sTab('all',this)">جميع الفواتير <span class="tn">38</span></div>
+      <div class="tab" onclick="sTab('pending',this)">بانتظار الموافقة <span class="tn am">5</span></div>
+      <div class="tab" onclick="sTab('overdue',this)">متأخرة <span class="tn rd">2</span></div>
+      <div class="tab" onclick="sTab('paid',this)">مدفوعة <span class="tn" style="background:var(--green)">31</span></div>
+    </div>
+    <!-- TABLE -->
+    <div class="card" id="tAll">
+      <div class="ch"><div class="ct">جميع الفواتير</div><div class="cs">الفواتير الضريبية الموثقة</div></div>
+      <div class="tw"><table class="tbl" id="invTable"></table></div>
+    </div>
+    <div class="card" id="tPending" style="display:none">
+      <div class="ch"><div class="ct">⚠️ بانتظار موافقتك</div></div>
+      <div style="padding:14px 18px" id="pendList"></div>
+    </div>
+    <div class="card" id="tOverdue" style="display:none">
+      <div class="ch"><div class="ct">⛔ فواتير متأخرة الدفع</div></div>
+      <div style="padding:14px 18px">
+        <div style="background:var(--red-l);border:1px solid #FCA5A5;border-radius:var(--rl);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:24px">⛔</span>
+          <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--ink)">INV-2026-1018 · 48,200 ر.س</div><div style="font-size:11px;color:var(--ink2)">MedSource Arabia · تأخرت 3 أيام</div></div>
+          <button class="btn bg_ bxs" onclick="toast('جارٍ المعالجة...')">دفع الآن</button>
+        </div>
+        <div style="background:var(--red-l);border:1px solid #FCA5A5;border-radius:var(--rl);padding:14px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:24px">⛔</span>
+          <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--ink)">INV-2026-1009 · 32,100 ر.س</div><div style="font-size:11px;color:var(--ink2)">Gulf Medical Trading · تأخرت 7 أيام</div></div>
+          <button class="btn bg_ bxs" onclick="toast('جارٍ المعالجة...')">دفع الآن</button>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="tPaid" style="display:none">
+      <div class="ch"><div class="ct">✅ الفواتير المدفوعة</div></div>
+      <div class="tw"><table class="tbl" id="paidTable"></table></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PRINT INVOICE -->
+<div class="inv-wrap" id="invPrint">
+  <div class="inv-ctrl">
+    <button class="btn bo" onclick="document.getElementById('invPrint').classList.remove('on')">✕ إغلاق</button>
+    <button class="btn bb" onclick="window.print()">🖨️ طباعة</button>
+    <button class="btn bg_" onclick="window.print()">📄 تنزيل PDF</button>
+  </div>
+  <div class="invoice">
+    <div class="inv-header">
+      <div class="inv-logo">
+        <div class="inv-logo-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2Z" fill="rgba(255,255,255,.2)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="inv-logo-name">ميدفلو</div><div class="inv-logo-sub">شركة ميدفلو المحدودة</div><div class="inv-logo-sub">مكة المكرمة، المملكة العربية السعودية</div></div>
+      </div>
+      <div class="inv-title">
+        <h1>فاتورة ضريبية</h1>
+        <p>رقم الفاتورة: <strong>INV-2026-1042</strong></p>
+        <p>التاريخ: 5 يوليو 2026</p>
+        <p>تاريخ الاستحقاق: 5 يوليو 2026</p>
+      </div>
+    </div>
+    <div class="inv-info">
+      <div><div class="inv-info-lbl">مُصدرة من</div><div class="inv-info-val">شركة ميدفلو المحدودة<br>السجل التجاري: 1234567890<br>الرقم الضريبي: 300123456700003<br>GLN: 6281234567890</div></div>
+      <div><div class="inv-info-lbl">صادرة إلى</div><div class="inv-info-val">صيدلية الشفاء<br>ترخيص SFDA: SA-RX-2024-0089<br>مكة المكرمة<br>0501234567</div></div>
+      <div><div class="inv-info-lbl">بيانات الطلب</div><div class="inv-info-val">رقم الطلب: ORD-8821<br>عدد البنود: 5 بنود<br>Escrow: مدفوع ✓<br>GLN موثق: ✓</div></div>
+    </div>
+    <table class="inv-tbl">
+      <thead><tr><th>#</th><th>البند</th><th>رقم SFDA</th><th style="text-align:center">الكمية</th><th style="text-align:left">سعر الوحدة</th><th style="text-align:left">قبل الضريبة</th><th style="text-align:left">ضريبة 15%</th><th style="text-align:left">الإجمالي</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:center">1</td><td><div style="font-weight:700">أموكسيسيلين 500mg كبسول</div></td><td style="font-size:10px;color:var(--ink3)">SA-2024-0123456</td><td style="text-align:center">5,000 علبة</td><td style="text-align:left;font-weight:700">97.00 ﷼</td><td style="text-align:left">485,000 ﷼</td><td style="text-align:left">72,750 ﷼</td><td style="text-align:left;font-weight:700">557,750 ﷼</td></tr>
+        <tr><td style="text-align:center">2</td><td><div style="font-weight:700">قفازات لاتكس L</div></td><td style="font-size:10px;color:var(--ink3)">SA-2024-0234567</td><td style="text-align:center">200 علبة</td><td style="text-align:left;font-weight:700">195.65 ﷼</td><td style="text-align:left">39,130 ﷼</td><td style="text-align:left">5,870 ﷼</td><td style="text-align:left;font-weight:700">45,000 ﷼</td></tr>
+        <tr><td style="text-align:center">3</td><td><div style="font-weight:700">أوميغا 3 — 60 كبسولة</div></td><td style="font-size:10px;color:var(--ink3)">SA-2024-0567890</td><td style="text-align:center">100 علبة</td><td style="text-align:left;font-weight:700">111.30 ﷼</td><td style="text-align:left">11,130 ﷼</td><td style="text-align:left">1,670 ﷼</td><td style="text-align:left;font-weight:700">12,800 ﷼</td></tr>
+        <tr><td style="text-align:center">4</td><td><div style="font-weight:700">فيتامين D3 1000IU</div></td><td style="font-size:10px;color:var(--ink3)">SA-2024-0890123</td><td style="text-align:center">80 علبة</td><td style="text-align:left;font-weight:700">69.57 ﷼</td><td style="text-align:left">5,565 ﷼</td><td style="text-align:left">835 ﷼</td><td style="text-align:left;font-weight:700">6,400 ﷼</td></tr>
+        <tr><td style="text-align:center">5</td><td><div style="font-weight:700">ضمادات معقمة 10×15</div></td><td style="font-size:10px;color:var(--ink3)">SA-2024-0456789</td><td style="text-align:center">500 حزمة</td><td style="text-align:left;font-weight:700">14.65 ﷼</td><td style="text-align:left">7,325 ﷼</td><td style="text-align:left">1,100 ﷼</td><td style="text-align:left;font-weight:700">8,425 ﷼</td></tr>
+      </tbody>
+    </table>
+    <div class="inv-totals">
+      <div class="inv-totals-box">
+        <div class="inv-tot-row"><span style="color:var(--ink3)">المجموع قبل الضريبة</span><span style="font-weight:700">548,150 ﷼</span></div>
+        <div class="inv-tot-row"><span style="color:var(--ink3)">ضريبة القيمة المضافة (15%)</span><span style="font-weight:700">82,223 ﷼</span></div>
+        <div class="inv-tot-row"><span style="color:var(--ink3)">عمولة ميدفلو (2%)</span><span style="font-weight:700;color:var(--blue)">محتسبة</span></div>
+        <div class="inv-tot-row"><span style="font-weight:800">الإجمالي المستحق</span><span style="color:var(--green);font-size:16px">630,375 ﷼</span></div>
+      </div>
+    </div>
+    <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">
+      <div><div class="inv-stamp">✓ مدفوع عبر Escrow ميدفلو</div><div style="font-size:10px;color:var(--ink3);margin-top:8px">• جميع المنتجات مرخصة SFDA • موثقة بـ GLN الرسمي</div></div>
+      <div style="text-align:left"><div style="background:var(--s2);border:1px solid var(--brd);width:60px;height:60px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink3);margin-bottom:4px">QR CODE</div><div style="font-size:9px;color:var(--ink3)">INV-2026-1042<br>medflow.sa/verify</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- APPROVE MODAL -->
+<div class="mov" id="appM">
+  <div class="modal">
+    <div class="mh"><div class="mic" style="background:#E3FCEF">✅</div><div><div class="mtitle">الموافقة على الفاتورة</div><div class="msub" id="appInvName">INV-2026-1042</div></div><div class="mcl" onclick="cM('appM')">✕</div></div>
+    <div class="mbody">
+      <div style="background:var(--blue-l);border:1px solid var(--blue-m);border-radius:var(--r);padding:13px;margin-bottom:14px;font-size:12px;line-height:1.8">
+        بالموافقة، سيُحرَّر المبلغ من Escrow للمورد. تأكد من مطابقة الفاتورة للبضاعة المستلمة.
+      </div>
+      <div class="fg"><label class="fl">ملاحظات (اختياري)</label><textarea class="fc" rows="2" placeholder="أي ملاحظات على الفاتورة..."></textarea></div>
+    </div>
+    <div class="mfoot"><button class="btn br_" onclick="cM('appM')">رفض</button><button class="btn bg_" onclick="approveInv()">✅ موافقة وتحرير Escrow</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<nav class="mob-nav">
+  <div class="mni">
+    <a href="dashboard.html" class="mna"><span class="mnic">📊</span><span class="mnlbl">الرئيسية</span></a>
+    <a href="rfq.html" class="mna"><span class="mnic">📋</span><span class="mnlbl">RFQs</span></a>
+    <a href="orders.html" class="mna"><span class="mnic">📦</span><span class="mnlbl">الطلبات</span></a>
+    <a href="dashboard.html" class="mna on"><span class="mnic">🧾</span><span class="mnlbl">الفواتير</span></a>
+    <a href="analytics.html" class="mna"><span class="mnic">📈</span><span class="mnlbl">تحليلات</span></a>
+  </div>
+</nav>
+
+<script>
+function oSB(){document.getElementById('sb').classList.add('on');document.getElementById('mo').classList.add('on');document.body.style.overflow='hidden';}
+function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');document.body.style.overflow='';}
+function cM(id){document.getElementById(id).classList.remove('on');}
+function openPrint(){document.getElementById('invPrint').classList.add('on');}
+function approveInv(){cM('appM');toast('✅ تمت الموافقة — جارٍ تحرير Escrow!');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000);}
+function sTab(tab,el){
+  ['All','Pending','Overdue','Paid'].forEach(t=>{const e=document.getElementById('t'+t);if(e)e.style.display=t.toLowerCase()===tab?'block':'none';});
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));if(el)el.classList.add('on');
+}
+const invs=[
+  {id:'INV-2026-1042',sup:'صيدلية الشفاء',items:'5 بنود',amount:'630,375',date:'5 يوليو',due:'5 يوليو',gln:'✓',st:'مدفوع',stC:'bg2'},
+  {id:'INV-2026-1038',sup:'Saudi Pharma Co.',items:'8 بنود',amount:'96,400',date:'3 يوليو',due:'10 يوليو',gln:'✓',st:'بانتظار الموافقة',stC:'ba2'},
+  {id:'INV-2026-1031',sup:'MedSource Arabia',items:'5 بنود',amount:'48,200',date:'28 يونيو',due:'5 يوليو',gln:'✓',st:'مدفوع',stC:'bg2'},
+  {id:'INV-2026-1024',sup:'مستودع الداوا الطبي',items:'12 بنداً',amount:'285,600',date:'25 يونيو',due:'2 يوليو',gln:'✓',st:'مدفوع',stC:'bg2'},
+  {id:'INV-2026-1018',sup:'Gulf Medical Trading',items:'3 بنود',amount:'32,100',date:'20 يونيو',due:'27 يونيو',gln:'✗',st:'متأخر',stC:'br2'},
+  {id:'INV-2026-1011',sup:'صيدلية الشفاء',items:'7 بنود',amount:'112,800',date:'15 يونيو',due:'22 يونيو',gln:'✓',st:'مدفوع',stC:'bg2'},
+];
+document.getElementById('invTable').innerHTML=`
+<thead><tr><th>رقم الفاتورة</th><th>المورد / العميل</th><th>البنود</th><th>المبلغ (ر.س)</th><th>تاريخ الإصدار</th><th>تاريخ الاستحقاق</th><th>GLN</th><th>الحالة</th><th>الإجراء</th></tr></thead>
+<tbody>${invs.map(i=>`<tr>
+  <td><span class="tm">${i.id}</span></td>
+  <td class="tp">${i.sup}</td><td>${i.items}</td>
+  <td style="font-weight:700;color:var(--ink)">${i.amount}</td>
+  <td style="color:var(--ink3)">${i.date}</td>
+  <td style="font-weight:600">${i.due}</td>
+  <td style="text-align:center;color:${i.gln==='✓'?'var(--green)':'var(--red)'};font-weight:700">${i.gln}</td>
+  <td><span class="bdg ${i.stC} bnd">${i.st}</span></td>
+  <td style="display:flex;gap:5px">
+    <button class="btn bo bxs" onclick="openPrint()">📄 عرض</button>
+    ${i.stC==='ba2'?`<button class="btn bg_ bxs" onclick="document.getElementById('appInvName').textContent='${i.id}';document.getElementById('appM').classList.add('on')">موافقة</button>`:''}
+  </td>
+</tr>`).join('')}</tbody>`;
+
+// PENDING LIST
+document.getElementById('pendList').innerHTML=invs.filter(i=>i.stC==='ba2').map(i=>`
+<div style="background:var(--amber-l);border:1px solid #FCD34D;border-radius:var(--rl);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
+  <span style="font-size:24px">📄</span>
+  <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--ink)">${i.id} · ${i.amount} ر.س</div><div style="font-size:11px;color:var(--ink2)">${i.sup} · استحقاق: ${i.due}</div></div>
+  <div style="display:flex;gap:6px">
+    <button class="btn bo bxs" onclick="openPrint()">📄 عرض</button>
+    <button class="btn bg_ bxs" onclick="document.getElementById('appInvName').textContent='${i.id}';document.getElementById('appM').classList.add('on')">موافقة</button>
+  </div>
+</div>`).join('');
+
+// PAID TABLE
+document.getElementById('paidTable').innerHTML=`
+<thead><tr><th>رقم الفاتورة</th><th>المورد</th><th>المبلغ (ر.س)</th><th>تاريخ الدفع</th><th>Escrow</th></tr></thead>
+<tbody>${invs.filter(i=>i.stC==='bg2').map(i=>`<tr>
+  <td><span class="tm">${i.id}</span></td><td class="tp">${i.sup}</td>
+  <td style="font-weight:700;color:var(--green)">${i.amount}</td>
+  <td>${i.date}</td>
+  <td><span class="bdg bg2 bnd">محرَّر</span></td>
+</tr>`).join('')}</tbody>`;
+</script>
+
+<script>
+// WORKING SEARCH
+(function(){
+  const searchData = [
+    {type:'rfq',    label:'RFQ-24581 — أموكسيسيلين 500mg',     url:'rfq-detail.html',   icon:'📋'},
+    {type:'rfq',    label:'RFQ-24576 — قفازات جراحية L',         url:'rfq-detail.html',   icon:'📋'},
+    {type:'rfq',    label:'RFQ-24569 — فيتامين D3 1000IU',       url:'rfq-detail.html',   icon:'📋'},
+    {type:'order',  label:'PO-89238 — أموكسيسيلين 500mg',        url:'order-detail.html', icon:'📦'},
+    {type:'order',  label:'PO-89241 — مستلزمات جراحية',          url:'order-detail.html', icon:'📦'},
+    {type:'sup',    label:'مستودع الداوا الطبي — مورد · الرياض', url:'supplier.html',     icon:'🏭'},
+    {type:'sup',    label:'Saudi Pharma Co. — مورد · جدة',       url:'supplier.html',     icon:'🏭'},
+    {type:'sup',    label:'MedSource Arabia — مورد · الدمام',    url:'supplier.html',     icon:'🏭'},
+    {type:'buyer',  label:'مستشفى الملك فيصل — مشتري',          url:'buyer.html',        icon:'🏥'},
+    {type:'buyer',  label:'صيدلية الشفاء — مشتري',              url:'buyer.html',        icon:'🏥'},
+    {type:'inv',    label:'INV-2026-1042 — 630,375 ﷼',           url:'invoices.html',     icon:'🧾'},
+    {type:'page',   label:'التحليلات — Analytics',               url:'analytics.html',    icon:'📈'},
+    {type:'page',   label:'تتبع الشحنات — Delivery',             url:'delivery.html',     icon:'🚚'},
+    {type:'page',   label:'الإعدادات — Settings',                url:'settings.html',     icon:'⚙️'},
+  ];
+
+  // Build search dropdown HTML and inject into page
+  const dropHTML = `<div id="srchDrop" style="position:absolute;top:calc(100% + 6px);right:0;left:0;background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh-lg);z-index:500;display:none;overflow:hidden;max-height:320px;overflow-y:auto">
+    <div id="srchList"></div>
+  </div>`;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchWrap = document.querySelector('.srch');
+    if(!searchWrap) return;
+    searchWrap.style.position = 'relative';
+    searchWrap.insertAdjacentHTML('beforeend', dropHTML);
+    const inp = searchWrap.querySelector('input');
+    const drop = document.getElementById('srchDrop');
+    const list = document.getElementById('srchList');
+
+    inp.addEventListener('input', () => {
+      const q = inp.value.trim().toLowerCase();
+      if(q.length < 1){ drop.style.display='none'; return; }
+      const res = searchData.filter(d =>
+        d.label.toLowerCase().includes(q) ||
+        (q.match(/[a-z]/i) && d.label.toLowerCase().includes(q))
+      ).slice(0,8);
+      if(!res.length){ drop.style.display='none'; return; }
+      list.innerHTML = res.map(r => `
+        <div onclick="window.location.href='${r.url}'" style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--brd-l)" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+          <span style="font-size:18px;flex-shrink:0">${r.icon}</span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink)">${r.label.replace(new RegExp(inp.value,'gi'), m=>'<mark style="background:var(--blue-l);color:var(--blue);border-radius:3px;padding:0 2px">'+m+'</mark>')}</div>
+            <div style="font-size:10px;color:var(--ink3);margin-top:1px">${{rfq:'طلبية',order:'أمر شراء',sup:'مورد',buyer:'مشتري',inv:'فاتورة',page:'صفحة'}[r.type]}</div>
+          </div>
+        </div>`).join('');
+      drop.style.display='block';
+    });
+
+    inp.addEventListener('keydown', e => {
+      if(e.key==='Escape'){ drop.style.display='none'; inp.value=''; }
+      if(e.key==='Enter'){
+        const first = searchData.find(d => d.label.toLowerCase().includes(inp.value.toLowerCase()));
+        if(first) window.location.href=first.url;
+      }
+    });
+
+    document.addEventListener('click', e => {
+      if(!searchWrap.contains(e.target)) drop.style.display='none';
+    });
+  });
+})();
+</script>
+
+<script>
+// LOCALSTORAGE STATE MANAGER
+window.MF = window.MF || {};
+MF.state = {
+  get: (k, def={}) => { try{ return JSON.parse(localStorage.getItem('mf_'+k))||def; }catch(e){ return def; } },
+  set: (k,v) => { try{ localStorage.setItem('mf_'+k, JSON.stringify(v)); }catch(e){} },
+  push: (k,v,max=50) => {
+    const arr = MF.state.get(k,[]);
+    arr.unshift({...v, ts: Date.now()});
+    if(arr.length>max) arr.length=max;
+    MF.state.set(k,arr);
+  }
+};
+
+// Track page visit
+MF.state.push('visits', { page: location.pathname.split('/').pop() });
+
+// Load notification badge count from storage
+document.addEventListener('DOMContentLoaded', () => {
+  // Update notif count from localStorage
+  const notifs = MF.state.get('notifs', []);
+  const unread = notifs.filter(n=>!n.read).length;
+  const badge = document.querySelector('.ndot');
+  if(badge && unread === 0) badge.style.display = 'none';
+
+  // Show welcome toast if just logged in
+  if(sessionStorage.getItem('mf_just_login')){
+    sessionStorage.removeItem('mf_just_login');
+    const user = JSON.parse(localStorage.getItem('mf_user')||'{}');
+    if(user.name && typeof toast === 'function') toast('مرحباً ' + user.name + ' 👋');
+  }
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+// ── EXCEL EXPORT ENGINE ──
+window.MFExport = {
+
+  // Export any table element
+  table: function(tableId, filename) {
+    const tbl = document.getElementById(tableId);
+    if(!tbl){ toast('⚠️ لا توجد بيانات للتصدير'); return; }
+    const wb = XLSX.utils.table_to_book(tbl, {sheet:'Data', raw:false});
+    const ws = wb.Sheets['Data'];
+    // Style header row
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for(let c = range.s.c; c <= range.e.c; c++){
+      const cell = ws[XLSX.utils.encode_cell({r:0,c})];
+      if(cell) cell.s = { font:{bold:true}, fill:{fgColor:{rgb:'0066CC'}}, font:{color:{rgb:'FFFFFF'},bold:true} };
+    }
+    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    toast('✅ تم تصدير ' + filename + '.xlsx');
+  },
+
+  // Export JSON array
+  json: function(data, headers, filename) {
+    if(!data||!data.length){ toast('⚠️ لا توجد بيانات'); return; }
+    const ws = XLSX.utils.json_to_sheet(data, { header: Object.keys(data[0]) });
+    // Add RTL header row
+    if(headers){
+      XLSX.utils.sheet_add_aoa(ws, [Object.values(headers)], {origin:'A1'});
+      XLSX.utils.sheet_add_json(ws, data, {origin:'A2', skipHeader:true});
+    }
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'ميدفلو');
+    ws['!cols'] = Object.keys(data[0]).map(()=>({wch:20}));
+    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    toast('✅ تم تصدير ' + filename + '.xlsx');
+  },
+
+  // Export multiple sheets
+  multi: function(sheets, filename) {
+    const wb = XLSX.utils.book_new();
+    sheets.forEach(s => {
+      const ws = XLSX.utils.json_to_sheet(s.data);
+      ws['!cols'] = Object.keys(s.data[0]||{}).map(()=>({wch:18}));
+      XLSX.utils.book_append_sheet(wb, ws, s.name);
+    });
+    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    toast('✅ تم تصدير ' + filename + ' (' + sheets.length + ' أوراق)');
+  }
+};
+
+function exportInvoices(){
+  MFExport.json([
+    {'رقم الفاتورة':'INV-2026-1042','المورد':'صيدلية الشفاء','المبلغ (﷼)':'630,375','تاريخ الإصدار':'5 يوليو','الاستحقاق':'5 يوليو','GLN':'✓','الحالة':'مدفوع'},
+    {'رقم الفاتورة':'INV-2026-1038','المورد':'Saudi Pharma Co.','المبلغ (﷼)':'96,400','تاريخ الإصدار':'3 يوليو','الاستحقاق':'10 يوليو','GLN':'✓','الحالة':'بانتظار الموافقة'},
+    {'رقم الفاتورة':'INV-2026-1031','المورد':'MedSource Arabia','المبلغ (﷼)':'48,200','تاريخ الإصدار':'28 يونيو','الاستحقاق':'5 يوليو','GLN':'✓','الحالة':'مدفوع'},
+    {'رقم الفاتورة':'INV-2026-1024','المورد':'مستودع الداوا الطبي','المبلغ (﷼)':'285,600','تاريخ الإصدار':'25 يونيو','الاستحقاق':'2 يوليو','GLN':'✓','الحالة':'مدفوع'},
+    {'رقم الفاتورة':'INV-2026-1018','المورد':'Gulf Medical Trading','المبلغ (﷼)':'32,100','تاريخ الإصدار':'20 يونيو','الاستحقاق':'27 يونيو','GLN':'✗','الحالة':'متأخر'},
+  ], null, 'الفواتير_ميدفلو');
+}
+</script>
+</body>
+</html>

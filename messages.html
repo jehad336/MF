@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — الرسائل</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0066CC;--blue-d:#004D99;--blue-l:#EBF4FF;--blue-m:#CCE0F5;--green:#00875A;--green-l:#E3FCEF;--amber:#FF8B00;--amber-l:#FFF4E5;--red:#DE350B;--red-l:#FFEBE6;--purple:#6554C0;--purple-l:#EAE6FF;--ink:#0A1628;--ink2:#3D4E6B;--ink3:#7A8BA8;--bg:#F0F2F5;--w:#fff;--s2:#F7F8FA;--s3:#EEF0F4;--brd:#D8DCE6;--brd-l:#EAEDF3;--sh:0 1px 3px rgba(10,22,40,.08),0 1px 2px rgba(10,22,40,.06);--sh-md:0 4px 6px rgba(10,22,40,.07);--sh-lg:0 10px 15px rgba(10,22,40,.07);--r:10px;--rl:14px;--rx:20px;--rf:9999px;--sw:240px;--th:60px;--font:'IBM Plex Sans Arabic',system-ui,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--font);border:none}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:99px}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(--sw);background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:200;transition:transform .3s}
+.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.06);gap:10px;flex-shrink:0}
+.sb-logo{width:32px;height:32px;background:var(--blue);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-name{font-size:16px;font-weight:700;color:#fff}.sb-tag{font-size:9px;color:rgba(255,255,255,.3);margin-top:1px}
+.ng{padding:20px 10px 4px}.ngl{font-size:9px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
+.na{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);color:rgba(255,255,255,.5);font-size:12.5px;font-weight:500;margin-bottom:1px;transition:all .12s;position:relative}
+.na:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}.na.on{background:rgba(0,102,204,.25);color:#fff;font-weight:600}
+.na.on::before{content:'';position:absolute;right:0;top:20%;bottom:20%;width:3px;background:var(--blue);border-radius:0 99px 99px 0}
+.nico{width:15px;height:15px;flex-shrink:0;opacity:.7}.na.on .nico{opacity:1}
+.nb{margin-right:auto;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;min-width:18px;text-align:center}.nb.am{background:var(--amber)}
+.sb-ft{margin-top:auto;padding:12px 10px;border-top:1px solid rgba(255,255,255,.06)}
+.urow{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r);cursor:pointer}.urow:hover{background:rgba(255,255,255,.06)}
+.uav{width:34px;height:34px;border-radius:var(--r);background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.uname{font-size:12px;font-weight:600;color:#fff}.urole{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:var(--th);background:var(--w);border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 24px;gap:10px;flex-shrink:0;box-shadow:0 1px 2px rgba(10,22,40,.05)}
+.tb-t{font-size:15px;font-weight:700;color:var(--ink)}.tb-s{font-size:11px;color:var(--ink3);margin-top:1px}.sp{flex:1}
+.ham{display:none;width:36px;height:36px;border-radius:var(--r);background:var(--s2);border:1px solid var(--brd);align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:12px;font-weight:600;transition:all .12s;white-space:nowrap;border:none;font-family:var(--font)}
+.bb{background:var(--blue);color:#fff}.bb:hover{background:var(--blue-d)}.bo{background:transparent;border:1px solid var(--brd);color:var(--ink2)}.bo:hover{background:var(--s2)}
+.bsm{padding:5px 11px;font-size:11px}.bxs{padding:3px 9px;font-size:10px}
+/* MESSAGES LAYOUT */
+.msg-layout{flex:1;display:flex;overflow:hidden}
+/* CONVERSATIONS PANEL */
+.conv-panel{width:300px;border-left:1px solid var(--brd-l);background:var(--w);display:flex;flex-direction:column;flex-shrink:0}
+.conv-header{padding:14px 16px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;justify-content:space-between}
+.conv-search{margin:10px 12px;position:relative}
+.conv-search input{width:100%;border:1px solid var(--brd);border-radius:var(--r);padding:7px 32px 7px 10px;font-size:12px;color:var(--ink);background:var(--s2);outline:none;font-family:var(--font)}
+.conv-search input:focus{border-color:var(--blue);background:var(--w)}
+.conv-search-ic{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--ink3)}
+.conv-list{overflow-y:auto;flex:1}
+.conv-item{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--brd-l);position:relative}
+.conv-item:hover{background:var(--s2)}.conv-item.active{background:var(--blue-l)}
+.conv-item.unread::after{content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.conv-av{width:40px;height:40px;border-radius:var(--rl);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;position:relative}
+.conv-online::after{content:'';position:absolute;bottom:1px;left:1px;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--w)}
+.conv-name{font-size:12px;font-weight:700;color:var(--ink)}
+.conv-preview{font-size:11px;color:var(--ink3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.conv-time{font-size:10px;color:var(--ink3);flex-shrink:0}
+.conv-badge{background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;margin-top:2px;display:inline-block}
+/* CHAT AREA */
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-header{padding:14px 20px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;gap:12px;background:var(--w)}
+.chat-av{width:38px;height:38px;border-radius:var(--rl);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.chat-name{font-size:14px;font-weight:700;color:var(--ink)}
+.chat-status{font-size:11px;color:var(--green);margin-top:1px;display:flex;align-items:center;gap:4px}
+.chat-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green)}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+/* MESSAGES */
+.msg{display:flex;gap:8px;max-width:75%}
+.msg.sent{align-self:flex-start;flex-direction:row-reverse}
+.msg.recv{align-self:flex-end}
+.msg-av{width:30px;height:30px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;margin-top:2px}
+.msg-bubble{border-radius:var(--rl);padding:10px 14px;font-size:13px;line-height:1.6;position:relative}
+.msg.sent .msg-bubble{background:var(--blue);color:#fff;border-bottom-right-radius:4px}
+.msg.recv .msg-bubble{background:var(--w);border:1px solid var(--brd-l);color:var(--ink);border-bottom-left-radius:4px;box-shadow:var(--sh)}
+.msg-meta{font-size:10px;margin-top:4px;text-align:left}
+.msg.sent .msg-meta{color:rgba(255,255,255,.7);text-align:right}
+.msg.recv .msg-meta{color:var(--ink3)}
+/* ATTACHMENT */
+.msg-attach{background:rgba(255,255,255,.15);border-radius:var(--r);padding:8px 10px;margin-top:6px;display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer}
+.msg.recv .msg-attach{background:var(--blue-l);color:var(--blue)}
+/* DATE DIVIDER */
+.date-div{text-align:center;font-size:10px;color:var(--ink3);margin:4px 0;position:relative}
+.date-div::before,.date-div::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:var(--brd-l)}
+.date-div::before{right:0}.date-div::after{left:0}
+/* INPUT */
+.chat-input{padding:12px 16px;border-top:1px solid var(--brd-l);background:var(--w)}
+.input-row{display:flex;align-items:flex-end;gap:8px;background:var(--s2);border:1px solid var(--brd);border-radius:var(--rl);padding:8px 12px;transition:all .12s}
+.input-row:focus-within{border-color:var(--blue);background:var(--w);box-shadow:0 0 0 3px var(--blue-l)}
+.chat-inp{border:none;background:transparent;flex:1;font-size:13px;color:var(--ink);outline:none;font-family:var(--font);resize:none;max-height:120px;line-height:1.5}
+.chat-inp::placeholder{color:var(--ink3)}
+.input-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.inp-btn{width:32px;height:32px;border-radius:var(--r);background:transparent;border:none;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--ink3);transition:all .12s}
+.inp-btn:hover{background:var(--s3);color:var(--ink)}
+.send-btn{width:36px;height:36px;border-radius:var(--r);background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .12s;color:#fff;flex-shrink:0}
+.send-btn:hover{background:var(--blue-d);box-shadow:var(--sh-md)}
+/* REF CARD */
+.ref-card{background:var(--blue-l);border:1px solid var(--blue-m);border-radius:var(--r);padding:8px 10px;margin-bottom:8px;font-size:11px;display:flex;align-items:center;gap:8px}
+.ref-card-icon{font-size:18px}
+.ref-card-title{font-weight:700;color:var(--blue)}
+.ref-card-sub{color:var(--ink3);margin-top:1px}
+/* EMPTY */
+.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--ink3)}
+.chat-empty-ic{font-size:56px;margin-bottom:12px;opacity:.3}
+/* TYPING */
+.typing-indicator{display:flex;align-items:center;gap:4px;padding:8px 12px;background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);width:fit-content;box-shadow:var(--sh)}
+.typing-dot{width:7px;height:7px;border-radius:50%;background:var(--ink3);animation:td .8s ease infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+/* DARK */
+body.dark{--blue:#4D9FFF;--blue-l:rgba(77,159,255,.12);--blue-m:rgba(77,159,255,.25);--green:#34D399;--ink:#F1F5F9;--ink2:#94A3B8;--ink3:#64748B;--bg:#0F172A;--w:#1E293B;--s2:#162032;--s3:#1E293B;--brd:#2D3F55;--brd-l:#253347}
+body.dark .sidebar{background:#0A1628}body.dark .topbar{background:#1E293B;border-bottom-color:#253347}
+body.dark .conv-panel{background:#1E293B;border-left-color:#253347}body.dark .chat-area{background:#0F172A}
+body.dark .chat-header{background:#1E293B;border-bottom-color:#253347}body.dark .chat-input{background:#1E293B;border-top-color:#253347}
+body.dark .input-row{background:#162032;border-color:#2D3F55}body.dark .input-row:focus-within{background:#1E293B;border-color:var(--blue)}
+body.dark .msg.recv .msg-bubble{background:#1E293B;border-color:#2D3F55}
+body.dark .conv-item{border-bottom-color:#253347}body.dark .conv-item:hover{background:#253347}body.dark .conv-item.active{background:rgba(77,159,255,.1)}
+body.dark .conv-search input{background:#162032;border-color:#2D3F55;color:#F1F5F9}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:12px;font-weight:600;box-shadow:var(--sh-lg);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+.mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:var(--ink);border-top:1px solid rgba(255,255,255,.06);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
+.mni{display:flex;justify-content:space-around}
+.mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:var(--r);text-decoration:none}
+.mna.on{background:rgba(0,102,204,.2)}.mnic{font-size:19px;line-height:1}.mnlbl{font-size:9px;font-weight:600;color:rgba(255,255,255,.4)}.mna.on .mnlbl{color:#60A5FA}
+.mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190;display:none}.mob-ov.on{display:block}
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;right:0;bottom:0;transform:translateX(100%);transition:transform .3s;z-index:500}
+  .sidebar.on{transform:translateX(0)}.topbar{padding:0 14px}.ham{display:flex}
+  .conv-panel{width:100%;display:block}
+  .chat-area{display:none}.chat-area.mobile-open{display:flex;position:fixed;inset:0;z-index:300;background:var(--bg)}
+  .mob-nav{display:block}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sb">
+  <div class="sb-brand">
+    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2Z" fill="rgba(255,255,255,.12)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><div class="sb-name">ميدفلو</div><div class="sb-tag">Medical Procurement</div></div>
+  </div>
+  <div class="ng"><div class="ngl">الرئيسية</div>
+    <a href="dashboard.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>لوحة التحكم</a>
+  </div>
+  <div class="ng"><div class="ngl">المشتريات</div>
+    <a href="rfq.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 7h10M2 10h8M2 13h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>سوق الطلبيات — RFQ<span class="nb">23</span></a>
+    <a href="orders.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M1 3h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3Z" stroke="currentColor" stroke-width="1.2"/></svg>أوامر الشراء</a>
+    <a href="invoices.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2"/></svg>الفواتير<span class="nb am">5</span></a>
+  </div>
+  <div class="ng"><div class="ngl">التواصل</div>
+    <a href="messages.html" class="na on"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 3h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5l-3 2V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>الرسائل<span class="nb rd" style="background:var(--red)">3</span></a>
+  </div>
+  <div class="ng"><div class="ngl">الشبكة</div>
+    <a href="supplier.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الموردون</a>
+    <a href="buyer.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="6" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.2"/></svg>المشترون</a>
+  </div>
+  <div class="ng"><div class="ngl">النظام</div>
+    <a href="analytics.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 12l3-4 3 2 3-5 3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>التحليلات</a>
+    <a href="settings.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الإعدادات</a>
+  </div>
+  <div class="sb-ft"><div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مدير المستودع · مكة</div></div></div></div>
+</aside>
+<div class="mob-ov" id="mo" onclick="cSB()"></div>
+
+<div class="main">
+  <header class="topbar">
+    <button class="ham" onclick="oSB()">☰</button>
+    <div><div class="tb-t">الرسائل — Messages</div><div class="tb-s">3 رسائل غير مقروءة</div></div>
+    <div class="sp"></div>
+    <button id="darkBtn" onclick="toggleDark()" class="ib" style="width:36px;height:36px;border:1px solid var(--brd);border-radius:var(--r);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--ink2)"><span id="darkIco">🌙</span></button>
+    <button class="btn bb bsm" onclick="newConv()">✏️ محادثة جديدة</button>
+  </header>
+
+  <div class="msg-layout">
+    <!-- CONVERSATIONS LIST -->
+    <div class="conv-panel">
+      <div class="conv-header">
+        <span style="font-size:13px;font-weight:700;color:var(--ink)">المحادثات</span>
+        <span style="font-size:11px;color:var(--ink3)">3 غير مقروءة</span>
+      </div>
+      <div class="conv-search">
+        <input placeholder="بحث في المحادثات..." id="convSearch" oninput="filterConvs()">
+        <span class="conv-search-ic">🔍</span>
+      </div>
+      <div class="conv-list" id="convList"></div>
+    </div>
+
+    <!-- CHAT AREA -->
+    <div class="chat-area" id="chatArea">
+      <div class="chat-empty" id="chatEmpty">
+        <div class="chat-empty-ic">💬</div>
+        <div style="font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:6px">اختر محادثة</div>
+        <div style="font-size:12px;color:var(--ink3)">اضغط على محادثة لبدء التواصل</div>
+      </div>
+
+      <div id="chatView" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+        <!-- CHAT HEADER -->
+        <div class="chat-header">
+          <button onclick="backToList()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--ink3);display:none" id="backBtn">←</button>
+          <div class="chat-av" id="chatAv" style="background:#0066CC">DA</div>
+          <div style="flex:1">
+            <div class="chat-name" id="chatName">مستودع الداوا الطبي</div>
+            <div class="chat-status" id="chatStatus">متصل الآن</div>
+          </div>
+          <button class="btn bo bxs" onclick="toast('عرض ملف المورد...')">👤 الملف</button>
+          <button class="btn bo bxs" onclick="window.location.href='rfq-detail.html'">📋 RFQ-24581</button>
+          <button class="btn bo bxs" onclick="toast('بدء مكالمة صوتية...')">📞</button>
+        </div>
+
+        <!-- REF CARD -->
+        <div style="padding:10px 16px;background:var(--bg)">
+          <div class="ref-card" id="refCard">
+            <span class="ref-card-icon">📋</span>
+            <div>
+              <div class="ref-card-title" id="refTitle">RFQ-24581 — أموكسيسيلين 500mg</div>
+              <div class="ref-card-sub" id="refSub">15,000 علبة · أفضل عرض: 97.00 ﷼ · عاجل</div>
+            </div>
+            <button class="btn bb bxs" style="margin-right:auto" onclick="window.location.href='rfq-detail.html'">عرض ←</button>
+          </div>
+        </div>
+
+        <!-- MESSAGES -->
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <!-- INPUT -->
+        <div class="chat-input">
+          <div class="input-row">
+            <textarea class="chat-inp" id="msgInput" placeholder="اكتب رسالتك..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+            <div class="input-actions">
+              <button class="inp-btn" onclick="attachFile()" title="إرفاق ملف">📎</button>
+              <button class="inp-btn" onclick="sendQuickOffer()" title="إرسال عرض سعر">💰</button>
+              <button class="send-btn" onclick="sendMsg()" title="إرسال">←</button>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:6px;padding:0 4px">
+            الرسائل مشفرة ومحفوظة في ميدفلو · المحادثة مرتبطة بـ RFQ-24581
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="toast"></div>
+<nav class="mob-nav">
+  <div class="mni">
+    <a href="dashboard.html" class="mna"><span class="mnic">📊</span><span class="mnlbl">الرئيسية</span></a>
+    <a href="rfq.html" class="mna"><span class="mnic">📋</span><span class="mnlbl">RFQs</span></a>
+    <a href="orders.html" class="mna"><span class="mnic">📦</span><span class="mnlbl">الطلبات</span></a>
+    <a href="messages.html" class="mna on"><span class="mnic">💬</span><span class="mnlbl">الرسائل</span></a>
+    <a href="analytics.html" class="mna"><span class="mnic">📈</span><span class="mnlbl">تحليلات</span></a>
+  </div>
+</nav>
+
+<script>
+(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login.html';})();
+function oSB(){document.getElementById('sb').classList.add('on');document.getElementById('mo').classList.add('on');document.body.style.overflow='hidden';}
+function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');document.body.style.overflow='';}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000);}
+function toggleDark(){const d=document.body.classList.toggle('dark');localStorage.setItem('mf_dark',d?'1':'0');document.getElementById('darkIco').textContent=d?'☀️':'🌙';}
+(function(){if(localStorage.getItem('mf_dark')==='1'){document.body.classList.add('dark');const i=document.getElementById('darkIco');if(i)i.textContent='☀️';}})();
+
+// CONVERSATIONS DATA
+const convs = [
+  {id:1, name:'مستودع الداوا الطبي', role:'مورد', color:'#0066CC', rfq:'RFQ-24581', unread:2, online:true,
+    msgs:[
+      {from:'them', text:'مرحباً، تلقينا طلبيتكم بخصوص أموكسيسيلين 500mg. يسعدنا تقديم أفضل الأسعار.', time:'09:14'},
+      {from:'me', text:'أهلاً، نتطلع لتلقي عرضكم. هل لديكم الكمية المطلوبة 15,000 علبة؟', time:'09:16'},
+      {from:'them', text:'نعم لدينا الكمية كاملة في المخزون، ومنتهية الصلاحية بعد 24 شهراً. يمكننا التسليم خلال 18 ساعة من الموافقة.', time:'09:18'},
+      {from:'me', text:'ممتاز. ما هو أفضل سعر تقدرون تعطوناه؟', time:'09:20'},
+      {from:'them', text:'نقدم لكم سعر 97.00 ﷼/علبة — وهو أقل بـ 22% من المتوسط السوقي. العرض ساري لمدة 3 ساعات.', time:'09:22', attach:{name:'عرض_السعر_الداوا.pdf', size:'124 KB'}},
+      {from:'me', text:'شكراً، سنراجع العرض ونرد عليكم قريباً.', time:'09:25'},
+      {from:'them', text:'في انتظار ردكم. لا تترددوا في التواصل.', time:'09:26'},
+    ]
+  },
+  {id:2, name:'Saudi Pharma Co.', role:'مورد', color:'#00875A', rfq:'RFQ-24581', unread:1, online:true,
+    msgs:[
+      {from:'them', text:'السلام عليكم، نود تقديم عرض سعر على طلبيتكم.', time:'أمس'},
+      {from:'me', text:'وعليكم السلام، تفضلوا.', time:'أمس'},
+      {from:'them', text:'نقدم 99.50 ﷼/علبة مع ضمان 6 أشهر والتسليم خلال 24 ساعة.', time:'أمس'},
+    ]
+  },
+  {id:3, name:'مستشفى الملك فيصل', role:'مشتري', color:'#6554C0', rfq:'PO-89238', unread:0, online:false,
+    msgs:[
+      {from:'them', text:'متى نتوقع وصول الشحنة؟', time:'5 يوليو'},
+      {from:'me', text:'الشحنة في الطريق، الوصول المتوقع غداً الساعة 8 صباحاً.', time:'5 يوليو'},
+      {from:'them', text:'شكراً، سنكون جاهزين للاستلام.', time:'5 يوليو'},
+    ]
+  },
+  {id:4, name:'MedSource Arabia', role:'مورد', color:'#FF8B00', rfq:'RFQ-24576', unread:0, online:false,
+    msgs:[
+      {from:'them', text:'لدينا القفازات الجراحية بسعر تنافسي.', time:'4 يوليو'},
+    ]
+  },
+];
+
+let activeConv = null;
+
+function renderConvs(list) {
+  document.getElementById('convList').innerHTML = list.map(c => `
+    <div class="conv-item ${c.unread?'unread':''} ${activeConv?.id===c.id?'active':''}" onclick="openConv(${c.id})">
+      <div class="conv-av ${c.online?'conv-online':''}" style="background:${c.color}">${c.name.substring(0,2)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="conv-name">${c.name}</div>
+          <div class="conv-time">${c.msgs.at(-1)?.time||''}</div>
+        </div>
+        <div class="conv-preview">${c.msgs.at(-1)?.text||''}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+          <span style="font-size:9px;padding:1px 6px;border-radius:99px;background:var(--s3);color:var(--ink3)">${c.rfq}</span>
+          ${c.unread ? `<span class="conv-badge">${c.unread}</span>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function openConv(id) {
+  const conv = convs.find(c=>c.id===id);
+  if(!conv) return;
+  activeConv = conv;
+  conv.unread = 0;
+  renderConvs(convs);
+
+  // Update chat header
+  document.getElementById('chatAv').textContent = conv.name.substring(0,2);
+  document.getElementById('chatAv').style.background = conv.color;
+  document.getElementById('chatName').textContent = conv.name;
+  document.getElementById('chatStatus').textContent = conv.online ? 'متصل الآن' : 'آخر ظهور اليوم';
+  document.getElementById('refTitle').textContent = conv.rfq + ' — ' + (conv.role==='مورد'?'طلبية مفتوحة':'أمر شراء');
+  document.getElementById('refSub').textContent = conv.role + ' · ' + conv.name;
+
+  // Render messages
+  renderMessages(conv.msgs);
+
+  document.getElementById('chatEmpty').style.display='none';
+  document.getElementById('chatView').style.display='flex';
+
+  // Mobile
+  if(window.innerWidth<=768){
+    document.getElementById('chatArea').classList.add('mobile-open');
+    document.getElementById('backBtn').style.display='block';
+  }
+
+  // Focus input
+  setTimeout(()=>document.getElementById('msgInput').focus(), 100);
+}
+
+function renderMessages(msgs) {
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = `<div class="date-div">اليوم</div>` + msgs.map(m => `
+    <div class="msg ${m.from==='me'?'sent':'recv'}">
+      ${m.from!=='me'?`<div class="msg-av" style="background:${activeConv.color}">${activeConv.name.substring(0,2)}</div>`:''}
+      <div>
+        <div class="msg-bubble">
+          ${m.text}
+          ${m.attach?`<div class="msg-attach"><span style="font-size:16px">📄</span><div><div style="font-weight:600">${m.attach.name}</div><div style="opacity:.7">${m.attach.size}</div></div></div>`:''}
+        </div>
+        <div class="msg-meta">${m.time} ${m.from==='me'?'✓✓':''}</div>
+      </div>
+      ${m.from==='me'?`<div class="msg-av" style="background:#0066CC">جه</div>`:''}
+    </div>`).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendMsg() {
+  if(!activeConv) return;
+  const inp = document.getElementById('msgInput');
+  const text = inp.value.trim();
+  if(!text) return;
+  activeConv.msgs.push({from:'me', text, time: new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})});
+  renderMessages(activeConv.msgs);
+  renderConvs(convs);
+  inp.value=''; inp.style.height='auto';
+
+  // Simulate reply after 1.5s
+  const container = document.getElementById('chatMessages');
+  setTimeout(()=>{
+    const typing = document.createElement('div');
+    typing.className='msg recv'; typing.id='typing';
+    typing.innerHTML=`<div class="msg-av" style="background:${activeConv.color}">${activeConv.name.substring(0,2)}</div>
+      <div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+    container.appendChild(typing);
+    container.scrollTop=container.scrollHeight;
+  }, 600);
+
+  const replies = [
+    'شكراً على ردكم السريع.',
+    'سنعود إليكم خلال دقائق.',
+    'تم الاستلام، سنتحقق ونرد.',
+    'هل لديكم استفسارات إضافية؟',
+    'يسعدنا خدمتكم دائماً.',
+    'سيتم معالجة طلبكم فوراً.'
+  ];
+  setTimeout(()=>{
+    const t=document.getElementById('typing');if(t)t.remove();
+    const reply = replies[Math.floor(Math.random()*replies.length)];
+    activeConv.msgs.push({from:'them', text:reply, time:new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})});
+    renderMessages(activeConv.msgs);
+    renderConvs(convs);
+  }, 2000);
+}
+
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+function attachFile(){toast('📎 جارٍ إرفاق ملف...');}
+function sendQuickOffer(){toast('💰 إرسال عرض سعر سريع...');}
+function filterConvs(){
+  const q=document.getElementById('convSearch').value.toLowerCase();
+  const filtered=q?convs.filter(c=>c.name.toLowerCase().includes(q)||c.rfq.toLowerCase().includes(q)):convs;
+  renderConvs(filtered);
+}
+function newConv(){toast('✏️ فتح محادثة جديدة...');}
+function backToList(){document.getElementById('chatArea').classList.remove('mobile-open');document.getElementById('backBtn').style.display='none';}
+
+// Init
+renderConvs(convs);
+// Auto-open first conv
+setTimeout(()=>openConv(1), 200);
+</script>
+</body>
+</html>

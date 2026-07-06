@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — الإشعارات</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0066CC;--blue-d:#004D99;--blue-l:#EBF4FF;--blue-m:#CCE0F5;--green:#00875A;--green-l:#E3FCEF;--amber:#FF8B00;--amber-l:#FFF4E5;--red:#DE350B;--red-l:#FFEBE6;--purple:#6554C0;--purple-l:#EAE6FF;--ink:#0A1628;--ink2:#3D4E6B;--ink3:#7A8BA8;--bg:#F0F2F5;--w:#fff;--s2:#F7F8FA;--s3:#EEF0F4;--brd:#D8DCE6;--brd-l:#EAEDF3;--sh:0 1px 3px rgba(10,22,40,.08),0 1px 2px rgba(10,22,40,.06);--sh-md:0 4px 6px rgba(10,22,40,.07);--sh-lg:0 10px 15px rgba(10,22,40,.07);--r:10px;--rl:14px;--rx:20px;--rf:9999px;--sw:240px;--th:60px;--font:'IBM Plex Sans Arabic',system-ui,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--font);border:none}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:99px}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(--sw);background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:200;transition:transform .3s}
+.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.06);gap:10px;flex-shrink:0}
+.sb-logo{width:32px;height:32px;background:var(--blue);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-name{font-size:16px;font-weight:700;color:#fff}.sb-tag{font-size:9px;color:rgba(255,255,255,.3);margin-top:1px}
+.ng{padding:20px 10px 4px}.ngl{font-size:9px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
+.na{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);color:rgba(255,255,255,.5);font-size:12.5px;font-weight:500;margin-bottom:1px;transition:all .12s;position:relative}
+.na:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}.na.on{background:rgba(0,102,204,.25);color:#fff;font-weight:600}
+.na.on::before{content:'';position:absolute;right:0;top:20%;bottom:20%;width:3px;background:var(--blue);border-radius:0 99px 99px 0}
+.nico{width:15px;height:15px;flex-shrink:0;opacity:.7}.na.on .nico{opacity:1}
+.nb{margin-right:auto;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;min-width:18px;text-align:center}.nb.am{background:var(--amber)}
+.sb-ft{margin-top:auto;padding:12px 10px;border-top:1px solid rgba(255,255,255,.06)}
+.urow{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r);cursor:pointer}.urow:hover{background:rgba(255,255,255,.06)}
+.uav{width:34px;height:34px;border-radius:var(--r);background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.uname{font-size:12px;font-weight:600;color:#fff}.urole{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:var(--th);background:var(--w);border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 24px;gap:10px;flex-shrink:0;box-shadow:0 1px 2px rgba(10,22,40,.05)}
+.tb-t{font-size:15px;font-weight:700;color:var(--ink)}.tb-s{font-size:11px;color:var(--ink3);margin-top:1px}.sp{flex:1}
+.ham{display:none;width:36px;height:36px;border-radius:var(--r);background:var(--s2);border:1px solid var(--brd);align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:12px;font-weight:600;transition:all .12s;white-space:nowrap;border:none;font-family:var(--font)}
+.bb{background:var(--blue);color:#fff}.bb:hover{background:var(--blue-d)}.bo{background:transparent;border:1px solid var(--brd);color:var(--ink2)}.bo:hover{background:var(--s2)}
+.bsm{padding:5px 11px;font-size:11px}.bxs{padding:3px 9px;font-size:10px}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+/* FILTERS */
+.notif-wrap{max-width:800px;margin:0 auto}
+.filter-row{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.fchip{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--rf);font-size:11px;font-weight:600;cursor:pointer;transition:all .12s;border:1px solid var(--brd);background:var(--w);color:var(--ink2)}
+.fchip:hover{border-color:var(--blue);color:var(--blue)}
+.fchip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.fchip-count{background:rgba(255,255,255,.25);border-radius:99px;padding:0 5px;font-size:9px}
+.fchip:not(.on) .fchip-count{background:var(--s3);color:var(--ink3)}
+/* DATE GROUP */
+.notif-group{margin-bottom:24px}
+.ng-title{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.8px;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--brd-l)}
+/* NOTIF ITEM */
+.ni{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);margin-bottom:6px;cursor:pointer;transition:all .2s;position:relative;box-shadow:var(--sh)}
+.ni:hover{box-shadow:var(--sh-md);border-color:var(--blue-m)}
+.ni.unread{border-right:3px solid var(--blue);background:var(--w)}
+.ni.unread::before{content:'';position:absolute;left:14px;top:50%;transform:translateY(-50%);width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.ni-icon{width:42px;height:42px;border-radius:var(--rl);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ni-content{flex:1;min-width:0}
+.ni-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.ni.unread .ni-title{font-weight:800}
+.ni-sub{font-size:12px;color:var(--ink2);line-height:1.6}
+.ni-meta{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}
+.ni-tag{font-size:10px;padding:2px 7px;border-radius:var(--rf);font-weight:600}
+.ni-time{font-size:10px;color:var(--ink3)}
+.ni-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:var(--ink3)}
+.empty-ic{font-size:52px;margin-bottom:14px;opacity:.3}
+/* DARK */
+body.dark{--blue:#4D9FFF;--blue-l:rgba(77,159,255,.12);--blue-m:rgba(77,159,255,.2);--green:#34D399;--green-l:rgba(52,211,153,.12);--amber:#FBBF24;--amber-l:rgba(251,191,36,.12);--red:#F87171;--red-l:rgba(248,113,113,.12);--ink:#F1F5F9;--ink2:#94A3B8;--ink3:#64748B;--bg:#0F172A;--w:#1E293B;--s2:#162032;--s3:#1E293B;--brd:#2D3F55;--brd-l:#253347}
+body.dark .sidebar{background:#0A1628}body.dark .topbar{background:#1E293B;border-bottom-color:#253347}
+body.dark .ni{background:#1E293B;border-color:#253347}body.dark .ni:hover{border-color:var(--blue)}
+body.dark .ni.unread{background:#1a2540;border-right-color:var(--blue)}
+body.dark .fchip{background:#1E293B;border-color:#2D3F55;color:#94A3B8}
+body.dark .ng-title{border-bottom-color:#253347}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:12px;font-weight:600;box-shadow:var(--sh-lg);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+.mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:var(--ink);border-top:1px solid rgba(255,255,255,.06);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
+.mni{display:flex;justify-content:space-around}
+.mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:var(--r);text-decoration:none}
+.mna.on{background:rgba(0,102,204,.2)}.mnic{font-size:19px;line-height:1}.mnlbl{font-size:9px;font-weight:600;color:rgba(255,255,255,.4)}.mna.on .mnlbl{color:#60A5FA}
+.mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190;display:none}.mob-ov.on{display:block}
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;right:0;bottom:0;transform:translateX(100%);transition:transform .3s;z-index:500}
+  .sidebar.on{transform:translateX(0)}.main{width:100%}.content{padding:14px;padding-bottom:72px}.topbar{padding:0 14px}
+  .mob-nav{display:block}.ham{display:flex}.ni-actions{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sb">
+  <div class="sb-brand">
+    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2Z" fill="rgba(255,255,255,.12)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><div class="sb-name">ميدفلو</div><div class="sb-tag">Medical Procurement</div></div>
+  </div>
+  <div class="ng"><div class="ngl">الرئيسية</div>
+    <a href="dashboard.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>لوحة التحكم</a>
+  </div>
+  <div class="ng"><div class="ngl">المشتريات</div>
+    <a href="rfq.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 7h10M2 10h8M2 13h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>سوق الطلبيات — RFQ<span class="nb">23</span></a>
+    <a href="orders.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M1 3h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3Z" stroke="currentColor" stroke-width="1.2"/></svg>أوامر الشراء</a>
+    <a href="invoices.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2"/></svg>الفواتير<span class="nb am">5</span></a>
+  </div>
+  <div class="ng"><div class="ngl">التواصل</div>
+    <a href="notifications.html" class="na on"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M8 1a5 5 0 0 1 5 5c0 3.5 1 4.5 1 4.5H2s1-1 1-4.5A5 5 0 0 1 8 1Z" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 13.5a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.2"/></svg>الإشعارات<span class="nb rd" style="background:var(--red)">8</span></a>
+    <a href="messages.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 3h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5l-3 2V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>الرسائل<span class="nb rd" style="background:var(--red)">3</span></a>
+  </div>
+  <div class="ng"><div class="ngl">الشبكة</div>
+    <a href="supplier.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الموردون</a>
+    <a href="buyer.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="6" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.2"/></svg>المشترون</a>
+  </div>
+  <div class="ng"><div class="ngl">النظام</div>
+    <a href="analytics.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 12l3-4 3 2 3-5 3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>التحليلات</a>
+    <a href="settings.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الإعدادات</a>
+  </div>
+  <div class="sb-ft"><div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مدير المستودع · مكة</div></div></div></div>
+</aside>
+<div class="mob-ov" id="mo" onclick="cSB()"></div>
+
+<div class="main">
+  <header class="topbar">
+    <button class="ham" onclick="oSB()">☰</button>
+    <div><div class="tb-t">الإشعارات</div><div class="tb-s" id="unreadCount">8 إشعارات غير مقروءة</div></div>
+    <div class="sp"></div>
+    <button id="darkBtn" onclick="toggleDark()" style="width:36px;height:36px;border:1px solid var(--brd);border-radius:var(--r);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--ink2)"><span id="darkIco">🌙</span></button>
+    <button class="btn bo bsm" onclick="markAllRead()">✓ قراءة الكل</button>
+    <button class="btn bo bsm" onclick="clearAll()">🗑️ حذف الكل</button>
+  </header>
+
+  <div class="content">
+    <div class="notif-wrap">
+      <!-- FILTERS -->
+      <div class="filter-row" id="filterRow"></div>
+      <!-- NOTIFICATIONS -->
+      <div id="notifContainer"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="toast"></div>
+<nav class="mob-nav">
+  <div class="mni">
+    <a href="dashboard.html" class="mna"><span class="mnic">📊</span><span class="mnlbl">الرئيسية</span></a>
+    <a href="rfq.html" class="mna"><span class="mnic">📋</span><span class="mnlbl">RFQs</span></a>
+    <a href="notifications.html" class="mna on"><span class="mnic">🔔</span><span class="mnlbl">إشعارات</span></a>
+    <a href="messages.html" class="mna"><span class="mnic">💬</span><span class="mnlbl">رسائل</span></a>
+    <a href="analytics.html" class="mna"><span class="mnic">📈</span><span class="mnlbl">تحليلات</span></a>
+  </div>
+</nav>
+
+<script>
+(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login.html';})();
+function oSB(){document.getElementById('sb').classList.add('on');document.getElementById('mo').classList.add('on');document.body.style.overflow='hidden';}
+function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');document.body.style.overflow='';}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000);}
+function toggleDark(){const d=document.body.classList.toggle('dark');localStorage.setItem('mf_dark',d?'1':'0');document.getElementById('darkIco').textContent=d?'☀️':'🌙';}
+(function(){if(localStorage.getItem('mf_dark')==='1'){document.body.classList.add('dark');const i=document.getElementById('darkIco');if(i)i.textContent='☀️';}})();
+
+const allNotifs=[
+  {id:1,type:'rfq',icon:'📋',bg:'#EBF4FF',title:'عرض سعر جديد على RFQ-24581',body:'مستودع الداوا الطبي قدّم عرضاً بـ 97.00 ر.س/وحدة — أفضل سعر حتى الآن بتوفير 22%',time:'منذ 8 دقائق',tag:'RFQ-24581',tagColor:'#EBF4FF',tagText:'#0066CC',unread:true,url:'rfq-detail.html'},
+  {id:2,type:'order',icon:'📦',bg:'#E3FCEF',title:'شحنة وصلت — بانتظار تأكيدك',body:'PO-89238 · أموكسيسيلين 500mg · 15,000 علبة وصلت. أكّد الاستلام لتحرير Escrow للمورد.',time:'منذ 22 دقيقة',tag:'PO-89238',tagColor:'#E3FCEF',tagText:'#00875A',unread:true,url:'order-detail.html'},
+  {id:3,type:'escrow',icon:'🔒',bg:'#EAE6FF',title:'Escrow محجوز — 1,455,000 ر.س',body:'تم حجز المبلغ بنجاح بعد قبولك لعرض مستودع الداوا الطبي. المبلغ آمن ومحمي.',time:'منذ ساعة',tag:'Escrow',tagColor:'#EAE6FF',tagText:'#6554C0',unread:true,url:'orders.html'},
+  {id:4,type:'alert',icon:'⚠️',bg:'#FFF4E5',title:'طلبية RFQ-24576 تنتهي خلال ساعتين',body:'قفازات جراحية L · 50,000 زوج — 4 عروض مستلمة. راجع العروض الآن قبل انتهاء المهلة.',time:'منذ 2 ساعة',tag:'عاجل',tagColor:'#FFF4E5',tagText:'#FF8B00',unread:true,url:'rfq.html'},
+  {id:5,type:'invoice',icon:'🧾',bg:'#EBF4FF',title:'فاتورة جديدة بانتظار موافقتك',body:'INV-2026-1038 من Saudi Pharma Co. بمبلغ 96,400 ر.س — استحقاق 10 يوليو 2026.',time:'منذ 3 ساعات',tag:'فاتورة',tagColor:'#EBF4FF',tagText:'#0066CC',unread:true,url:'invoices.html'},
+  {id:6,type:'rfq',icon:'💰',bg:'#E3FCEF',title:'3 عروض جديدة على طلبياتك',body:'وصلت عروض جديدة على: RFQ-24569 (×2) و RFQ-24558 (×1) — راجعها الآن.',time:'منذ 4 ساعات',tag:'عروض أسعار',tagColor:'#E3FCEF',tagText:'#00875A',unread:true,url:'rfq.html'},
+  {id:7,type:'system',icon:'🛡️',bg:'#FFF4E5',title:'تجديد ترخيص SFDA قريباً',body:'ترخيص التجميل الطبي SA-CS-2024-0231 ينتهي خلال 90 يوماً — 10 يناير 2026.',time:'أمس',tag:'SFDA',tagColor:'#FFF4E5',tagText:'#FF8B00',unread:false,url:'settings.html'},
+  {id:8,type:'order',icon:'✅',bg:'#E3FCEF',title:'تم تحرير Escrow — ORD-8771',body:'تم تحرير 142,000 ر.س لصيدليات النهدي بعد تأكيد الاستلام ورفع الفاتورة.',time:'أمس',tag:'ORD-8771',tagColor:'#E3FCEF',tagText:'#00875A',unread:false,url:'orders.html'},
+  {id:9,type:'system',icon:'📊',bg:'#EBF4FF',title:'تقرير الأسبوع جاهز',body:'ملخص أسبوع 1-7 يوليو: 12 طلبية مكتملة · توفير 22% · 8 عروض مقبولة.',time:'منذ يومين',tag:'تقرير',tagColor:'#EBF4FF',tagText:'#0066CC',unread:false,url:'analytics.html'},
+  {id:10,type:'alert',icon:'🚨',bg:'#FFEBE6',title:'نزاع مفتوح يحتاج ردك',body:'DSP-001 · صيدلية الشفاء فتحت نزاعاً على عجز في الكمية — يرجى الرد خلال 48 ساعة.',time:'منذ يومين',tag:'نزاع',tagColor:'#FFEBE6',tagText:'#DE350B',unread:false,url:'orders.html'},
+];
+
+const types=[
+  {key:'all',label:'الكل',count:allNotifs.length},
+  {key:'rfq',label:'طلبيات',count:allNotifs.filter(n=>n.type==='rfq').length},
+  {key:'order',label:'طلبات',count:allNotifs.filter(n=>n.type==='order').length},
+  {key:'escrow',label:'Escrow',count:allNotifs.filter(n=>n.type==='escrow').length},
+  {key:'invoice',label:'فواتير',count:allNotifs.filter(n=>n.type==='invoice').length},
+  {key:'alert',label:'تنبيهات',count:allNotifs.filter(n=>n.type==='alert').length},
+  {key:'system',label:'النظام',count:allNotifs.filter(n=>n.type==='system').length},
+];
+
+let activeFilter='all';
+let notifs=[...allNotifs];
+
+function renderFilters(){
+  document.getElementById('filterRow').innerHTML=types.map(t=>`
+    <div class="fchip ${activeFilter===t.key?'on':''}" onclick="setFilter('${t.key}')">
+      ${t.label} <span class="fchip-count">${t.count}</span>
+    </div>`).join('');
+}
+
+function renderNotifs(){
+  const filtered=activeFilter==='all'?notifs:notifs.filter(n=>n.type===activeFilter);
+  if(!filtered.length){
+    document.getElementById('notifContainer').innerHTML=`<div class="empty"><div class="empty-ic">🔔</div><div style="font-size:14px;font-weight:700;margin-bottom:6px">لا توجد إشعارات</div><div style="font-size:12px">ستظهر إشعاراتك هنا</div></div>`;
+    return;
+  }
+  // Group by time
+  const today=filtered.filter(n=>n.time.includes('دقيقة')||n.time.includes('ساعة'));
+  const yesterday=filtered.filter(n=>n.time==='أمس');
+  const older=filtered.filter(n=>n.time.includes('يومين'));
+  let html='';
+  if(today.length){html+=`<div class="notif-group"><div class="ng-title">اليوم</div>${today.map(renderNotif).join('')}</div>`;}
+  if(yesterday.length){html+=`<div class="notif-group"><div class="ng-title">أمس</div>${yesterday.map(renderNotif).join('')}</div>`;}
+  if(older.length){html+=`<div class="notif-group"><div class="ng-title">سابقاً</div>${older.map(renderNotif).join('')}</div>`;}
+  document.getElementById('notifContainer').innerHTML=html;
+  updateUnread();
+}
+
+function renderNotif(n){
+  return`<div class="ni ${n.unread?'unread':''}" onclick="openNotif(${n.id})">
+    <div class="ni-icon" style="background:${n.bg}">${n.icon}</div>
+    <div class="ni-content">
+      <div class="ni-title">${n.title}</div>
+      <div class="ni-sub">${n.body}</div>
+      <div class="ni-meta">
+        <span class="ni-tag" style="background:${n.tagColor};color:${n.tagText}">${n.tag}</span>
+        <span class="ni-time">${n.time}</span>
+      </div>
+    </div>
+    <div class="ni-actions">
+      ${n.unread?`<button class="btn bo bxs" onclick="event.stopPropagation();markRead(${n.id})">✓ قراءة</button>`:''}
+      <button class="btn bo bxs" onclick="event.stopPropagation();deleteNotif(${n.id})">🗑️</button>
+    </div>
+  </div>`;
+}
+
+function openNotif(id){
+  const n=notifs.find(x=>x.id===id);
+  if(!n)return;
+  n.unread=false;
+  if(n.url) window.location.href=n.url;
+  else{renderNotifs();renderFilters();}
+}
+function markRead(id){
+  const n=notifs.find(x=>x.id===id);if(n)n.unread=false;
+  renderNotifs();renderFilters();toast('✓ تم تحديده كمقروء');
+}
+function deleteNotif(id){
+  notifs=notifs.filter(x=>x.id!==id);
+  renderNotifs();renderFilters();toast('🗑️ تم حذف الإشعار');
+}
+function markAllRead(){notifs.forEach(n=>n.unread=false);renderNotifs();renderFilters();toast('✓ تم قراءة جميع الإشعارات');}
+function clearAll(){notifs=[];renderNotifs();renderFilters();toast('🗑️ تم حذف جميع الإشعارات');}
+function setFilter(f){activeFilter=f;renderFilters();renderNotifs();}
+function updateUnread(){
+  const u=notifs.filter(n=>n.unread).length;
+  document.getElementById('unreadCount').textContent=u?u+' إشعارات غير مقروءة':'جميع الإشعارات مقروءة';
+}
+
+renderFilters();
+renderNotifs();
+</script>
+</body>
+</html>

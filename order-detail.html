@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — تفاصيل الطلب</title>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.41.0/dist/apexcharts.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0066CC;--blue-d:#004D99;--blue-l:#EBF4FF;--blue-m:#CCE0F5;--green:#00875A;--green-l:#E3FCEF;--amber:#FF8B00;--amber-l:#FFF4E5;--red:#DE350B;--red-l:#FFEBE6;--purple:#6554C0;--purple-l:#EAE6FF;--teal:#00A878;--teal-l:#E6F7F3;--ink:#0A1628;--ink2:#3D4E6B;--ink3:#7A8BA8;--bg:#F0F2F5;--w:#fff;--s2:#F7F8FA;--s3:#EEF0F4;--brd:#D8DCE6;--brd-l:#EAEDF3;--sh:0 1px 3px rgba(10,22,40,.08),0 1px 2px rgba(10,22,40,.06);--sh-md:0 4px 6px rgba(10,22,40,.07);--sh-lg:0 10px 15px rgba(10,22,40,.07);--r:10px;--rl:14px;--rx:20px;--rf:9999px;--sw:240px;--th:60px;--font:'IBM Plex Sans Arabic',system-ui,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--font);border:none}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:99px}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(--sw);background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:200;transition:transform .3s}
+.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.06);gap:10px;flex-shrink:0}
+.sb-logo{width:32px;height:32px;background:var(--blue);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-name{font-size:16px;font-weight:700;color:#fff}.sb-tag{font-size:9px;color:rgba(255,255,255,.3);margin-top:1px}
+.ng{padding:20px 10px 4px}.ngl{font-size:9px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
+.na{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);color:rgba(255,255,255,.5);font-size:12.5px;font-weight:500;margin-bottom:1px;transition:all .12s;position:relative}
+.na:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}.na.on{background:rgba(0,102,204,.25);color:#fff;font-weight:600}
+.na.on::before{content:'';position:absolute;right:0;top:20%;bottom:20%;width:3px;background:var(--blue);border-radius:0 99px 99px 0}
+.nico{width:15px;height:15px;flex-shrink:0;opacity:.7}.na.on .nico{opacity:1}
+.nb{margin-right:auto;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;min-width:18px;text-align:center}.nb.am{background:var(--amber)}
+.sb-ft{margin-top:auto;padding:12px 10px;border-top:1px solid rgba(255,255,255,.06)}
+.urow{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r);cursor:pointer}.urow:hover{background:rgba(255,255,255,.06)}
+.uav{width:34px;height:34px;border-radius:var(--r);background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.uname{font-size:12px;font-weight:600;color:#fff}.urole{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:var(--th);background:var(--w);border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 24px;gap:10px;flex-shrink:0;box-shadow:0 1px 2px rgba(10,22,40,.05)}
+.tb-back{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;padding:6px 10px;border-radius:var(--r);transition:all .12s;background:none;border:none}
+.tb-back:hover{background:var(--s2);color:var(--blue)}
+.tb-title{font-size:15px;font-weight:700;color:var(--ink)}.tb-sub{font-size:11px;color:var(--ink3);margin-top:1px}.sp{flex:1}
+.ham{display:none;width:36px;height:36px;border-radius:var(--r);background:var(--s2);border:1px solid var(--brd);align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:12px;font-weight:600;transition:all .12s;white-space:nowrap;border:none;font-family:var(--font)}
+.bb{background:var(--blue);color:#fff}.bb:hover{background:var(--blue-d);box-shadow:var(--sh-md)}.bg_{background:var(--green);color:#fff}.br_{background:var(--red);color:#fff}
+.bo{background:transparent;border:1px solid var(--brd);color:var(--ink2)}.bo:hover{background:var(--s2)}
+.bsm{padding:5px 11px;font-size:11px}.bxs{padding:3px 9px;font-size:10px}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+/* STATUS BANNER */
+.status-banner{border-radius:var(--rl);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.status-banner.transit{background:linear-gradient(135deg,#EBF4FF,#E6F7F3);border:1px solid var(--blue-m)}
+.status-banner.delivered{background:var(--green-l);border:1px solid #6EE7B7}
+.status-banner.pending{background:var(--amber-l);border:1px solid #FCD34D}
+.sb-icon{font-size:28px;flex-shrink:0}
+.sb-title{font-size:16px;font-weight:800;color:var(--ink)}
+.sb-sub{font-size:12px;color:var(--ink2);margin-top:3px}
+/* STEPPER */
+.stepper{display:flex;align-items:center;background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);padding:20px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;top:16px;right:-50%;width:100%;height:2px;background:var(--brd-l);z-index:0}
+.step:not(:last-child).done::after{background:var(--green)}
+.step:not(:last-child).active::after{background:linear-gradient(to left,var(--brd-l),var(--blue))}
+.step-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--brd);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:13px;z-index:1;flex-shrink:0;transition:all .3s}
+.step.done .step-dot{background:var(--green);border-color:var(--green);color:#fff}
+.step.active .step-dot{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--blue-l)}
+.step-lbl{font-size:10px;color:var(--ink3);margin-top:6px;text-align:center;white-space:nowrap;font-weight:500}
+.step.done .step-lbl{color:var(--green);font-weight:600}
+.step.active .step-lbl{color:var(--blue);font-weight:700}
+.step-time{font-size:9px;color:var(--ink3);margin-top:2px;text-align:center}
+/* LAYOUT */
+.ga{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mb16{margin-bottom:16px}
+.card{background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh)}
+.ch{padding:14px 18px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ct{font-size:13px;font-weight:700;color:var(--ink)}.cs{font-size:11px;color:var(--ink3);margin-top:1px}.cb{padding:16px 18px}
+.cf{padding:12px 18px;border-top:1px solid var(--brd-l);background:var(--s2);border-radius:0 0 var(--rl) var(--rl)}
+/* TABLE */
+.tw{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:var(--s2);color:var(--ink2);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:9px 12px;text-align:right;border-bottom:1px solid var(--brd-l);white-space:nowrap}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--brd-l);color:var(--ink2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tp{font-weight:600;color:var(--ink)}.tm{font-size:10px;color:var(--blue);direction:ltr;display:inline-block;font-family:monospace}
+/* ESCROW */
+.escrow-box{background:linear-gradient(135deg,var(--blue-l),var(--teal-l));border:1px solid var(--blue-m);border-radius:var(--rl);padding:16px;margin-bottom:12px}
+.er{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid rgba(0,102,204,.1)}
+.er:last-child{border-bottom:none;font-size:14px;font-weight:800;padding-top:10px}
+.el{color:var(--ink2)}.ev{font-weight:700;color:var(--ink)}
+/* TIMELINE */
+.tl{position:relative;padding-right:18px}
+.tl::before{content:'';position:absolute;right:5px;top:0;bottom:0;width:2px;background:var(--brd-l)}
+.tl-item{position:relative;padding-right:22px;margin-bottom:14px}
+.tl-dot{position:absolute;right:-14px;top:3px;width:12px;height:12px;border-radius:50%;border:2px solid var(--brd);background:var(--w)}
+.tl-dot.done{background:var(--green);border-color:var(--green)}
+.tl-dot.active{background:var(--blue);border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
+.tl-title{font-size:12px;font-weight:600;color:var(--ink)}.tl-sub{font-size:10px;color:var(--ink3);margin-top:2px;line-height:1.5}.tl-time{font-size:10px;color:var(--ink3);margin-top:2px}
+/* MODAL */
+.mov{position:fixed;inset:0;background:rgba(10,22,40,.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.mov.on{display:flex}
+.modal{background:var(--w);border-radius:var(--rx);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,.2)}
+.mh{padding:18px 20px 14px;border-bottom:1px solid var(--brd-l);display:flex;align-items:flex-start;gap:12px}
+.mic{width:38px;height:38px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.mtitle{font-size:15px;font-weight:800;color:var(--ink)}.msub{font-size:11px;color:var(--ink3);margin-top:2px}
+.mcl{width:28px;height:28px;border-radius:6px;background:var(--s2);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink3);cursor:pointer;margin-right:auto;transition:all .12s}
+.mcl:hover{background:var(--s3);color:var(--ink)}
+.mbody{padding:18px 20px}.mfoot{padding:12px 20px;border-top:1px solid var(--brd-l);display:flex;gap:8px;justify-content:flex-end;background:var(--s2);border-radius:0 0 var(--rx) var(--rx)}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.fl{font-size:11px;font-weight:700;color:var(--ink)}
+.fc{border:1px solid var(--brd);border-radius:var(--r);padding:8px 11px;font-size:12px;color:var(--ink);background:var(--s2);outline:none;font-family:var(--font);width:100%;transition:all .12s}
+.fc:focus{border-color:var(--blue);background:var(--w);box-shadow:0 0 0 3px var(--blue-l)}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:12px;font-weight:600;box-shadow:var(--sh-lg);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+.mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:var(--ink);border-top:1px solid rgba(255,255,255,.06);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
+.mni{display:flex;justify-content:space-around}
+.mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:var(--r);text-decoration:none;transition:all .12s}
+.mna.on{background:rgba(0,102,204,.2)}.mnic{font-size:19px;line-height:1}.mnlbl{font-size:9px;font-weight:600;color:rgba(255,255,255,.4)}.mna.on .mnlbl{color:#60A5FA}
+.mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190;display:none}.mob-ov.on{display:block}
+@media(max-width:1100px){.ga{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;right:0;bottom:0;transform:translateX(100%);transition:transform .3s;z-index:500}
+  .sidebar.on{transform:translateX(0)}.main{width:100%}.content{padding:14px;padding-bottom:72px}.topbar{padding:0 10px}
+  .mob-nav{display:block}.ham{display:flex}.g2{grid-template-columns:1fr}
+  .stepper{padding:16px 10px;overflow-x:auto}.step-lbl{font-size:8px}
+  .modal{max-width:100%;border-radius:var(--rx) var(--rx) 0 0}.mov{align-items:flex-end;padding:0}
+}
+
+/* ── DARK MODE ── */
+body.dark{
+  --blue:#4D9FFF;--blue-d:#3388EE;--blue-l:rgba(77,159,255,.12);--blue-m:rgba(77,159,255,.25);
+  --green:#34D399;--green-l:rgba(52,211,153,.12);
+  --amber:#FBBF24;--amber-l:rgba(251,191,36,.12);
+  --red:#F87171;--red-l:rgba(248,113,113,.12);
+  --purple:#A78BFA;--purple-l:rgba(167,139,250,.12);
+  --teal:#2DD4BF;--teal-l:rgba(45,212,191,.12);
+  --ink:#F1F5F9;--ink2:#94A3B8;--ink3:#64748B;
+  --bg:#0F172A;--w:#1E293B;--s2:#162032;--s3:#1E293B;
+  --brd:#2D3F55;--brd-l:#253347;
+  --sh:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  --sh-md:0 4px 12px rgba(0,0,0,.4);--sh-lg:0 10px 30px rgba(0,0,0,.5);
+}
+body.dark .sidebar{background:#0A1628;border-left:1px solid #1E293B}
+body.dark .sb-brand{border-bottom-color:rgba(255,255,255,.04)}
+body.dark .topbar{background:#1E293B;border-bottom-color:#253347}
+body.dark .rfq-hero,body.dark .stepper{background:#1E293B;border-color:#253347}
+body.dark .card{background:#1E293B;border-color:#253347}
+body.dark .ch{border-bottom-color:#253347}
+body.dark .cf{background:#162032;border-top-color:#253347}
+body.dark .tbl th{background:#162032}
+body.dark .tbl td{border-bottom-color:#253347}
+body.dark .tbl tbody tr:hover td{background:#253347}
+body.dark .stat{background:#1E293B;border-color:#253347}
+body.dark .fc{background:#162032;border-color:#2D3F55;color:#F1F5F9}
+body.dark .fc:focus{background:#1E293B;border-color:var(--blue)}
+body.dark .role-tabs,.dark .ptabs{background:#162032;border-color:#2D3F55}
+body.dark .role-tab.on,.dark .pt.on{background:#1E293B}
+body.dark .modal{background:#1E293B}
+body.dark .mh{border-bottom-color:#253347}
+body.dark .mfoot{background:#162032;border-top-color:#253347}
+body.dark .qcard{background:#1E293B;border-color:#253347}
+body.dark .qcard.best{background:rgba(52,211,153,.08);border-color:#34D399}
+body.dark .escrow-box{background:linear-gradient(135deg,rgba(77,159,255,.1),rgba(45,212,191,.08));border-color:rgba(77,159,255,.2)}
+body.dark .demo-hint{background:rgba(77,159,255,.1);border-color:rgba(77,159,255,.2)}
+body.dark .status-banner.transit{background:linear-gradient(135deg,rgba(77,159,255,.1),rgba(45,212,191,.08));border-color:rgba(77,159,255,.25)}
+body.dark .status-banner.delivered{background:rgba(52,211,153,.1);border-color:#34D399}
+body.dark .hero{background:linear-gradient(135deg,#060D1A 0%,#0D1F3C 100%)}
+body.dark .hkpi{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
+body.dark .set-nav{background:#1E293B;border-color:#253347}
+body.dark .sn-item{border-bottom-color:#253347;color:#94A3B8}
+body.dark .sn-item.on{background:rgba(77,159,255,.12);color:var(--blue)}
+body.dark .set-panel{background:#1E293B;border-color:#253347}
+body.dark .map-ph{background:linear-gradient(135deg,rgba(77,159,255,.08),rgba(45,212,191,.06))}
+body.dark .tabs{border-bottom-color:#253347}
+body.dark .tab{color:#64748B}
+body.dark .tab.on{color:var(--blue);border-bottom-color:var(--blue)}
+body.dark .fbar .fsel{background:#1E293B;border-color:#2D3F55;color:#94A3B8}
+body.dark .apexcharts-canvas{filter:brightness(.9)}
+body.dark .left{background:#060D1A}
+body.dark .right{background:#0F172A}
+body.dark .form-wrap .form-title{color:#F1F5F9}
+body.dark .form-wrap .form-sub{color:#64748B}
+body.dark .btn-demo{background:transparent;border-color:#2D3F55;color:#94A3B8}
+body.dark .btn-demo:hover{border-color:var(--blue);color:var(--blue)}
+body.dark .check-lbl{color:#94A3B8}
+body.dark .client-chip{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.06)}
+body.dark .uchip{background:#162032;border-color:#2D3F55}
+body.dark #toast{background:#334155}
+body.dark .ib{background:#1E293B;border-color:#2D3F55;color:#94A3B8}
+body.dark .ib:hover{background:#253347}
+body.dark .mob-nav{background:#0A1628}
+body.dark .sav{background:rgba(52,211,153,.08);border-color:#34D399}
+body.dark .savp{color:#34D399}
+body.dark .savl{color:#34D399}
+body.dark .irfq{background:#1E293B;border-color:#253347}
+body.dark .esc{background:#1E293B;border-color:#253347}
+body.dark .appr{background:#1E293B;border-color:#253347}
+body.dark .appr.urg{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.3)}
+body.dark .tw{border-color:#253347}
+body.dark .hkpi-val{color:#F1F5F9}
+
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sb">
+  <div class="sb-brand">
+    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2Z" fill="rgba(255,255,255,.12)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><div class="sb-name">ميدفلو</div><div class="sb-tag">Medical Procurement</div></div>
+  </div>
+  <div class="ng"><div class="ngl">الرئيسية</div>
+    <a href="dashboard.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>لوحة التحكم</a>
+  </div>
+  <div class="ng"><div class="ngl">المشتريات</div>
+    <a href="rfq.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 7h10M2 10h8M2 13h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>سوق الطلبيات — RFQ<span class="nb">23</span></a>
+    <a href="orders.html" class="na on"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M1 3h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3Z" stroke="currentColor" stroke-width="1.2"/><path d="M1 3l2-2h10l2 2" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>أوامر الشراء</a>
+    <a href="invoices.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2"/></svg>الفواتير<span class="nb am">5</span></a>
+    <a href="delivery.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M1 10h10V4H1v6ZM11 6l3 2v2h-3V6Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>تتبع الشحنات</a>
+  </div>
+  <div class="ng"><div class="ngl">الشبكة</div>
+    <a href="supplier.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الموردون</a>
+    <a href="buyer.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="6" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.2"/></svg>المشترون</a>
+  </div>
+  <div class="ng"><div class="ngl">النظام</div>
+    <a href="analytics.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 12l3-4 3 2 3-5 3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>التحليلات</a>
+    <a href="settings.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الإعدادات</a>
+  </div>
+  <div class="sb-ft"><div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مدير المستودع · مكة</div></div></div></div>
+</aside>
+<div class="mob-ov" id="mo" onclick="cSB()"></div>
+
+<div class="main">
+  <header class="topbar">
+    <button class="ham" onclick="oSB()">☰</button>
+    <button class="tb-back" onclick="window.location.href='orders.html'">← أوامر الشراء</button>
+    <div style="width:1px;height:20px;background:var(--brd-l)"></div>
+    <div><div class="tb-title">PO-89238 — أموكسيسيلين 500mg</div><div class="tb-sub">مستودع الداوا الطبي · 1,455,000 ﷼</div></div>
+    <div class="sp"></div>
+<!-- DARK MODE TOGGLE -->
+<button id="darkBtn" onclick="toggleDark()" title="تبديل الوضع" style="width:36px;height:36px;border:1px solid var(--brd);border-radius:var(--r);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .12s;color:var(--ink2);flex-shrink:0" class="ib">
+  <span id="darkIco">🌙</span>
+</button>
+    <button class="btn bo bsm" onclick="window.open('invoices.html')">📄 الفاتورة</button>
+    <button class="btn bo bsm" onclick="openDisputeM()">🚩 نزاع</button>
+    <button class="btn bg_ bsm" onclick="openConfirmM()">✅ تأكيد الاستلام</button>
+  </header>
+
+  <div class="content">
+
+    <!-- STATUS BANNER -->
+    <div class="status-banner transit mb16">
+      <span class="sb-icon">🚚</span>
+      <div style="flex:1">
+        <div class="sb-title">في الطريق — الوصول المتوقع: 6 يوليو 08:00 ص</div>
+        <div class="sb-sub">الشاحنة SHQ-1234 · أرامكس · 980 كم متبقي · آخر موقع: طريق الرياض-مكة</div>
+      </div>
+      <button class="btn bo bsm" onclick="window.location.href='delivery.html'">📍 تتبع مباشر</button>
+    </div>
+
+    <!-- STEPPER -->
+    <div class="stepper mb16">
+      <div class="step done">
+        <div class="step-dot">✓</div>
+        <div class="step-lbl">تأكيد الطلب</div>
+        <div class="step-time">5 يوليو 09:14</div>
+      </div>
+      <div class="step done">
+        <div class="step-dot">✓</div>
+        <div class="step-lbl">Escrow نشط</div>
+        <div class="step-time">5 يوليو 09:30</div>
+      </div>
+      <div class="step done">
+        <div class="step-dot">✓</div>
+        <div class="step-lbl">التجهيز</div>
+        <div class="step-time">5 يوليو 11:30</div>
+      </div>
+      <div class="step active">
+        <div class="step-dot">🚚</div>
+        <div class="step-lbl">في الطريق</div>
+        <div class="step-time">الآن</div>
+      </div>
+      <div class="step">
+        <div class="step-dot">📦</div>
+        <div class="step-lbl">الاستلام</div>
+        <div class="step-time">6 يوليو (متوقع)</div>
+      </div>
+      <div class="step">
+        <div class="step-dot">🔓</div>
+        <div class="step-lbl">تحرير Escrow</div>
+        <div class="step-time">بعد التأكيد</div>
+      </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="ga">
+
+      <!-- LEFT -->
+      <div>
+        <!-- Order Items -->
+        <div class="card mb16">
+          <div class="ch">
+            <div><div class="ct">بنود الطلب</div><div class="cs">5 بنود · جميعها مرخصة SFDA</div></div>
+            <button class="btn bo bxs" onclick="toast('جارٍ تنزيل قائمة البنود...')">📤 تصدير</button>
+          </div>
+          <div class="tw">
+            <table class="tbl" id="itemsTable"></table>
+          </div>
+          <div class="cf">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--ink3)">المجموع قبل الضريبة</span><span style="font-weight:700">1,265,217 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--ink3)">ضريبة القيمة المضافة (15%)</span><span style="font-weight:700">189,783 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800"><span>الإجمالي</span><span style="color:var(--green)">1,455,000 ﷼</span></div>
+          </div>
+        </div>
+
+        <!-- Delivery Map -->
+        <div class="card mb16">
+          <div class="ch">
+            <div><div class="ct">🗺️ تتبع الشحنة</div><div class="cs">SHP-4421 · أرامكس</div></div>
+            <a href="delivery.html" class="btn bb bxs">تتبع مباشر</a>
+          </div>
+          <div style="padding:14px">
+            <div style="background:linear-gradient(135deg,var(--blue-l),var(--teal-l));border-radius:var(--rl);height:140px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;position:relative;overflow:hidden;border:1px solid var(--blue-m)">
+              <div style="font-size:28px;opacity:.4">🗺️</div>
+              <div style="font-size:12px;color:var(--ink2);font-weight:600">الرياض → مكة المكرمة</div>
+              <div style="font-size:10px;color:var(--ink3)">980 كم · ETA 6 يوليو 08:00 ص</div>
+              <div style="position:absolute;top:50%;left:30%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid #fff;box-shadow:0 0 0 4px rgba(0,135,90,.2)"></div>
+              <div style="position:absolute;top:35%;left:70%;transform:translate(-50%,-50%);font-size:16px">🏁</div>
+              <div style="position:absolute;top:35%;left:30%;transform:translate(-50%,-50%);font-size:14px">🚚</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;font-size:11px">
+              <div style="text-align:center"><div style="color:var(--ink3)">المسافة المتبقية</div><div style="font-weight:700">980 كم</div></div>
+              <div style="text-align:center"><div style="color:var(--ink3)">الوقت المتبقي</div><div style="font-weight:700;color:var(--blue)">~14 ساعة</div></div>
+              <div style="text-align:center"><div style="color:var(--ink3)">آخر تحديث</div><div style="font-weight:700">منذ 8 د</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Timeline -->
+        <div class="card">
+          <div class="ch"><div class="ct">سجل النشاط الكامل</div></div>
+          <div class="cb">
+            <div class="tl" id="actTL"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <!-- Escrow Status -->
+        <div class="escrow-box">
+          <div style="font-size:12px;font-weight:800;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:6px">🔒 حالة Escrow</div>
+          <div style="background:rgba(255,255,255,.6);border-radius:var(--r);padding:10px;margin-bottom:12px;text-align:center">
+            <div style="font-size:10px;color:var(--ink3);margin-bottom:3px">المبلغ المحجوز</div>
+            <div style="font-size:24px;font-weight:900;color:var(--blue)">1,455,000 ﷼</div>
+            <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:3px">● محجوز وآمن</div>
+          </div>
+          <div class="er"><span class="el">المورد</span><span class="ev">مستودع الداوا الطبي</span></div>
+          <div class="er"><span class="el">تاريخ الحجز</span><span class="ev">5 يوليو 2026</span></div>
+          <div class="er"><span class="el">عمولة ميدفلو (2%)</span><span class="ev" style="color:var(--blue)">29,100 ﷼</span></div>
+          <div class="er"><span>يُحرَّر عند</span><span style="color:var(--green);font-weight:700">تأكيد الاستلام + GLN</span></div>
+        </div>
+
+        <!-- Parties -->
+        <div class="card mb16">
+          <div class="ch"><div class="ct">أطراف الصفقة</div></div>
+          <div class="cb">
+            <div style="display:flex;align-items:center;gap:10px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--brd-l)">
+              <div style="width:36px;height:36px;border-radius:var(--r);background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--blue)">DA</div>
+              <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--ink)">مستودع الداوا الطبي</div><div style="font-size:10px;color:var(--ink3)">مورد · الرياض · ⭐ 4.9</div></div>
+              <button class="btn bo bxs" onclick="toast('فتح ملف المورد...')">عرض</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:var(--r);background:var(--purple-l);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--purple)">مف</div>
+              <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--ink)">مستشفى الملك فيصل</div><div style="font-size:10px;color:var(--ink3)">مشتري · الرياض · موثق SFDA ✓</div></div>
+              <button class="btn bo bxs" onclick="toast('فتح ملف المشتري...')">عرض</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card mb16">
+          <div class="ch"><div class="ct">ملخص الطلب</div></div>
+          <div class="cb">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px">
+              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px">رقم الطلب</div><div style="font-weight:700;direction:ltr;font-family:monospace;color:var(--blue);font-size:11px">PO-89238</div></div>
+              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px">تاريخ الإصدار</div><div style="font-weight:700">5 يوليو 2026</div></div>
+              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px">موعد التسليم</div><div style="font-weight:700;color:var(--green)">6 يوليو 2026</div></div>
+              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px">الكمية الإجمالية</div><div style="font-weight:700">15,000 علبة</div></div>
+              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px">RFQ المصدر</div><div style="font-weight:700;color:var(--blue);direction:ltr;font-size:11px;cursor:pointer" onclick="window.location.href='rfq-detail.html'">RFQ-24581 ↗</div></div>
+              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px">التوفير المحقق</div><div style="font-weight:700;color:var(--green)">22% (405K ﷼)</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirm CTA -->
+        <div style="background:var(--green-l);border:1px solid #6EE7B7;border-radius:var(--rl);padding:16px">
+          <div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:6px">📦 جاهز للاستلام؟</div>
+          <div style="font-size:11px;color:#065F46;line-height:1.7;margin-bottom:12px">بعد استلام البضاعة ورفع الفاتورة، اضغط تأكيد لتحرير Escrow للمورد فوراً</div>
+          <button class="btn bg_" style="width:100%;justify-content:center" onclick="openConfirmM()">✅ تأكيد الاستلام وتحرير Escrow</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="mov" id="confirmM">
+  <div class="modal">
+    <div class="mh"><div class="mic" style="background:#E3FCEF">✅</div><div><div class="mtitle">تأكيد الاستلام وتحرير Escrow</div><div class="msub">PO-89238 · 1,455,000 ﷼</div></div><div class="mcl" onclick="cM('confirmM')">✕</div></div>
+    <div class="mbody">
+      <div style="background:var(--green-l);border:1px solid #6EE7B7;border-radius:var(--r);padding:13px;margin-bottom:14px;font-size:12px;color:#065F46;line-height:1.7">
+        ⚠️ <strong>إجراء لا رجعة فيه.</strong> بالتأكيد سيُحرَّر مبلغ <strong>1,455,000 ﷼</strong> لمستودع الداوا الطبي.
+      </div>
+      <div class="fg"><label class="fl">رفع فاتورة GLN (إلزامي)</label><input class="fc" type="file" accept=".pdf,.jpg,.png" style="padding:7px"></div>
+      <div class="fg"><label class="fl">حالة البضاعة المستلمة</label><select class="fc"><option>مطابقة للطلب بالكامل ✓</option><option>مطابقة جزئياً</option><option>يوجد عجز</option></select></div>
+      <div class="fg"><label class="fl">ملاحظات (اختياري)</label><textarea class="fc" rows="2" placeholder="أي ملاحظات على الاستلام..."></textarea></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn br_ bo" onclick="cM('confirmM');openDisputeM()">🚩 رفع نزاع</button>
+      <div style="flex:1"></div>
+      <button class="btn bo" onclick="cM('confirmM')">إلغاء</button>
+      <button class="btn bg_" onclick="confirmDelivery()">✅ تأكيد وتحرير Escrow</button>
+    </div>
+  </div>
+</div>
+
+<!-- DISPUTE MODAL -->
+<div class="mov" id="disputeM">
+  <div class="modal">
+    <div class="mh"><div class="mic" style="background:var(--red-l)">🚩</div><div><div class="mtitle">رفع نزاع</div><div class="msub">سيُجمَّد Escrow حتى حل النزاع</div></div><div class="mcl" onclick="cM('disputeM')">✕</div></div>
+    <div class="mbody">
+      <div class="fg"><label class="fl">سبب النزاع</label><select class="fc"><option>عجز في الكمية</option><option>المنتج لا يطابق المواصفات</option><option>منتج منتهي الصلاحية</option><option>تأخر في التسليم</option></select></div>
+      <div class="fg"><label class="fl">وصف المشكلة بالتفصيل</label><textarea class="fc" rows="3" placeholder="اشرح المشكلة بالتفصيل..."></textarea></div>
+      <div class="fg"><label class="fl">دليل (صور أو مستندات)</label><input class="fc" type="file" accept=".pdf,.jpg,.png" style="padding:7px" multiple></div>
+      <div style="background:var(--amber-l);border:1px solid #FCD34D;border-radius:var(--r);padding:12px;font-size:11px;color:var(--ink2);line-height:1.7">⚠️ مدة المراجعة: <strong>3-5 أيام عمل</strong> — فريق ميدفلو سيتواصل معك خلال 24 ساعة</div>
+    </div>
+    <div class="mfoot"><button class="btn bo" onclick="cM('disputeM')">إلغاء</button><button class="btn br_" onclick="submitDispute()">🚩 رفع النزاع رسمياً</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<nav class="mob-nav">
+  <div class="mni">
+    <a href="dashboard.html" class="mna"><span class="mnic">📊</span><span class="mnlbl">الرئيسية</span></a>
+    <a href="rfq.html" class="mna"><span class="mnic">📋</span><span class="mnlbl">RFQs</span></a>
+    <a href="orders.html" class="mna on"><span class="mnic">📦</span><span class="mnlbl">الطلبات</span></a>
+    <a href="supplier.html" class="mna"><span class="mnic">🏭</span><span class="mnlbl">موردون</span></a>
+    <a href="analytics.html" class="mna"><span class="mnic">📈</span><span class="mnlbl">تحليلات</span></a>
+  </div>
+</nav>
+
+<script>
+(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login.html';})();
+function oSB(){document.getElementById('sb').classList.add('on');document.getElementById('mo').classList.add('on');document.body.style.overflow='hidden';}
+function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');document.body.style.overflow='';}
+function cM(id){document.getElementById(id).classList.remove('on');}
+function openConfirmM(){document.getElementById('confirmM').classList.add('on');}
+function openDisputeM(){document.getElementById('disputeM').classList.add('on');}
+function confirmDelivery(){cM('confirmM');toast('✅ تأكيد الاستلام — جارٍ تحرير Escrow! ');setTimeout(()=>window.location.href='orders.html',2000);}
+function submitDispute(){cM('disputeM');toast('🚩 تم رفع النزاع — ستتلقى رداً خلال 24 ساعة');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3500);}
+
+// ORDER ITEMS
+const items=[
+  {name:'أموكسيسيلين 500mg كبسول',sfda:'SA-2024-0123456',qty:'8,000 علبة',unit:'97.00',total:'776,000'},
+  {name:'أموكسيسيلين 500mg أقراص',sfda:'SA-2024-0123457',qty:'4,000 علبة',unit:'92.00',total:'368,000'},
+  {name:'أموكسيسيلين 250mg كبسول (أطفال)',sfda:'SA-2024-0123458',qty:'2,000 علبة',unit:'54.00',total:'108,000'},
+  {name:'تعبئة إضافية 10×10',sfda:'SA-2024-0456789',qty:'500 كرتون',unit:'26.43',total:'13,217'},
+];
+document.getElementById('itemsTable').innerHTML=`
+<thead><tr><th>المنتج</th><th>رقم SFDA</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead>
+<tbody>${items.map(i=>`<tr>
+  <td class="tp">${i.name}</td>
+  <td><span class="tm">${i.sfda}</span></td>
+  <td style="font-weight:600">${i.qty}</td>
+  <td style="font-weight:700">${i.unit} ﷼</td>
+  <td style="font-weight:700;color:var(--ink)">${i.total} ﷼</td>
+</tr>`).join('')}</tbody>`;
+
+// TIMELINE
+const events=[
+  {dot:'done',title:'تأكيد الطلب وإصدار PO',sub:'وافق جهاد اللهيبي على الطلب',time:'5 يوليو 09:14'},
+  {dot:'done',title:'تفعيل Escrow',sub:'تم حجز 1,455,000 ﷼ في حساب ميدفلو الآمن',time:'5 يوليو 09:30'},
+  {dot:'done',title:'قبول المورد للطلب',sub:'مستودع الداوا الطبي قبل الطلب وبدأ التجهيز',time:'5 يوليو 10:15'},
+  {dot:'done',title:'اكتمال التجهيز',sub:'15,000 وحدة جُهّزت وعُبّئت · تحقق SFDA مكتمل',time:'5 يوليو 11:30'},
+  {dot:'done',title:'مغادرة المستودع',sub:'تسليم للشاحنة SHQ-1234 · أرامكس',time:'5 يوليو 14:00'},
+  {dot:'active',title:'في الطريق إلى الوجهة',sub:'الرياض → مكة المكرمة · 980 كم متبقي',time:'الآن'},
+  {dot:'',title:'الاستلام المتوقع',sub:'مستشفى الملك فيصل · مكة المكرمة',time:'6 يوليو 08:00 (متوقع)'},
+  {dot:'',title:'تأكيد الاستلام + تحرير Escrow',sub:'ينتظر تأكيد المشتري ورفع فاتورة GLN',time:'بعد الاستلام'},
+];
+document.getElementById('actTL').innerHTML=events.map(e=>`
+<div class="tl-item">
+  <div class="tl-dot ${e.dot}"></div>
+  <div class="tl-title">${e.title}</div>
+  <div class="tl-sub">${e.sub}</div>
+  <div class="tl-time">${e.time}</div>
+</div>`).join('');
+</script>
+
+<script>
+// WORKING SEARCH
+(function(){
+  const searchData = [
+    {type:'rfq',    label:'RFQ-24581 — أموكسيسيلين 500mg',     url:'rfq-detail.html',   icon:'📋'},
+    {type:'rfq',    label:'RFQ-24576 — قفازات جراحية L',         url:'rfq-detail.html',   icon:'📋'},
+    {type:'rfq',    label:'RFQ-24569 — فيتامين D3 1000IU',       url:'rfq-detail.html',   icon:'📋'},
+    {type:'order',  label:'PO-89238 — أموكسيسيلين 500mg',        url:'order-detail.html', icon:'📦'},
+    {type:'order',  label:'PO-89241 — مستلزمات جراحية',          url:'order-detail.html', icon:'📦'},
+    {type:'sup',    label:'مستودع الداوا الطبي — مورد · الرياض', url:'supplier.html',     icon:'🏭'},
+    {type:'sup',    label:'Saudi Pharma Co. — مورد · جدة',       url:'supplier.html',     icon:'🏭'},
+    {type:'sup',    label:'MedSource Arabia — مورد · الدمام',    url:'supplier.html',     icon:'🏭'},
+    {type:'buyer',  label:'مستشفى الملك فيصل — مشتري',          url:'buyer.html',        icon:'🏥'},
+    {type:'buyer',  label:'صيدلية الشفاء — مشتري',              url:'buyer.html',        icon:'🏥'},
+    {type:'inv',    label:'INV-2026-1042 — 630,375 ﷼',           url:'invoices.html',     icon:'🧾'},
+    {type:'page',   label:'التحليلات — Analytics',               url:'analytics.html',    icon:'📈'},
+    {type:'page',   label:'تتبع الشحنات — Delivery',             url:'delivery.html',     icon:'🚚'},
+    {type:'page',   label:'الإعدادات — Settings',                url:'settings.html',     icon:'⚙️'},
+  ];
+
+  // Build search dropdown HTML and inject into page
+  const dropHTML = `<div id="srchDrop" style="position:absolute;top:calc(100% + 6px);right:0;left:0;background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh-lg);z-index:500;display:none;overflow:hidden;max-height:320px;overflow-y:auto">
+    <div id="srchList"></div>
+  </div>`;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchWrap = document.querySelector('.srch');
+    if(!searchWrap) return;
+    searchWrap.style.position = 'relative';
+    searchWrap.insertAdjacentHTML('beforeend', dropHTML);
+    const inp = searchWrap.querySelector('input');
+    const drop = document.getElementById('srchDrop');
+    const list = document.getElementById('srchList');
+
+    inp.addEventListener('input', () => {
+      const q = inp.value.trim().toLowerCase();
+      if(q.length < 1){ drop.style.display='none'; return; }
+      const res = searchData.filter(d =>
+        d.label.toLowerCase().includes(q) ||
+        (q.match(/[a-z]/i) && d.label.toLowerCase().includes(q))
+      ).slice(0,8);
+      if(!res.length){ drop.style.display='none'; return; }
+      list.innerHTML = res.map(r => `
+        <div onclick="window.location.href='${r.url}'" style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--brd-l)" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+          <span style="font-size:18px;flex-shrink:0">${r.icon}</span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink)">${r.label.replace(new RegExp(inp.value,'gi'), m=>'<mark style="background:var(--blue-l);color:var(--blue);border-radius:3px;padding:0 2px">'+m+'</mark>')}</div>
+            <div style="font-size:10px;color:var(--ink3);margin-top:1px">${{rfq:'طلبية',order:'أمر شراء',sup:'مورد',buyer:'مشتري',inv:'فاتورة',page:'صفحة'}[r.type]}</div>
+          </div>
+        </div>`).join('');
+      drop.style.display='block';
+    });
+
+    inp.addEventListener('keydown', e => {
+      if(e.key==='Escape'){ drop.style.display='none'; inp.value=''; }
+      if(e.key==='Enter'){
+        const first = searchData.find(d => d.label.toLowerCase().includes(inp.value.toLowerCase()));
+        if(first) window.location.href=first.url;
+      }
+    });
+
+    document.addEventListener('click', e => {
+      if(!searchWrap.contains(e.target)) drop.style.display='none';
+    });
+  });
+})();
+</script>
+
+<script>
+// LOCALSTORAGE STATE MANAGER
+window.MF = window.MF || {};
+MF.state = {
+  get: (k, def={}) => { try{ return JSON.parse(localStorage.getItem('mf_'+k))||def; }catch(e){ return def; } },
+  set: (k,v) => { try{ localStorage.setItem('mf_'+k, JSON.stringify(v)); }catch(e){} },
+  push: (k,v,max=50) => {
+    const arr = MF.state.get(k,[]);
+    arr.unshift({...v, ts: Date.now()});
+    if(arr.length>max) arr.length=max;
+    MF.state.set(k,arr);
+  }
+};
+
+// Track page visit
+MF.state.push('visits', { page: location.pathname.split('/').pop() });
+
+// Load notification badge count from storage
+document.addEventListener('DOMContentLoaded', () => {
+  // Update notif count from localStorage
+  const notifs = MF.state.get('notifs', []);
+  const unread = notifs.filter(n=>!n.read).length;
+  const badge = document.querySelector('.ndot');
+  if(badge && unread === 0) badge.style.display = 'none';
+
+  // Show welcome toast if just logged in
+  if(sessionStorage.getItem('mf_just_login')){
+    sessionStorage.removeItem('mf_just_login');
+    const user = JSON.parse(localStorage.getItem('mf_user')||'{}');
+    if(user.name && typeof toast === 'function') toast('مرحباً ' + user.name + ' 👋');
+  }
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+// ── EXCEL EXPORT ENGINE ──
+window.MFExport = {
+
+  // Export any table element
+  table: function(tableId, filename) {
+    const tbl = document.getElementById(tableId);
+    if(!tbl){ toast('⚠️ لا توجد بيانات للتصدير'); return; }
+    const wb = XLSX.utils.table_to_book(tbl, {sheet:'Data', raw:false});
+    const ws = wb.Sheets['Data'];
+    // Style header row
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for(let c = range.s.c; c <= range.e.c; c++){
+      const cell = ws[XLSX.utils.encode_cell({r:0,c})];
+      if(cell) cell.s = { font:{bold:true}, fill:{fgColor:{rgb:'0066CC'}}, font:{color:{rgb:'FFFFFF'},bold:true} };
+    }
+    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    toast('✅ تم تصدير ' + filename + '.xlsx');
+  },
+
+  // Export JSON array
+  json: function(data, headers, filename) {
+    if(!data||!data.length){ toast('⚠️ لا توجد بيانات'); return; }
+    const ws = XLSX.utils.json_to_sheet(data, { header: Object.keys(data[0]) });
+    // Add RTL header row
+    if(headers){
+      XLSX.utils.sheet_add_aoa(ws, [Object.values(headers)], {origin:'A1'});
+      XLSX.utils.sheet_add_json(ws, data, {origin:'A2', skipHeader:true});
+    }
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'ميدفلو');
+    ws['!cols'] = Object.keys(data[0]).map(()=>({wch:20}));
+    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    toast('✅ تم تصدير ' + filename + '.xlsx');
+  },
+
+  // Export multiple sheets
+  multi: function(sheets, filename) {
+    const wb = XLSX.utils.book_new();
+    sheets.forEach(s => {
+      const ws = XLSX.utils.json_to_sheet(s.data);
+      ws['!cols'] = Object.keys(s.data[0]||{}).map(()=>({wch:18}));
+      XLSX.utils.book_append_sheet(wb, ws, s.name);
+    });
+    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    toast('✅ تم تصدير ' + filename + ' (' + sheets.length + ' أوراق)');
+  }
+};
+</script>
+</body>
+</html>
