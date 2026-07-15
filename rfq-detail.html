@@ -1,751 +1,793 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ميدفلو — تفاصيل الطلبية</title>
+<title>MedFlow — تفاصيل الطلبية</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.41.0/dist/apexcharts.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
-:root{--blue:#0066CC;--blue-d:#004D99;--blue-l:#EBF4FF;--blue-m:#CCE0F5;--green:#00875A;--green-l:#E3FCEF;--amber:#FF8B00;--amber-l:#FFF4E5;--red:#DE350B;--red-l:#FFEBE6;--purple:#6554C0;--purple-l:#EAE6FF;--teal:#00A878;--teal-l:#E6F7F3;--ink:#0A1628;--ink2:#3D4E6B;--ink3:#7A8BA8;--bg:#F0F2F5;--w:#fff;--s2:#F7F8FA;--s3:#EEF0F4;--brd:#D8DCE6;--brd-l:#EAEDF3;--sh:0 1px 3px rgba(10,22,40,.08),0 1px 2px rgba(10,22,40,.06);--sh-md:0 4px 6px rgba(10,22,40,.07);--sh-lg:0 10px 15px rgba(10,22,40,.07);--r:10px;--rl:14px;--rx:20px;--rf:9999px;--sw:240px;--th:60px;--font:'IBM Plex Sans Arabic',system-ui,sans-serif}
+:root{
+  --blue:#0D9488;--blue-d:#0F766E;--blue-l:#F0FDFA;--blue-m:#CCFBF1;
+  --green:#16A34A;--green-l:#F0FDF4;--green-m:#BBF7D0;
+  --amber:#F59E0B;--amber-l:#FFFBEB;
+  --red:#EF4444;--red-l:#FFF5F5;
+  --purple:#8B5CF6;--purple-l:#F5F3FF;
+  --ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;
+  --bg:#F8FAFC;--w:#fff;--s2:#F8FAFC;--s3:#F1F5F9;
+  --brd:#E2E8F0;--brd-l:#F1F5F9;
+  --sh:0 1px 3px rgba(15,23,42,.06);--sh-md:0 4px 12px rgba(15,23,42,.08);--sh-lg:0 16px 32px rgba(15,23,42,.10);
+  --r:10px;--rl:14px;--rx:18px;--rf:9999px;--sw:220px;--th:52px;
+  --font:'Cairo',system-ui,sans-serif;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--font);border:none}
-::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:99px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--font);border:none}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--brd);border-radius:99px}
 .app{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:var(--sw);background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:200;transition:transform .3s}
-.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.06);gap:10px;flex-shrink:0}
-.sb-logo{width:32px;height:32px;background:var(--blue);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-name{font-size:16px;font-weight:700;color:#fff}.sb-tag{font-size:9px;color:rgba(255,255,255,.3);margin-top:1px}
-.ng{padding:20px 10px 4px}.ngl{font-size:9px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
-.na{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);color:rgba(255,255,255,.5);font-size:12.5px;font-weight:500;margin-bottom:1px;transition:all .12s;position:relative}
-.na:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}.na.on{background:rgba(0,102,204,.25);color:#fff;font-weight:600}
-.na.on::before{content:'';position:absolute;right:0;top:20%;bottom:20%;width:3px;background:var(--blue);border-radius:0 99px 99px 0}
-.nico{width:15px;height:15px;flex-shrink:0;opacity:.7}.na.on .nico{opacity:1}
-.nb{margin-right:auto;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;min-width:18px;text-align:center}.nb.am{background:var(--amber)}
-.sb-ft{margin-top:auto;padding:12px 10px;border-top:1px solid rgba(255,255,255,.06)}
-.urow{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r);cursor:pointer}.urow:hover{background:rgba(255,255,255,.06)}
-.uav{width:34px;height:34px;border-radius:var(--r);background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
-.uname{font-size:12px;font-weight:600;color:#fff}.urole{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.topbar{height:var(--th);background:var(--w);border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 24px;gap:10px;flex-shrink:0;box-shadow:0 1px 2px rgba(10,22,40,.05)}
-.tb-back{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;padding:6px 10px;border-radius:var(--r);transition:all .12s;background:none;border:none}
-.tb-back:hover{background:var(--s2);color:var(--blue)}
-.tb-title{font-size:15px;font-weight:700;color:var(--ink)}.tb-sub{font-size:11px;color:var(--ink3);margin-top:1px}.sp{flex:1}
-.ham{display:none;width:36px;height:36px;border-radius:var(--r);background:var(--s2);border:1px solid var(--brd);align-items:center;justify-content:center;font-size:15px;cursor:pointer}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:12px;font-weight:600;transition:all .12s;white-space:nowrap;border:none;font-family:var(--font)}
-.bb{background:var(--blue);color:#fff}.bb:hover{background:var(--blue-d);box-shadow:var(--sh-md)}.bg_{background:var(--green);color:#fff}.br_{background:var(--red);color:#fff}
-.bo{background:transparent;border:1px solid var(--brd);color:var(--ink2)}.bo:hover{background:var(--s2)}
-.bsm{padding:5px 11px;font-size:11px}.bxs{padding:3px 9px;font-size:10px}
-.live{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--green)}
-.live::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:bl 1.5s ease infinite}
-@keyframes bl{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
-.content{flex:1;overflow-y:auto;padding:20px 24px}
-/* HERO */
-.rfq-hero{background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh);padding:22px 24px;margin-bottom:16px}
-.rh-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap}
-.rh-left{display:flex;align-items:flex-start;gap:14px}
-.rh-icon{width:52px;height:52px;border-radius:var(--rl);background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.rh-id{font-size:11px;color:var(--blue);font-weight:700;direction:ltr;font-family:monospace;margin-bottom:3px}
-.rh-name{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:5px}
-.rh-tags{display:flex;gap:6px;flex-wrap:wrap}
-.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--rf);font-size:10px;font-weight:700}
-.tag-blue{background:var(--blue-l);color:var(--blue)}.tag-green{background:var(--green-l);color:var(--green)}.tag-amber{background:var(--amber-l);color:var(--amber)}.tag-red{background:var(--red-l);color:var(--red)}.tag-purple{background:var(--purple-l);color:var(--purple)}
-.rh-right{text-align:left;flex-shrink:0}
-.rh-timer{font-size:28px;font-weight:900;color:var(--red);font-variant-numeric:tabular-nums;line-height:1}
-.rh-timer-lbl{font-size:10px;color:var(--ink3);margin-top:3px;text-align:center}
-.rh-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding-top:16px;border-top:1px solid var(--brd-l)}
-.rh-meta-item{text-align:center}
-.rh-meta-val{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:2px}
-.rh-meta-lbl{font-size:10px;color:var(--ink3)}
-/* TABS */
-.tabs{display:flex;border-bottom:1px solid var(--brd-l);margin-bottom:16px;gap:2px}
-.tab{padding:9px 16px;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:5px}
-.tab:hover{color:var(--ink2)}.tab.on{color:var(--blue);font-weight:700;border-bottom-color:var(--blue)}
-.tn{background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px}
-/* GRID */
-.ga{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.mb16{margin-bottom:16px}
-.card{background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh)}
-.ch{padding:14px 18px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;justify-content:space-between;gap:8px}
-.ct{font-size:13px;font-weight:700;color:var(--ink)}.cs{font-size:11px;color:var(--ink3);margin-top:1px}.cb{padding:16px 18px}
-/* QUOTE CARDS */
-.qcard{border:1px solid var(--brd-l);border-radius:var(--rl);padding:16px;margin-bottom:10px;transition:all .2s;cursor:pointer;background:var(--w)}
-.qcard:hover{box-shadow:var(--sh-md)}
-.qcard.best{border:2px solid var(--green);background:var(--green-l)}
-.qcard.selected{border:2px solid var(--blue);background:var(--blue-l)}
-.qc-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.qc-av{width:40px;height:40px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
-.qc-name{font-size:13px;font-weight:700;color:var(--ink)}
-.qc-meta{font-size:10px;color:var(--ink3);margin-top:2px}
-.qc-price{font-size:22px;font-weight:900;color:var(--ink);line-height:1}
-.qc-price-unit{font-size:10px;color:var(--ink3);margin-top:2px}
-.qc-saving{font-size:11px;font-weight:700;color:var(--green);margin-right:8px}
-.qc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding-top:12px;border-top:1px solid var(--brd-l);margin-top:8px}
-.qc-field{background:var(--s2);border-radius:var(--r);padding:8px 10px}
-.qc-field-lbl{font-size:9px;color:var(--ink3);font-weight:600;margin-bottom:3px}
-.qc-field-val{font-size:11px;font-weight:700;color:var(--ink)}
-/* COMPARISON TABLE */
-.cmp{width:100%;border-collapse:collapse;font-size:12px}
-.cmp th{background:var(--ink);color:#fff;font-size:10px;font-weight:700;padding:10px 12px;text-align:right;white-space:nowrap}
-.cmp td{padding:10px 12px;border-bottom:1px solid var(--brd-l);vertical-align:middle}
-.cmp tr:last-child td{border-bottom:none}
-.cmp tbody tr:hover td{background:var(--blue-l)}
-.cmp .best-cell{color:var(--green);font-weight:800}
-.cmp .worst-cell{color:var(--red)}
-/* ITEM TABLE */
-.tw{overflow-x:auto}
-.tbl{width:100%;border-collapse:collapse;font-size:12px}
-.tbl th{background:var(--s2);color:var(--ink2);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:9px 12px;text-align:right;border-bottom:1px solid var(--brd-l);white-space:nowrap}
-.tbl td{padding:10px 12px;border-bottom:1px solid var(--brd-l);color:var(--ink2);vertical-align:middle}
-.tbl tr:last-child td{border-bottom:none}
-.tp{font-weight:600;color:var(--ink)}.tm{font-size:10px;color:var(--blue);direction:ltr;display:inline-block;font-family:monospace}
-/* ESCROW BOX */
-.escrow-box{background:linear-gradient(135deg,var(--blue-l),var(--teal-l));border:1px solid var(--blue-m);border-radius:var(--rl);padding:16px}
-.escrow-title{font-size:12px;font-weight:800;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.er{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid rgba(0,102,204,.1)}
-.er:last-child{border-bottom:none;font-size:14px;font-weight:800;padding-top:10px}
-.el{color:var(--ink2)}.ev{font-weight:700;color:var(--ink)}
-/* ACTIVITY */
-.act{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--brd-l)}
-.act:last-child{border-bottom:none}
-.act-ic{width:30px;height:30px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.act-txt{font-size:11px;color:var(--ink2);line-height:1.6;flex:1}
-.act-txt strong{color:var(--ink);font-weight:700}
-.act-time{font-size:10px;color:var(--ink3);white-space:nowrap;flex-shrink:0}
-/* MODAL */
-.mov{position:fixed;inset:0;background:rgba(10,22,40,.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
-.mov.on{display:flex}
-.modal{background:var(--w);border-radius:var(--rx);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,.2)}
-.mh{padding:18px 20px 14px;border-bottom:1px solid var(--brd-l);display:flex;align-items:flex-start;gap:12px}
-.mic{width:38px;height:38px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.mtitle{font-size:15px;font-weight:800;color:var(--ink)}.msub{font-size:11px;color:var(--ink3);margin-top:2px}
-.mcl{width:28px;height:28px;border-radius:6px;background:var(--s2);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink3);cursor:pointer;margin-right:auto;transition:all .12s}
-.mcl:hover{background:var(--s3);color:var(--ink)}
-.mbody{padding:18px 20px}.mfoot{padding:12px 20px;border-top:1px solid var(--brd-l);display:flex;gap:8px;justify-content:flex-end;background:var(--s2);border-radius:0 0 var(--rx) var(--rx)}
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
-.fgr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fl{font-size:11px;font-weight:700;color:var(--ink)}
-.fc{border:1px solid var(--brd);border-radius:var(--r);padding:8px 11px;font-size:12px;color:var(--ink);background:var(--s2);outline:none;font-family:var(--font);width:100%;transition:all .12s}
-.fc:focus{border-color:var(--blue);background:var(--w);box-shadow:0 0 0 3px var(--blue-l)}
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:12px;font-weight:600;box-shadow:var(--sh-lg);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
-#toast.on{opacity:1}
-.mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:var(--ink);border-top:1px solid rgba(255,255,255,.06);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
-.mni{display:flex;justify-content:space-around}
-.mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:var(--r);text-decoration:none;transition:all .12s}
-.mna.on{background:rgba(0,102,204,.2)}.mnic{font-size:19px;line-height:1}.mnlbl{font-size:9px;font-weight:600;color:rgba(255,255,255,.4)}.mna.on .mnlbl{color:#60A5FA}
-.mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190;display:none}.mob-ov.on{display:block}
-@media(max-width:1100px){.ga{grid-template-columns:1fr}.rh-meta{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:768px){
-  .sidebar{position:fixed;top:0;right:0;bottom:0;transform:translateX(100%);transition:transform .3s;z-index:500}
-  .sidebar.on{transform:translateX(0)}.main{width:100%}.content{padding:14px;padding-bottom:72px}.topbar{padding:0 10px}
-  .mob-nav{display:block}.ham{display:flex}.g2{grid-template-columns:1fr}.rh-meta{grid-template-columns:1fr 1fr}
-  .modal{max-width:100%;border-radius:var(--rx) var(--rx) 0 0}.mov{align-items:flex-end;padding:0}
-}
 
-/* ── DARK MODE ── */
+/* SIDEBAR */
+.sidebar{width:var(--sw);background:#fff;border-left:1px solid var(--brd-l);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:200;transition:transform .3s}
+.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--brd-l);gap:10px;flex-shrink:0}
+.sb-logo{width:32px;height:32px;background:linear-gradient(135deg,#2DD4BF,#0D9488);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(13,148,136,.25)}
+.sb-name{font-size:14px;font-weight:800;color:var(--ink)}
+.sb-tag{font-size:8px;color:var(--ink4);margin-top:1px}
+.ng{padding:14px 10px 4px}
+.ngl{font-size:8px;font-weight:700;color:#CBD5E1;letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
+.na{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;color:var(--ink3);font-size:11.5px;font-weight:600;margin-bottom:1px;transition:all .12s}
+.na:hover{background:var(--bg);color:var(--ink2)}
+.na.on{background:var(--blue-l);color:var(--blue)}
+.nico{width:15px;height:15px;flex-shrink:0;opacity:.5}
+.na.on .nico,.na:hover .nico{opacity:1}
+.nb{margin-right:auto;background:var(--blue);color:#fff;font-size:8px;font-weight:700;padding:1px 6px;border-radius:99px}
+.nb.am{background:var(--amber)}.nb.rd{background:var(--red)}
+.sb-ft{margin-top:auto;padding:12px 10px;border-top:1px solid var(--brd-l)}
+.urow{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer}
+.urow:hover{background:var(--bg)}
+.uav{width:30px;height:30px;border-radius:9px;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0}
+.uname{font-size:11px;font-weight:700;color:var(--ink)}
+.urole{font-size:9px;color:var(--ink4);margin-top:1px}
+.lang-pill{display:flex;background:var(--s3);border-radius:99px;padding:2px;gap:1px;margin:0 10px 8px}
+.lp{padding:3px 10px;border-radius:99px;font-size:9px;font-weight:700;color:var(--ink4);cursor:pointer;text-align:center;flex:1;transition:all .15s}
+.lp.on{background:var(--blue);color:#fff}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:var(--th);background:#fff;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 18px;gap:9px;flex-shrink:0}
+.tb-t{font-size:13px;font-weight:800;color:var(--ink)}
+.tb-s{font-size:10px;color:var(--ink4);margin-top:1px}
+.sp{flex:1}
+.ib{width:32px;height:32px;border:1px solid var(--brd);border-radius:var(--r);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink3);cursor:pointer;transition:all .12s;position:relative}
+.ib:hover{background:var(--bg);color:var(--ink)}
+.ndot{position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
+.live{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:var(--green)}
+.live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:bl 1.5s ease infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.4}}
+.ham{display:none;width:32px;height:32px;border-radius:var(--r);background:var(--bg);border:1px solid var(--brd);align-items:center;justify-content:center;color:var(--ink3);cursor:pointer}
+.uchip{display:flex;align-items:center;gap:7px;padding:5px 11px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--rf);cursor:pointer}
+.ucav{width:22px;height:22px;border-radius:50%;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--blue)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:11.5px;font-weight:700;transition:all .12s;white-space:nowrap;border:none;font-family:var(--font)}
+.bb{background:var(--blue);color:#fff}.bb:hover{background:var(--blue-d);box-shadow:0 4px 10px rgba(13,148,136,.2)}
+.bg_{background:var(--green);color:#fff}.bg_:hover{background:#15803D}
+.br_{background:var(--red);color:#fff}
+.bo{background:#fff;border:1px solid var(--brd);color:var(--ink2)}.bo:hover{background:var(--bg)}
+.bsm{padding:5px 11px;font-size:10.5px}
+.bxs{padding:3px 9px;font-size:10px}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:18px 20px;background:var(--bg)}
+
+/* BREADCRUMB */
+.bc{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink4);margin-bottom:14px}
+.bc a{color:var(--blue);font-weight:600}
+.bc a:hover{text-decoration:underline}
+.bc span{color:var(--brd)}
+
+/* HERO CARD */
+.hero{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);padding:20px;margin-bottom:14px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;right:0;left:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--green))}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.hero-ref{font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;direction:ltr;display:block}
+.hero-title{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:5px}
+.hero-sub{font-size:12px;color:var(--ink4)}
+.hero-actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.hero-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.hm{background:var(--bg);border-radius:var(--r);padding:11px 13px;border:1px solid var(--brd-l)}
+.hm-val{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:2px}
+.hm-lbl{font-size:10px;color:var(--ink4)}
+
+/* COUNTDOWN */
+.countdown{display:flex;gap:8px;align-items:center}
+.cd-block{background:var(--ink);color:#fff;border-radius:8px;padding:8px 12px;text-align:center;min-width:50px}
+.cd-val{font-size:20px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.cd-lbl{font-size:8px;color:rgba(255,255,255,.5);margin-top:2px}
+.cd-sep{font-size:20px;font-weight:800;color:var(--ink3)}
+
+/* LAYOUT */
+.lay{display:grid;grid-template-columns:1fr 340px;gap:14px;align-items:start}
+
+/* BADGE */
+.bdg{display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--rf);font-size:10px;font-weight:700;white-space:nowrap}
+.bg2{background:var(--green-l);color:var(--green)}.ba2{background:var(--amber-l);color:var(--amber)}.br2{background:var(--red-l);color:var(--red)}.bb2{background:var(--blue-l);color:var(--blue)}.bp2{background:var(--purple-l);color:var(--purple)}.bx2{background:var(--s3);color:var(--ink3)}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh)}
+.ch{padding:12px 16px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ct{font-size:12px;font-weight:700;color:var(--ink)}
+.cs{font-size:10px;color:var(--ink4);margin-top:1px}
+.cb{padding:14px 16px}
+.cf{padding:11px 16px;border-top:1px solid var(--brd-l);background:var(--bg);border-radius:0 0 var(--rl) var(--rl)}
+
+/* QUOTE CARD */
+.qcard{background:#fff;border:1.5px solid var(--brd-l);border-radius:var(--rl);padding:14px 16px;margin-bottom:10px;transition:all .18s;cursor:pointer;position:relative;overflow:hidden}
+.qcard::before{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:var(--brd)}
+.qcard:hover{box-shadow:var(--sh-md);border-color:var(--blue)}
+.qcard:hover::before{background:var(--blue)}
+.qcard.best{border-color:var(--green);background:linear-gradient(135deg,var(--green-l),#fff)}
+.qcard.best::before{background:var(--green)}
+.qcard-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.qrank{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.qr-g{background:#FEF3C7;color:#B45309}.qr-s{background:var(--s3);color:var(--ink3)}.qr-b{background:#FFEDD5;color:#C2410C}
+.qsup-name{font-size:13px;font-weight:700;color:var(--ink)}
+.qsup-meta{font-size:10px;color:var(--ink4);margin-top:1px}
+.qprice-big{font-size:22px;font-weight:900;color:var(--ink);line-height:1}
+.qsaving{font-size:10px;font-weight:700;color:var(--green);margin-top:2px}
+.qcard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--brd-l)}
+.qi-lbl{font-size:9.5px;color:var(--ink4);margin-bottom:2px}
+.qi-val{font-size:12px;font-weight:700;color:var(--ink)}
+
+/* ESCROW */
+.esc{background:linear-gradient(135deg,var(--blue-l),#EFF6FF);border:1px solid var(--blue-m);border-radius:var(--rl);padding:16px}
+.esc-title{font-size:13px;font-weight:800;color:var(--blue);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.esc-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-bottom:8px}
+.esc-lbl{color:var(--ink3)}
+.esc-val{font-weight:700;color:var(--ink)}
+.esc-total{font-size:18px;font-weight:800;color:var(--blue);border-top:1px dashed var(--blue-m);padding-top:10px;margin-top:4px;display:flex;justify-content:space-between}
+
+/* BUYER INFO */
+.buyer-card{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);padding:16px;margin-bottom:10px;box-shadow:var(--sh)}
+.buyer-av{width:42px;height:42px;border-radius:12px;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--green);flex-shrink:0}
+
+/* SUBMIT QUOTE MODAL */
+.mov{position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.mov.on{display:flex}
+.modal{background:#fff;border-radius:var(--rx);width:100%;max-width:500px;max-height:92vh;overflow-y:auto;box-shadow:var(--sh-lg)}
+.mh{padding:16px 18px 12px;border-bottom:1px solid var(--brd-l);display:flex;align-items:flex-start;gap:11px}
+.mic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mtitle{font-size:14px;font-weight:800;color:var(--ink)}
+.msub{font-size:10.5px;color:var(--ink4);margin-top:2px}
+.mcl{width:26px;height:26px;border-radius:8px;background:var(--bg);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;color:var(--ink4);cursor:pointer;margin-right:auto}
+.mcl:hover{background:var(--s3)}
+.mbody{padding:16px 18px}
+.mfoot{padding:11px 18px;border-top:1px solid var(--brd-l);display:flex;gap:8px;justify-content:flex-end;background:var(--bg);border-radius:0 0 var(--rx) var(--rx)}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fgr{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fl{font-size:10.5px;font-weight:700;color:var(--ink)}
+.fc{border:1px solid var(--brd);border-radius:var(--r);padding:8px 11px;font-size:12px;color:var(--ink);background:var(--bg);outline:none;font-family:var(--font);width:100%;transition:all .12s}
+.fc:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px var(--blue-l)}
+.fc::placeholder{color:var(--ink4)}
+.live-calc{background:var(--green-l);border:1px solid var(--green-m);border-radius:var(--r);padding:12px;font-size:12px;margin-bottom:12px}
+.lc-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.lc-t{color:var(--green);font-weight:800;font-size:15px}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:var(--r);font-size:11.5px;font-weight:700;box-shadow:var(--sh-lg);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+
+/* MOB */
+.mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:#fff;border-top:1px solid var(--brd-l);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
+.mni{display:flex;justify-content:space-around}
+.mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:10px;cursor:pointer;text-decoration:none}
+.mna.on{background:var(--blue-l)}
+.mnic{width:20px;height:20px;color:var(--ink4)}
+.mna.on .mnic{color:var(--blue)}
+.mnlbl{font-size:9px;font-weight:600;color:var(--ink4)}
+.mna.on .mnlbl{color:var(--blue)}
+.mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:190;display:none}
+.mob-ov.on{display:block}
+
+/* DARK */
 body.dark{
-  --blue:#4D9FFF;--blue-d:#3388EE;--blue-l:rgba(77,159,255,.12);--blue-m:rgba(77,159,255,.25);
-  --green:#34D399;--green-l:rgba(52,211,153,.12);
+  --blue:#2DD4BF;--blue-d:#14B8A6;--blue-l:rgba(45,212,191,.12);--blue-m:rgba(45,212,191,.22);
+  --green:#34D399;--green-l:rgba(52,211,153,.12);--green-m:rgba(52,211,153,.25);
   --amber:#FBBF24;--amber-l:rgba(251,191,36,.12);
   --red:#F87171;--red-l:rgba(248,113,113,.12);
-  --purple:#A78BFA;--purple-l:rgba(167,139,250,.12);
-  --teal:#2DD4BF;--teal-l:rgba(45,212,191,.12);
-  --ink:#F1F5F9;--ink2:#94A3B8;--ink3:#64748B;
-  --bg:#0F172A;--w:#1E293B;--s2:#162032;--s3:#1E293B;
+  --ink:#F1F5F9;--ink2:#CBD5E1;--ink3:#94A3B8;--ink4:#64748B;
+  --bg:#0F172A;--w:#1E293B;--s2:#162032;--s3:#253347;
   --brd:#2D3F55;--brd-l:#253347;
-  --sh:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
-  --sh-md:0 4px 12px rgba(0,0,0,.4);--sh-lg:0 10px 30px rgba(0,0,0,.5);
+  --sh:0 1px 3px rgba(0,0,0,.4);--sh-md:0 4px 12px rgba(0,0,0,.4);
 }
-body.dark .sidebar{background:#0A1628;border-left:1px solid #1E293B}
-body.dark .sb-brand{border-bottom-color:rgba(255,255,255,.04)}
-body.dark .topbar{background:#1E293B;border-bottom-color:#253347}
-body.dark .rfq-hero,body.dark .stepper{background:#1E293B;border-color:#253347}
-body.dark .card{background:#1E293B;border-color:#253347}
-body.dark .ch{border-bottom-color:#253347}
-body.dark .cf{background:#162032;border-top-color:#253347}
-body.dark .tbl th{background:#162032}
-body.dark .tbl td{border-bottom-color:#253347}
-body.dark .tbl tbody tr:hover td{background:#253347}
-body.dark .stat{background:#1E293B;border-color:#253347}
-body.dark .fc{background:#162032;border-color:#2D3F55;color:#F1F5F9}
-body.dark .fc:focus{background:#1E293B;border-color:var(--blue)}
-body.dark .role-tabs,.dark .ptabs{background:#162032;border-color:#2D3F55}
-body.dark .role-tab.on,.dark .pt.on{background:#1E293B}
-body.dark .modal{background:#1E293B}
-body.dark .mh{border-bottom-color:#253347}
-body.dark .mfoot{background:#162032;border-top-color:#253347}
+body.dark .sidebar{background:#1E293B;border-left-color:#253347}
+body.dark .sb-brand,.dark .sb-ft{border-color:#253347}
+body.dark .topbar,.dark .card,.dark .modal,.dark .hero,.dark .buyer-card{background:#1E293B;border-color:#253347}
+body.dark .ch,.dark .mh,.dark .mfoot{border-color:#253347}
+body.dark .mfoot{background:#162032}
+body.dark .hm{background:#162032;border-color:#253347}
 body.dark .qcard{background:#1E293B;border-color:#253347}
-body.dark .qcard.best{background:rgba(52,211,153,.08);border-color:#34D399}
-body.dark .escrow-box{background:linear-gradient(135deg,rgba(77,159,255,.1),rgba(45,212,191,.08));border-color:rgba(77,159,255,.2)}
-body.dark .demo-hint{background:rgba(77,159,255,.1);border-color:rgba(77,159,255,.2)}
-body.dark .status-banner.transit{background:linear-gradient(135deg,rgba(77,159,255,.1),rgba(45,212,191,.08));border-color:rgba(77,159,255,.25)}
-body.dark .status-banner.delivered{background:rgba(52,211,153,.1);border-color:#34D399}
-body.dark .hero{background:linear-gradient(135deg,#060D1A 0%,#0D1F3C 100%)}
-body.dark .hkpi{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
-body.dark .set-nav{background:#1E293B;border-color:#253347}
-body.dark .sn-item{border-bottom-color:#253347;color:#94A3B8}
-body.dark .sn-item.on{background:rgba(77,159,255,.12);color:var(--blue)}
-body.dark .set-panel{background:#1E293B;border-color:#253347}
-body.dark .map-ph{background:linear-gradient(135deg,rgba(77,159,255,.08),rgba(45,212,191,.06))}
-body.dark .tabs{border-bottom-color:#253347}
-body.dark .tab{color:#64748B}
-body.dark .tab.on{color:var(--blue);border-bottom-color:var(--blue)}
-body.dark .fbar .fsel{background:#1E293B;border-color:#2D3F55;color:#94A3B8}
-body.dark .apexcharts-canvas{filter:brightness(.9)}
-body.dark .left{background:#060D1A}
-body.dark .right{background:#0F172A}
-body.dark .form-wrap .form-title{color:#F1F5F9}
-body.dark .form-wrap .form-sub{color:#64748B}
-body.dark .btn-demo{background:transparent;border-color:#2D3F55;color:#94A3B8}
-body.dark .btn-demo:hover{border-color:var(--blue);color:var(--blue)}
-body.dark .check-lbl{color:#94A3B8}
-body.dark .client-chip{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.06)}
-body.dark .uchip{background:#162032;border-color:#2D3F55}
-body.dark #toast{background:#334155}
+body.dark .qcard.best{background:rgba(52,211,153,.06)}
+body.dark .qcard-grid{border-top-color:#253347}
+body.dark .esc{background:rgba(45,212,191,.07);border-color:rgba(45,212,191,.2)}
+body.dark .esc-total{border-top-color:rgba(45,212,191,.2)}
+body.dark .fc{background:#162032;border-color:#2D3F55;color:#F1F5F9}
+body.dark .fc:focus{background:#1E293B}
+body.dark .live-calc{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.2)}
 body.dark .ib{background:#1E293B;border-color:#2D3F55;color:#94A3B8}
-body.dark .ib:hover{background:#253347}
-body.dark .mob-nav{background:#0A1628}
-body.dark .sav{background:rgba(52,211,153,.08);border-color:#34D399}
-body.dark .savp{color:#34D399}
-body.dark .savl{color:#34D399}
-body.dark .irfq{background:#1E293B;border-color:#253347}
-body.dark .esc{background:#1E293B;border-color:#253347}
-body.dark .appr{background:#1E293B;border-color:#253347}
-body.dark .appr.urg{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.3)}
-body.dark .tw{border-color:#253347}
-body.dark .hkpi-val{color:#F1F5F9}
+body.dark .uchip{background:#162032;border-color:#2D3F55}
+body.dark .uav{background:rgba(45,212,191,.15);color:#2DD4BF}
+body.dark .mob-nav{background:#1E293B;border-top-color:#253347}
+body.dark #toast{background:#334155}
+body.dark .cd-block{background:#0F172A}
 
+@media(max-width:1100px){.lay{grid-template-columns:1fr}.hero-meta{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;right:0;bottom:0;transform:translateX(100%);z-index:500}
+  .sidebar.on{transform:translateX(0)}
+  .main{width:100%}
+  .content{padding:13px;padding-bottom:72px}
+  .topbar{padding:0 13px}
+  .mob-nav{display:block}
+  .ham{display:flex}
+  .hero-meta{grid-template-columns:repeat(2,1fr)}
+  .fgr{grid-template-columns:1fr}
+}
 </style>
 </head>
+<script>
+(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u){window.location.href='login_v3.html';}})();
+</script>
 <body>
 <div class="app">
+
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sb">
   <div class="sb-brand">
-    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2Z" fill="rgba(255,255,255,.12)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
     <div><div class="sb-name">ميدفلو</div><div class="sb-tag">Medical Procurement</div></div>
   </div>
   <div class="ng"><div class="ngl">الرئيسية</div>
-    <a href="dashboard.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>لوحة التحكم</a>
+    <a href="dashboard_v3.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>لوحة التحكم</a>
+    <a href="analytics.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>التحليلات</a>
   </div>
   <div class="ng"><div class="ngl">المشتريات</div>
-    <a href="rfq.html" class="na on"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 7h10M2 10h8M2 13h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>سوق الطلبيات — RFQ<span class="nb">23</span></a>
-    <a href="orders.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M1 3h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3Z" stroke="currentColor" stroke-width="1.2"/><path d="M1 3l2-2h10l2 2" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>أوامر الشراء</a>
-    <a href="invoices.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2"/></svg>الفواتير<span class="nb am">5</span></a>
-    <a href="delivery.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M1 10h10V4H1v6ZM11 6l3 2v2h-3V6Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="4" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>تتبع الشحنات</a>
+    <a href="rfq.html" class="na on"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>سوق الطلبيات<span class="nb">23</span></a>
+    <a href="orders.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h22v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3Z"/><path d="m8 10 4 4 4-4"/></svg>أوامر الشراء</a>
+    <a href="invoices.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>الفواتير<span class="nb am">5</span></a>
+    <a href="delivery.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>تتبع الشحنات</a>
   </div>
   <div class="ng"><div class="ngl">الشبكة</div>
-    <a href="supplier.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الموردون</a>
-    <a href="buyer.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="6" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.2"/></svg>المشترون</a>
+    <a href="supplier.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>الموردون</a>
+    <a href="buyer-dashboard.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>المشترون</a>
   </div>
   <div class="ng"><div class="ngl">النظام</div>
-    <a href="analytics.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><path d="M2 12l3-4 3 2 3-5 3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>التحليلات</a>
-    <a href="settings.html" class="na"><svg class="nico" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>الإعدادات</a>
+    <a href="messages.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="1" y="2" width="14" height="10" rx="1.5"/><path d="M4 12l-2 3 3-1.5"/></svg>الرسائل<span class="nb rd">3</span></a>
+    <a href="settings.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>الإعدادات</a>
   </div>
-  <div class="sb-ft"><div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مدير المستودع · مكة</div></div></div></div>
+  <div class="sb-ft">
+    <div class="lang-pill"><div class="lp on" id="lpAR" onclick="setLang('ar')">ع</div><div class="lp" id="lpEN" onclick="setLang('en')">EN</div></div>
+    <div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مدير المستودع · مكة</div></div></div>
+  </div>
 </aside>
 <div class="mob-ov" id="mo" onclick="cSB()"></div>
 
 <!-- MAIN -->
 <div class="main">
-  <header class="topbar">
-    <button class="ham" onclick="oSB()">☰</button>
-    <button class="tb-back" onclick="window.location.href='rfq.html'">← سوق الطلبيات</button>
-    <div style="width:1px;height:20px;background:var(--brd-l)"></div>
-    <div><div class="tb-title">RFQ-24581 — أموكسيسيلين 500mg</div><div class="tb-sub">مستشفى الملك فيصل · الرياض</div></div>
-    <div class="sp"></div>
-<!-- DARK MODE TOGGLE -->
-<button id="darkBtn" onclick="toggleDark()" title="تبديل الوضع" style="width:36px;height:36px;border:1px solid var(--brd);border-radius:var(--r);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .12s;color:var(--ink2);flex-shrink:0" class="ib">
-  <span id="darkIco">🌙</span>
-</button>
-    <span class="live">مباشر</span>
-    <button class="btn bo bsm" onclick="toast('جارٍ مشاركة الرابط...')">📤 مشاركة</button>
-    <button class="btn bb bsm" onclick="openQuoteModal()">＋ تقديم عرض</button>
-  </header>
+<header class="topbar">
+  <button class="ham" onclick="oSB()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+  <div><div class="tb-t">تفاصيل الطلبية</div><div class="tb-s" id="lt"></div></div>
+  <div class="sp"></div>
+  <button id="dkBtn" class="ib" onclick="tDk()"><svg id="dkIco" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+  <span class="live">مباشر</span>
+  <button class="ib" onclick="toast('لا إشعارات جديدة')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="ndot"></span></button>
+  <div class="uchip"><div class="ucav">جه</div><span style="font-size:11px;font-weight:700;color:var(--ink)">جهاد</span></div>
+</header>
 
-  <div class="content">
+<div class="content">
 
-    <!-- HERO -->
-    <div class="rfq-hero mb16">
-      <div class="rh-top">
-        <div class="rh-left">
-          <div class="rh-icon">💊</div>
+  <!-- BREADCRUMB -->
+  <div class="bc">
+    <a href="rfq.html" data-ar="سوق الطلبيات" data-en="RFQ Market">سوق الطلبيات</a>
+    <span>›</span>
+    <span>RFQ-24581</span>
+    <span>›</span>
+    <span data-ar="أموكسيسيلين 500mg كبسول" data-en="Amoxicillin 500mg Capsule">أموكسيسيلين 500mg كبسول</span>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <span class="hero-ref">RFQ-24581</span>
+        <div class="hero-title" data-ar="أموكسيسيلين 500mg كبسول" data-en="Amoxicillin 500mg Capsule">أموكسيسيلين 500mg كبسول</div>
+        <div class="hero-sub">
+          <span class="bdg bb2" style="margin-left:6px" data-ar="أدوية" data-en="Medications">أدوية</span>
+          <span class="bdg bg2" style="margin-left:6px" data-ar="SFDA مطلوب" data-en="SFDA Required">SFDA مطلوب</span>
+          <span class="bdg" style="background:var(--blue-l);color:var(--blue)">Escrow</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <!-- countdown -->
+        <div>
+          <div style="font-size:10px;color:var(--ink4);margin-bottom:6px;text-align:center" data-ar="ينتهي خلال" data-en="Ends in">ينتهي خلال</div>
+          <div class="countdown">
+            <div class="cd-block"><div class="cd-val" id="cdH">02</div><div class="cd-lbl" data-ar="ساعة" data-en="hrs">ساعة</div></div>
+            <div class="cd-sep">:</div>
+            <div class="cd-block"><div class="cd-val" id="cdM">48</div><div class="cd-lbl" data-ar="دقيقة" data-en="min">دقيقة</div></div>
+            <div class="cd-sep">:</div>
+            <div class="cd-block"><div class="cd-val" id="cdS">33</div><div class="cd-lbl" data-ar="ثانية" data-en="sec">ثانية</div></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="btn bb" onclick="oM('quoteModal')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span data-ar="تقديم عرض" data-en="Submit Quote">تقديم عرض</span>
+          </button>
+          <button class="btn bo bsm" onclick="window.location='rfq.html'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+            <span data-ar="رجوع" data-en="Back">رجوع</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <div class="hm">
+        <div class="hm-val">15,000</div>
+        <div class="hm-lbl" data-ar="كبسول × 500mg" data-en="Capsules × 500mg">كبسول × 500mg</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">7</div>
+        <div class="hm-lbl" data-ar="عرض مقدم" data-en="Quotes submitted">عرض مقدم</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val" style="color:var(--green)">97.00 ر.س</div>
+        <div class="hm-lbl" data-ar="أفضل سعر حالي" data-en="Best price now">أفضل سعر حالي</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val" style="color:var(--green)">22%</div>
+        <div class="hm-lbl" data-ar="توفير vs السوق" data-en="Savings vs market">توفير vs السوق</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val" data-ar="مكة المكرمة" data-en="Mecca">مكة المكرمة</div>
+        <div class="hm-lbl" data-ar="موقع التسليم" data-en="Delivery location">موقع التسليم</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="lay">
+
+    <!-- LEFT — QUOTES -->
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="ch">
           <div>
-            <div class="rh-id">RFQ-24581</div>
-            <div class="rh-name">أموكسيسيلين 500mg كبسول</div>
-            <div class="rh-tags">
-              <span class="tag tag-blue">💊 أدوية</span>
-              <span class="tag tag-green">✓ SFDA مطلوب</span>
-              <span class="tag tag-amber">⚡ عاجل</span>
-              <span class="tag tag-purple">🔒 Escrow إلزامي</span>
+            <div class="ct" data-ar="عروض الأسعار المستلمة" data-en="Received Quotes">عروض الأسعار المستلمة</div>
+            <div class="cs" data-ar="مرتبة حسب أفضل سعر · تحديث فوري" data-en="Sorted by best price · Live updates">مرتبة حسب أفضل سعر · تحديث فوري</div>
+          </div>
+          <span class="live" style="font-size:9px">Live</span>
+        </div>
+        <div style="padding:12px 14px">
+
+          <!-- Quote 1 — BEST -->
+          <div class="qcard best">
+            <div class="qcard-top">
+              <div class="qrank qr-g">1</div>
+              <div style="flex:1">
+                <div class="qsup-name" data-ar="مستودع الداوا الطبي" data-en="Daawa Medical Warehouse">مستودع الداوا الطبي</div>
+                <div class="qsup-meta">⭐ 4.9 · 342 صفقة · الرياض · <span style="color:var(--green);font-weight:700" data-ar="موثق SFDA" data-en="SFDA Verified">موثق SFDA</span></div>
+              </div>
+              <div style="text-align:left">
+                <div class="qprice-big">97.00 <span style="font-size:12px;font-weight:500;color:var(--ink4)">ر.س</span></div>
+                <div class="qsaving" data-ar="↓ 22% أفضل من السوق" data-en="↓ 22% below market">↓ 22% أفضل من السوق</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px;margin-right:10px">
+                <button class="btn bg_ bxs" onclick="acceptQuote('مستودع الداوا')" data-ar="قبول العرض" data-en="Accept">قبول العرض</button>
+                <button class="btn bo bxs" data-ar="تفاصيل" data-en="Details">تفاصيل</button>
+              </div>
+            </div>
+            <div class="qcard-grid">
+              <div><div class="qi-lbl" data-ar="الكمية المتوفرة" data-en="Available Qty">الكمية المتوفرة</div><div class="qi-val">17,000 كبسول</div></div>
+              <div><div class="qi-lbl" data-ar="وقت التسليم" data-en="Delivery">وقت التسليم</div><div class="qi-val" data-ar="18 ساعة" data-en="18 hours">18 ساعة</div></div>
+              <div><div class="qi-lbl" data-ar="دفعة SFDA" data-en="SFDA Batch">دفعة SFDA</div><div class="qi-val" style="direction:ltr;font-size:11px">LOT-2024-AB</div></div>
             </div>
           </div>
-        </div>
-        <div class="rh-right">
-          <div class="rh-timer" id="countdown">02:47:33</div>
-          <div class="rh-timer-lbl">المهلة المتبقية</div>
-          <div style="display:flex;gap:6px;margin-top:10px">
-            <button class="btn bo bxs" onclick="toast('تم حفظ الطلبية في المفضلة')">☆ حفظ</button>
-            <button class="btn bb bxs" onclick="openQuoteModal()">تقديم عرض ←</button>
-          </div>
-        </div>
-      </div>
-      <div class="rh-meta">
-        <div class="rh-meta-item">
-          <div class="rh-meta-val">15,000</div>
-          <div class="rh-meta-lbl">الكمية المطلوبة (علبة)</div>
-        </div>
-        <div class="rh-meta-item">
-          <div class="rh-meta-val" style="color:var(--amber)">7</div>
-          <div class="rh-meta-lbl">عروض مستلمة</div>
-        </div>
-        <div class="rh-meta-item">
-          <div class="rh-meta-val" style="color:var(--green)">97.00 ﷼</div>
-          <div class="rh-meta-lbl">أفضل سعر الآن</div>
-        </div>
-        <div class="rh-meta-item">
-          <div class="rh-meta-val">15 يوليو</div>
-          <div class="rh-meta-lbl">موعد التسليم</div>
-        </div>
-        <div class="rh-meta-item">
-          <div class="rh-meta-val" style="color:var(--blue)">120 ﷼</div>
-          <div class="rh-meta-lbl">الحد الأقصى للسعر</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- TABS -->
-    <div class="tabs">
-      <div class="tab on" onclick="sTab('quotes',this)">العروض المستلمة <span class="tn">7</span></div>
-      <div class="tab" onclick="sTab('compare',this)">مقارنة تفصيلية</div>
-      <div class="tab" onclick="sTab('details',this)">تفاصيل الطلبية</div>
-      <div class="tab" onclick="sTab('activity',this)">سجل النشاط</div>
-    </div>
-
-    <!-- QUOTES TAB -->
-    <div id="tQuotes">
-      <div class="ga">
-        <div>
-          <div style="font-size:12px;color:var(--ink3);margin-bottom:12px">مرتبة حسب أفضل سعر · المتوسط السوقي: <strong style="color:var(--amber)">124.00 ﷼</strong></div>
-          <div id="quoteCards"></div>
-        </div>
-        <div>
-          <!-- Escrow Preview -->
-          <div class="escrow-box mb16">
-            <div class="escrow-title">🔒 Escrow عند قبول أفضل عرض</div>
-            <div class="er"><span class="el">سعر الوحدة</span><span class="ev">97.00 ﷼</span></div>
-            <div class="er"><span class="el">الكمية</span><span class="ev">15,000 علبة</span></div>
-            <div class="er"><span class="el">الإجمالي قبل الضريبة</span><span class="ev">1,455,000 ﷼</span></div>
-            <div class="er"><span class="el">ضريبة القيمة المضافة (15%)</span><span class="ev">218,250 ﷼</span></div>
-            <div class="er"><span class="el">عمولة ميدفلو (2%)</span><span class="ev" style="color:var(--blue)">29,100 ﷼</span></div>
-            <div class="er"><span>إجمالي Escrow</span><span style="color:var(--green)">1,702,350 ﷼</span></div>
-          </div>
-          <!-- Savings -->
-          <div class="card mb16">
-            <div class="ch"><div class="ct">التوفير المحتمل</div></div>
-            <div class="cb" style="text-align:center">
-              <div style="font-size:52px;font-weight:900;color:var(--green);line-height:1;margin-bottom:6px">22%</div>
-              <div style="font-size:13px;font-weight:700;color:var(--green)">توفير محتمل</div>
-              <div style="font-size:11px;color:var(--ink3);margin-top:4px">مقارنةً بمتوسط السوق 124 ﷼</div>
-              <div style="font-size:14px;font-weight:800;color:var(--ink);margin-top:12px;padding-top:12px;border-top:1px solid var(--brd-l)">405,000 ﷼ <span style="font-size:11px;font-weight:500;color:var(--green)">توفير فعلي</span></div>
+          <!-- Quote 2 -->
+          <div class="qcard">
+            <div class="qcard-top">
+              <div class="qrank qr-s">2</div>
+              <div style="flex:1">
+                <div class="qsup-name">Saudi Pharma Co.</div>
+                <div class="qsup-meta">⭐ 4.7 · 218 صفقة · جدة</div>
+              </div>
+              <div style="text-align:left">
+                <div class="qprice-big">99.50 <span style="font-size:12px;font-weight:500;color:var(--ink4)">ر.س</span></div>
+                <div style="font-size:10px;font-weight:700;color:var(--red)">+2.6%</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px;margin-right:10px">
+                <button class="btn bb bxs" onclick="acceptQuote('Saudi Pharma')" data-ar="قبول" data-en="Accept">قبول</button>
+                <button class="btn bo bxs" data-ar="تفاصيل" data-en="Details">تفاصيل</button>
+              </div>
+            </div>
+            <div class="qcard-grid">
+              <div><div class="qi-lbl" data-ar="الكمية" data-en="Qty">الكمية</div><div class="qi-val">15,000</div></div>
+              <div><div class="qi-lbl" data-ar="التسليم" data-en="Delivery">التسليم</div><div class="qi-val" data-ar="24 ساعة" data-en="24 hours">24 ساعة</div></div>
+              <div><div class="qi-lbl">SFDA</div><div class="qi-val" style="direction:ltr;font-size:11px">LOT-2024-KJ</div></div>
             </div>
           </div>
-          <!-- Price Chart -->
-          <div class="card">
-            <div class="ch"><div class="ct">توزيع الأسعار</div></div>
-            <div class="cb"><div id="priceChart"></div></div>
+
+          <!-- Quote 3 -->
+          <div class="qcard">
+            <div class="qcard-top">
+              <div class="qrank qr-b">3</div>
+              <div style="flex:1">
+                <div class="qsup-name">MedSource Arabia</div>
+                <div class="qsup-meta">⭐ 4.5 · 89 صفقة · الدمام</div>
+              </div>
+              <div style="text-align:left">
+                <div class="qprice-big">102.00 <span style="font-size:12px;font-weight:500;color:var(--ink4)">ر.س</span></div>
+                <div style="font-size:10px;font-weight:700;color:var(--red)">+5.2%</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px;margin-right:10px">
+                <button class="btn bb bxs" onclick="acceptQuote('MedSource')" data-ar="قبول" data-en="Accept">قبول</button>
+                <button class="btn bo bxs" data-ar="تفاصيل" data-en="Details">تفاصيل</button>
+              </div>
+            </div>
+            <div class="qcard-grid">
+              <div><div class="qi-lbl" data-ar="الكمية" data-en="Qty">الكمية</div><div class="qi-val">20,000</div></div>
+              <div><div class="qi-lbl" data-ar="التسليم" data-en="Delivery">التسليم</div><div class="qi-val" data-ar="36 ساعة" data-en="36 hours">36 ساعة</div></div>
+              <div><div class="qi-lbl">SFDA</div><div class="qi-val" style="direction:ltr;font-size:11px">LOT-2024-MS</div></div>
+            </div>
+          </div>
+
+          <!-- More quotes collapsed -->
+          <div style="text-align:center;padding:10px">
+            <button class="btn bo bsm" onclick="toast('4 عروض إضافية')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+              <span data-ar="عرض 4 عروض إضافية" data-en="Show 4 more quotes">عرض 4 عروض إضافية</span>
+            </button>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- COMPARE TAB -->
-    <div id="tCompare" style="display:none">
+      <!-- Price chart -->
       <div class="card">
         <div class="ch">
-          <div><div class="ct">مقارنة تفصيلية للعروض</div><div class="cs">الخلية الخضراء = الأفضل في كل معيار</div></div>
-          <button class="btn bg_ bsm" onclick="openAcceptModal()">✓ قبول الأفضل</button>
+          <div class="ct" data-ar="مقارنة الأسعار" data-en="Price Comparison">مقارنة الأسعار</div>
+          <div class="cs" data-ar="السعر الحالي vs متوسط السوق" data-en="Current price vs market avg">السعر الحالي vs متوسط السوق</div>
         </div>
-        <div style="padding:16px;overflow-x:auto">
-          <table class="cmp" id="cmpTable"></table>
-        </div>
+        <div class="cb"><div id="priceChart"></div></div>
       </div>
     </div>
 
-    <!-- DETAILS TAB -->
-    <div id="tDetails" style="display:none">
-      <div class="g2 mb16">
-        <div class="card">
-          <div class="ch"><div class="ct">بيانات الطلبية</div></div>
-          <div class="cb">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px">
-              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px;margin-bottom:3px">رقم الطلبية</div><div style="font-weight:700;direction:ltr;font-family:monospace;color:var(--blue)">RFQ-24581</div></div>
-              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px;margin-bottom:3px">الفئة</div><div style="font-weight:700">أدوية</div></div>
-              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px;margin-bottom:3px">الكمية المطلوبة</div><div style="font-weight:700">15,000 علبة</div></div>
-              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px;margin-bottom:3px">الوحدة</div><div style="font-weight:700">علبة (20 كبسولة)</div></div>
-              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px;margin-bottom:3px">الحد الأقصى للسعر</div><div style="font-weight:700;color:var(--amber)">120.00 ﷼/علبة</div></div>
-              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px;margin-bottom:3px">موعد التسليم</div><div style="font-weight:700">15 يوليو 2026</div></div>
-              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px;margin-bottom:3px">تاريخ الإنشاء</div><div style="font-weight:700">5 يوليو 2026</div></div>
-              <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px"><div style="color:var(--ink3);font-size:10px;margin-bottom:3px">مهلة العروض</div><div style="font-weight:700;color:var(--red)">6 يوليو 2026</div></div>
+    <!-- RIGHT -->
+    <div>
+
+      <!-- BUYER INFO -->
+      <div class="buyer-card">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px">
+          <div class="buyer-av">مف</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--ink)" data-ar="مستشفى الملك فيصل" data-en="King Faisal Hospital">مستشفى الملك فيصل</div>
+            <div style="font-size:10px;color:var(--ink4)">
+              <span style="color:var(--green);font-weight:700" data-ar="مشتري موثق" data-en="Verified Buyer">مشتري موثق</span> · ⭐ 4.8 · 156 صفقة
             </div>
           </div>
         </div>
-        <div class="card">
-          <div class="ch"><div class="ct">بيانات المشتري</div></div>
-          <div class="cb">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--brd-l)">
-              <div style="width:44px;height:44px;border-radius:var(--r);background:var(--purple-l);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--purple)">مف</div>
-              <div>
-                <div style="font-size:13px;font-weight:700;color:var(--ink)">مستشفى الملك فيصل</div>
-                <div style="font-size:10px;color:var(--ink3)">مستشفى تخصصي · الرياض</div>
-              </div>
-              <span style="margin-right:auto;font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--green-l);color:var(--green)">موثق ✓</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:var(--bg);border-radius:9px;padding:9px 11px">
+            <div style="font-size:9.5px;color:var(--ink4)" data-ar="معدل الدفع" data-en="Payment Rate">معدل الدفع</div>
+            <div style="font-size:13px;font-weight:800;color:var(--green)">100%</div>
+          </div>
+          <div style="background:var(--bg);border-radius:9px;padding:9px 11px">
+            <div style="font-size:9.5px;color:var(--ink4)" data-ar="متوسط الطلب" data-en="Avg Order">متوسط الطلب</div>
+            <div style="font-size:13px;font-weight:800;color:var(--ink)">142K ر.س</div>
+          </div>
+        </div>
+        <button class="btn bo bsm" style="width:100%;margin-top:10px;justify-content:center">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="2" width="14" height="10" rx="1.5"/><path d="M4 12l-2 3 3-1.5"/></svg>
+          <span data-ar="مراسلة المشتري" data-en="Message Buyer">مراسلة المشتري</span>
+        </button>
+      </div>
+
+      <!-- ESCROW CALC -->
+      <div class="esc" style="margin-bottom:10px">
+        <div class="esc-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span data-ar="حساب Escrow" data-en="Escrow Calculator">حساب Escrow</span>
+        </div>
+        <div class="esc-row"><span class="esc-lbl" data-ar="سعر الوحدة" data-en="Unit Price">سعر الوحدة</span><span class="esc-val">97.00 ر.س</span></div>
+        <div class="esc-row"><span class="esc-lbl" data-ar="الكمية" data-en="Quantity">الكمية</span><span class="esc-val">15,000</span></div>
+        <div class="esc-row"><span class="esc-lbl" data-ar="المجموع" data-en="Subtotal">المجموع</span><span class="esc-val">1,455,000 ر.س</span></div>
+        <div class="esc-row"><span class="esc-lbl">VAT 15%</span><span class="esc-val">218,250 ر.س</span></div>
+        <div class="esc-row"><span class="esc-lbl" data-ar="عمولة ميدفلو 2%" data-en="MedFlow fee 2%">عمولة ميدفلو 2%</span><span class="esc-val">29,100 ر.س</span></div>
+        <div class="esc-total">
+          <span data-ar="الإجمالي" data-en="Total">الإجمالي</span>
+          <span>1,702,350 ر.س</span>
+        </div>
+      </div>
+
+      <!-- SPECS -->
+      <div class="card" style="margin-bottom:10px">
+        <div class="ch"><div class="ct" data-ar="المواصفات المطلوبة" data-en="Requirements">المواصفات المطلوبة</div></div>
+        <div class="cb">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding-bottom:7px;border-bottom:1px solid var(--brd-l)">
+              <span style="color:var(--ink4)" data-ar="المنتج" data-en="Product">المنتج</span>
+              <span style="font-weight:700" data-ar="أموكسيسيلين 500mg" data-en="Amoxicillin 500mg">أموكسيسيلين 500mg</span>
             </div>
-            <div style="font-size:12px;line-height:1.8;color:var(--ink2)">
-              <div><span style="color:var(--ink3)">ترخيص SFDA:</span> <strong>SA-HO-2024-0089</strong></div>
-              <div><span style="color:var(--ink3)">العنوان:</span> طريق الملك فهد، الرياض</div>
-              <div><span style="color:var(--ink3)">التواصل:</span> procurement@kfh.sa</div>
-              <div><span style="color:var(--ink3)">الطلبات السابقة:</span> 28 طلبية مكتملة</div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding-bottom:7px;border-bottom:1px solid var(--brd-l)">
+              <span style="color:var(--ink4)" data-ar="الشكل الدوائي" data-en="Form">الشكل الدوائي</span>
+              <span style="font-weight:700" data-ar="كبسول" data-en="Capsule">كبسول</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding-bottom:7px;border-bottom:1px solid var(--brd-l)">
+              <span style="color:var(--ink4)" data-ar="الكمية" data-en="Quantity">الكمية</span>
+              <span style="font-weight:700">15,000</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding-bottom:7px;border-bottom:1px solid var(--brd-l)">
+              <span style="color:var(--ink4)">SFDA</span>
+              <span class="bdg bg2" data-ar="مطلوب" data-en="Required">مطلوب</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding-bottom:7px;border-bottom:1px solid var(--brd-l)">
+              <span style="color:var(--ink4)" data-ar="التسليم" data-en="Delivery by">التسليم</span>
+              <span style="font-weight:700">15 يوليو 2026</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px">
+              <span style="color:var(--ink4)" data-ar="طريقة الدفع" data-en="Payment">طريقة الدفع</span>
+              <span class="bdg bb2">Escrow</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="ch"><div class="ct">ملاحظات إضافية</div></div>
-        <div class="cb" style="font-size:13px;color:var(--ink2);line-height:1.8">
-          يُشترط أن تكون المنتجات حاصلة على تسجيل SFDA ساري المفعول. يجب أن لا تقل مدة الصلاحية عن 18 شهراً من تاريخ التسليم. التعبئة بحسب المواصفات السعودية. الفاتورة يجب أن تحتوي على رقم GLN الموثق. يُفضَّل التسليم خلال 24-48 ساعة.
+
+      <!-- ACTIONS -->
+      <button class="btn bb" style="width:100%;justify-content:center;margin-bottom:8px" onclick="oM('quoteModal')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span data-ar="تقديم عرض الآن" data-en="Submit Quote Now">تقديم عرض الآن</span>
+      </button>
+      <button class="btn bo" style="width:100%;justify-content:center" onclick="toast(lang==='ar'?'تمت إضافة الطلبية للمفضلة':'Added to watchlist')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span data-ar="إضافة للمتابعة" data-en="Add to Watchlist">إضافة للمتابعة</span>
+      </button>
+
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<!-- SUBMIT QUOTE MODAL -->
+<div class="mov" id="quoteModal">
+  <div class="modal">
+    <div class="mh">
+      <div class="mic" style="background:var(--green-l)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </div>
+      <div>
+        <div class="mtitle" data-ar="تقديم عرض سعر" data-en="Submit Price Quote">تقديم عرض سعر</div>
+        <div class="msub">RFQ-24581 · أموكسيسيلين 500mg · 15,000 كبسول</div>
+      </div>
+      <div class="mcl" onclick="cM('quoteModal')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></div>
+    </div>
+    <div class="mbody">
+      <!-- Row 1: سعر الوحدة + الكمية المتاحة -->
+      <div class="fgr">
+        <div class="fg">
+          <label class="fl" data-ar="سعر الوحدة (ر.س)" data-en="Unit Price (SAR)">سعر الوحدة (ر.س)</label>
+          <input class="fc" id="qPrice" type="number" placeholder="0.00" step="0.01" min="0" oninput="calcLive()">
+        </div>
+        <div class="fg">
+          <label class="fl" data-ar="الكمية المتاحة" data-en="Available Quantity">الكمية المتاحة</label>
+          <input class="fc" id="qQty" type="number" placeholder="15000" value="15000" min="1" oninput="calcLive()">
         </div>
       </div>
-    </div>
 
-    <!-- ACTIVITY TAB -->
-    <div id="tActivity" style="display:none">
-      <div class="card">
-        <div class="ch"><div class="ct">🕐 سجل النشاط</div><span class="live" style="font-size:10px">مباشر</span></div>
-        <div class="cb" id="activityLog"></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-</div>
-
-<!-- QUOTE MODAL -->
-<div class="mov" id="quoteM">
-  <div class="modal">
-    <div class="mh"><div class="mic" style="background:#E3FCEF">💰</div><div><div class="mtitle">تقديم عرض سعر</div><div class="msub">RFQ-24581 · أموكسيسيلين 500mg — 15,000 علبة</div></div><div class="mcl" onclick="cM('quoteM')">✕</div></div>
-    <div class="mbody">
-      <div style="background:var(--s2);border-radius:var(--r);padding:12px;margin-bottom:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:11px">
-        <div><div style="color:var(--ink3)">الكمية</div><div style="font-weight:700">15,000 علبة</div></div>
-        <div><div style="color:var(--ink3)">الحد الأقصى</div><div style="font-weight:700;color:var(--amber)">120.00 ﷼</div></div>
-        <div><div style="color:var(--ink3)">أفضل عرض حالياً</div><div style="font-weight:700;color:var(--green)">97.00 ﷼</div></div>
-      </div>
-      <div class="fgr"><div class="fg"><label class="fl">سعر الوحدة (﷼)</label><input class="fc" type="number" placeholder="0.00" id="qPrice" oninput="calcQ()"></div><div class="fg"><label class="fl">الكمية المتوفرة</label><input class="fc" type="number" placeholder="15,000" value="15000"></div></div>
-      <div class="fgr"><div class="fg"><label class="fl">مدة التسليم</label><select class="fc"><option>18 ساعة</option><option>24 ساعة</option><option>48 ساعة</option><option>3 أيام</option></select></div><div class="fg"><label class="fl">رقم دفعة SFDA</label><input class="fc" placeholder="LOT-XXXXXX"></div></div>
-      <div class="fg"><label class="fl">ملاحظات وشروط</label><textarea class="fc" rows="2" placeholder="شروط الضمان، خصومات الكمية..."></textarea></div>
-      <div style="background:linear-gradient(135deg,var(--green-l),#D1FAE5);border:1px solid #6EE7B7;border-radius:var(--r);padding:13px">
-        <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px">💰 الإيراد المتوقع</div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(0,135,90,.15)"><span style="color:#065F46">إجمالي الصفقة</span><span id="qTotal" style="font-weight:700">—</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(0,135,90,.15)"><span style="color:#065F46">عمولة ميدفلو (2%)</span><span id="qFee" style="font-weight:700;color:var(--red)">—</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800;padding-top:8px"><span>صافي الإيراد</span><span id="qNet" style="color:var(--green)">—</span></div>
-      </div>
-    </div>
-    <div class="mfoot"><button class="btn bo" onclick="cM('quoteM')">إلغاء</button><button class="btn bb" onclick="submitQ()">📨 إرسال العرض</button></div>
-  </div>
-</div>
-
-<!-- ACCEPT MODAL -->
-<div class="mov" id="acceptM">
-  <div class="modal">
-    <div class="mh"><div class="mic" style="background:#E3FCEF">✅</div><div><div class="mtitle">قبول العرض وتفعيل Escrow</div><div class="msub">مستودع الداوا الطبي · 97.00 ﷼/وحدة</div></div><div class="mcl" onclick="cM('acceptM')">✕</div></div>
-    <div class="mbody">
-      <div style="background:var(--green-l);border:1px solid #6EE7B7;border-radius:var(--r);padding:14px;margin-bottom:16px">
-        <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:10px">✓ أفضل عرض — توفير 22% (405,000 ﷼)</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px">
-          <div><div style="color:#065F46;font-size:10px">سعر الوحدة</div><div style="font-weight:800;font-size:16px;color:var(--green)">97.00 ﷼</div></div>
-          <div><div style="color:#065F46;font-size:10px">إجمالي Escrow</div><div style="font-weight:800;font-size:16px;color:var(--green)">1,702,350 ﷼</div></div>
-          <div><div style="color:#065F46;font-size:10px">التسليم</div><div style="font-weight:700">18 ساعة</div></div>
-          <div><div style="color:#065F46;font-size:10px">تقييم المورد</div><div style="font-weight:700">⭐ 4.9 · 342 طلب</div></div>
+      <!-- Row 2: تاريخ الانتهاء + رقم التشغيلة -->
+      <div class="fgr">
+        <div class="fg">
+          <label class="fl" data-ar="تاريخ انتهاء الصلاحية" data-en="Expiry Date">تاريخ انتهاء الصلاحية</label>
+          <input class="fc" id="qExpiry" type="date" min="2026-01-01">
+        </div>
+        <div class="fg">
+          <label class="fl" data-ar="رقم التشغيلة (Batch No.)" data-en="Batch Number">رقم التشغيلة (Batch No.)</label>
+          <input class="fc" id="qBatch" placeholder="مثال: LOT-2026-A1234">
         </div>
       </div>
-      <div style="background:linear-gradient(135deg,var(--blue-l),var(--teal-l));border:1px solid var(--blue-m);border-radius:var(--r);padding:13px;font-size:11px;color:var(--ink2);line-height:1.7;margin-bottom:14px">
-        🔒 <strong>تفعيل Escrow:</strong> سيُحجز 1,702,350 ﷼ ولن يُحرَّر للمورد إلا بعد تأكيد الاستلام ورفع فاتورة GLN موثقة.
+
+      <!-- Row 3: الخصم + البونص -->
+      <div class="fgr">
+        <div class="fg">
+          <label class="fl" data-ar="الخصم %" data-en="Discount %">
+            الخصم %
+            <span style="font-size:9.5px;font-weight:500;color:var(--ink4)"> (اختياري)</span>
+          </label>
+          <div style="position:relative">
+            <input class="fc" id="qDiscount" type="number" placeholder="0" min="0" max="100" step="0.1" oninput="calcLive()" style="padding-left:28px">
+            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:700;color:var(--ink4)">%</span>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl" data-ar="البونص (وحدات مجانية)" data-en="Bonus (free units)">
+            البونص
+            <span style="font-size:9.5px;font-weight:500;color:var(--ink4)"> (وحدات مجانية)</span>
+          </label>
+          <div style="position:relative">
+            <input class="fc" id="qBonus" type="number" placeholder="0" min="0" oninput="calcLive()" style="padding-left:40px">
+            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--ink4)">وحدة</span>
+          </div>
+        </div>
       </div>
-      <div class="fg"><label class="fl">ملاحظات للمورد (اختياري)</label><textarea class="fc" rows="2" placeholder="تعليمات خاصة للتسليم..."></textarea></div>
+
+      <!-- LIVE CALC -->
+      <div class="live-calc" id="liveCalc" style="display:none">
+        <div style="font-size:10.5px;font-weight:700;color:var(--green);margin-bottom:8px" data-ar="حساب مباشر" data-en="Live Calculation">حساب مباشر</div>
+        <div class="lc-row"><span data-ar="إجمالي الصفقة" data-en="Deal Total">إجمالي الصفقة</span><span id="lcTotal" class="lc-t">—</span></div>
+        <div class="lc-row" style="font-size:11px;color:var(--ink3)"><span data-ar="صافي ستحصل عليه (بعد 2% عمولة)" data-en="Your net (after 2% fee)">صافي ستحصل عليه</span><span id="lcNet">—</span></div>
+        <div class="lc-row" style="font-size:11px;color:var(--green)"><span data-ar="وفّر للمشتري" data-en="Buyer saves">وفّر للمشتري</span><span id="lcSave">—</span></div>
+      </div>
+
+      <div style="background:var(--blue-l);border:1px solid var(--blue-m);border-radius:var(--r);padding:10px 12px;font-size:11px;color:var(--ink2)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="2" stroke-linecap="round" style="display:inline;vertical-align:middle;margin-left:4px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span data-ar="بتقديم العرض أنت توافق على شروط Escrow — ستحصل على أموالك فور تأكيد المشتري للاستلام" data-en="By submitting, you agree to Escrow terms — you'll receive payment upon buyer confirmation">بتقديم العرض أنت توافق على شروط Escrow — ستحصل على أموالك فور تأكيد المشتري للاستلام</span>
+      </div>
     </div>
-    <div class="mfoot"><button class="btn bo" onclick="cM('acceptM')">إلغاء</button><button class="btn bg_" onclick="confirmAccept()">🔒 تأكيد وتفعيل Escrow</button></div>
+    <div class="mfoot">
+      <button class="btn bo" onclick="cM('quoteModal')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+      <button class="btn bg_" onclick="submitQuote()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span data-ar="إرسال العرض" data-en="Send Quote">إرسال العرض</span>
+      </button>
+    </div>
   </div>
 </div>
 
 <div id="toast"></div>
+
 <nav class="mob-nav">
   <div class="mni">
-    <a href="dashboard.html" class="mna"><span class="mnic">📊</span><span class="mnlbl">الرئيسية</span></a>
-    <a href="rfq.html" class="mna on"><span class="mnic">📋</span><span class="mnlbl">RFQs</span></a>
-    <a href="orders.html" class="mna"><span class="mnic">📦</span><span class="mnlbl">الطلبات</span></a>
-    <a href="supplier.html" class="mna"><span class="mnic">🏭</span><span class="mnlbl">موردون</span></a>
-    <a href="analytics.html" class="mna"><span class="mnic">📈</span><span class="mnlbl">تحليلات</span></a>
+    <a href="dashboard_v3.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="mnlbl">الرئيسية</span></a>
+    <a href="rfq.html" class="mna on"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span class="mnlbl">طلبيات</span></a>
+    <a href="orders.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h22v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3Z"/><path d="m8 10 4 4 4-4"/></svg><span class="mnlbl">طلبات</span></a>
+    <a href="supplier.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="mnlbl">موردون</span></a>
+    <a href="analytics.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="mnlbl">تحليلات</span></a>
   </div>
 </nav>
 
 <script>
-(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login.html';})();
-function oSB(){document.getElementById('sb').classList.add('on');document.getElementById('mo').classList.add('on');document.body.style.overflow='hidden';}
-function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');document.body.style.overflow='';}
-function cM(id){document.getElementById(id).classList.remove('on');}
-function openQuoteModal(){document.getElementById('quoteM').classList.add('on');}
-function openAcceptModal(){document.getElementById('acceptM').classList.add('on');}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000);}
-function submitQ(){cM('quoteM');toast('📨 تم إرسال عرض السعر بنجاح!');}
-function confirmAccept(){cM('acceptM');toast('🔒 تم القبول — Escrow نشط! جارٍ التحويل...');setTimeout(()=>window.location.href='orders.html',2000);}
-function sTab(t,el){
-  ['Quotes','Compare','Details','Activity'].forEach(x=>{const e=document.getElementById('t'+x);if(e)e.style.display=t===x.toLowerCase()?'block':'none';});
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));if(el)el.classList.add('on');
+(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u){window.location.href='login_v3.html';}})();
+if(localStorage.getItem('mf_dark')==='1')document.body.classList.add('dark');
+function tDk(){
+  const on=document.body.classList.toggle('dark');
+  localStorage.setItem('mf_dark',on?'1':'0');
+  document.getElementById('dkIco').innerHTML=on
+    ?'<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    :'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
 }
-function calcQ(){
-  const p=parseFloat(document.getElementById('qPrice').value)||0,total=p*15000,fee=total*.02;
-  document.getElementById('qTotal').textContent=total?total.toLocaleString('ar')+' ﷼':'—';
-  document.getElementById('qFee').textContent=fee?fee.toLocaleString('ar')+' ﷼':'—';
-  document.getElementById('qNet').textContent=total?(total-fee).toLocaleString('ar')+' ﷼':'—';
-}
+if(localStorage.getItem('mf_dark')==='1'){const i=document.getElementById('dkIco');if(i)i.innerHTML='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';}
 
-// COUNTDOWN TIMER
-let secs = 2*3600+47*60+33;
-setInterval(()=>{
+let lang=localStorage.getItem('mf_lang')||'ar';
+function setLang(l){
+  lang=l;localStorage.setItem('mf_lang',l);
+  document.documentElement.dataset.lang=l;
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  document.querySelectorAll('[data-ar][data-en]').forEach(el=>el.textContent=l==='ar'?el.dataset.ar:el.dataset.en);
+  document.getElementById('lpAR').classList.toggle('on',l==='ar');
+  document.getElementById('lpEN').classList.toggle('on',l==='en');
+}
+document.documentElement.dataset.lang=lang;
+document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+if(lang==='en')setTimeout(()=>setLang('en'),0);
+
+function oSB(){document.getElementById('sb').classList.add('on');document.getElementById('mo').classList.add('on');}
+function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');}
+function uT(){
+  const d=new Date(),L=lang;
+  const da=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const de=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const ma=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  const me=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const el=document.getElementById('lt');
+  if(el)el.textContent=L==='ar'
+    ?`${da[d.getDay()]} ${d.getDate()} ${ma[d.getMonth()]} · ${d.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})}`
+    :`${de[d.getDay()]} ${me[d.getMonth()]} ${d.getDate()} · ${d.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'})}`;
+}
+uT();setInterval(uT,30000);
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000);}
+function oM(id){document.getElementById(id).classList.add('on');}
+function cM(id){document.getElementById(id).classList.remove('on');}
+
+/* COUNTDOWN */
+let secs=(2*3600)+(48*60)+33;
+function tick(){
   if(secs<=0)return;secs--;
   const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;
-  document.getElementById('countdown').textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-},1000);
+  document.getElementById('cdH').textContent=String(h).padStart(2,'0');
+  document.getElementById('cdM').textContent=String(m).padStart(2,'0');
+  document.getElementById('cdS').textContent=String(s).padStart(2,'0');
+}
+setInterval(tick,1000);
 
-// QUOTES DATA
-const quotes=[
-  {rank:'🥇',name:'مستودع الداوا الطبي',city:'الرياض',rate:4.9,orders:342,price:97,del:'18 ساعة',sfda:'✓',warranty:'12 شهر',color:'#0066CC',best:true},
-  {rank:'🥈',name:'Saudi Pharma Co.',city:'جدة',rate:4.7,orders:218,price:99.5,del:'24 ساعة',sfda:'✓',warranty:'6 أشهر',color:'#00875A',best:false},
-  {rank:'🥉',name:'MedSource Arabia',city:'الدمام',rate:4.5,orders:89,price:102,del:'36 ساعة',sfda:'✓',warranty:'6 أشهر',color:'#6554C0',best:false},
-  {rank:'4',name:'مستودع الشفاء',city:'مكة',rate:4.3,orders:56,price:108,del:'48 ساعة',sfda:'✓',warranty:'3 أشهر',color:'#FF8B00',best:false},
-  {rank:'5',name:'Gulf Medical Trading',city:'الرياض',rate:4.6,orders:134,price:103.5,del:'30 ساعة',sfda:'✓',warranty:'12 شهر',color:'#DE350B',best:false},
-  {rank:'6',name:'الخليج الطبي',city:'جدة',rate:4.1,orders:28,price:112,del:'72 ساعة',sfda:'✓',warranty:'3 أشهر',color:'#7A8BA8',best:false},
-  {rank:'7',name:'نجد للمستلزمات',city:'الرياض',rate:4.4,orders:71,price:106,del:'48 ساعة',sfda:'✓',warranty:'6 أشهر',color:'#00A878',best:false},
-];
+/* LIVE CALC */
+const MARKET=124;
+function calcLive(){
+  const p=parseFloat(document.getElementById('qPrice').value)||0;
+  const q=parseInt(document.getElementById('qQty').value)||0;
+  const disc=parseFloat(document.getElementById('qDiscount').value)||0;
+  const bonus=parseInt(document.getElementById('qBonus').value)||0;
+  if(!p||!q){document.getElementById('liveCalc').style.display='none';return;}
+  document.getElementById('liveCalc').style.display='block';
+  const fmt=n=>n.toLocaleString('ar-SA',{maximumFractionDigits:0})+' ر.س';
+  // السعر بعد الخصم
+  const discPrice=p*(1-disc/100);
+  const total=discPrice*q;
+  const net=total*0.98; // بعد عمولة 2%
+  const save=Math.max(0,(MARKET-discPrice)/MARKET*100);
+  document.getElementById('lcTotal').textContent=fmt(total);
+  document.getElementById('lcNet').textContent=fmt(net);
+  document.getElementById('lcSave').textContent=save.toFixed(1)+'%';
+  // تحديث صف البونص إن وجد
+  let bonusEl=document.getElementById('lcBonus');
+  if(bonus>0){
+    if(!bonusEl){
+      const row=document.createElement('div');
+      row.className='lc-row';row.id='lcBonusRow';
+      row.style.cssText='font-size:11px;color:var(--green)';
+      row.innerHTML=`<span>وحدات مجانية (بونص)</span><span id="lcBonus"></span>`;
+      document.getElementById('lcSave').parentElement.after(row);
+      bonusEl=document.getElementById('lcBonus');
+    }
+    bonusEl.textContent=bonus.toLocaleString()+' وحدة';
+  } else {
+    const r=document.getElementById('lcBonusRow');
+    if(r)r.remove();
+  }
+}
 
-document.getElementById('quoteCards').innerHTML=quotes.map(q=>`
-<div class="qcard ${q.best?'best':''}" onclick="${q.best?'openAcceptModal()':'toast(\'عرض \'+\''+q.name+'\')'}">
-  <div class="qc-top">
-    <div class="qc-av" style="background:${q.color}${q.best?'':'60'}">${q.rank}</div>
-    <div style="flex:1">
-      <div class="qc-name">${q.name}</div>
-      <div class="qc-meta">⭐ ${q.rate} · ${q.orders} طلب · ${q.city}</div>
-    </div>
-    <div style="text-align:left">
-      <div class="qc-price">${q.price} <span style="font-size:11px;font-weight:500;color:var(--ink3)">﷼</span></div>
-      ${q.best?'<div class="qc-saving">✓ أفضل سعر — توفير 22%</div>':'<div style="font-size:10px;color:var(--red);font-weight:600">+'+((q.price-97)/97*100).toFixed(1)+'% أعلى</div>'}
-    </div>
-    ${q.best?'<button class="btn bg_ bxs" onclick="event.stopPropagation();openAcceptModal()">قبول</button>':'<button class="btn bo bxs" onclick="event.stopPropagation();toast(\'عرض تفاصيل\')">عرض</button>'}
-  </div>
-  <div class="qc-grid">
-    <div class="qc-field"><div class="qc-field-lbl">التسليم</div><div class="qc-field-val">${q.del}</div></div>
-    <div class="qc-field"><div class="qc-field-lbl">SFDA</div><div class="qc-field-val" style="color:var(--green)">${q.sfda}</div></div>
-    <div class="qc-field"><div class="qc-field-lbl">الضمان</div><div class="qc-field-val">${q.warranty}</div></div>
-  </div>
-</div>`).join('');
+/* SUBMIT QUOTE */
+function submitQuote(){
+  const p=document.getElementById('qPrice').value;
+  const q=document.getElementById('qQty').value;
+  const expiry=document.getElementById('qExpiry').value;
+  const batch=document.getElementById('qBatch').value;
+  if(!p){toast(lang==='ar'?'أدخل سعر الوحدة':'Enter unit price');return;}
+  if(!q){toast(lang==='ar'?'أدخل الكمية المتاحة':'Enter available quantity');return;}
+  if(!expiry){toast(lang==='ar'?'أدخل تاريخ انتهاء الصلاحية':'Enter expiry date');return;}
+  if(!batch){toast(lang==='ar'?'أدخل رقم التشغيلة':'Enter batch number');return;}
+  const disc=parseFloat(document.getElementById('qDiscount').value)||0;
+  const bonus=parseInt(document.getElementById('qBonus').value)||0;
+  cM('quoteModal');
+  let msg='✓ تم إرسال عرضك — أنت في المركز الأول';
+  if(disc>0)msg+=` · خصم ${disc}%`;
+  if(bonus>0)msg+=` · بونص ${bonus.toLocaleString()} وحدة`;
+  toast(msg);
+}
 
-// COMPARE TABLE
-document.getElementById('cmpTable').innerHTML=`
-<thead><tr style="text-align:right"><th>#</th><th>المورد</th><th>السعر ﷼</th><th>الإجمالي</th><th>التوفير</th><th>التسليم</th><th>التقييم</th><th>SFDA</th><th></th></tr></thead>
-<tbody>${quotes.map((q,i)=>{
-  const saving=((124-q.price)/124*100).toFixed(0);
-  const isBest=i===0;
-  return`<tr>
-    <td style="text-align:center;font-size:14px">${q.rank}</td>
-    <td><div style="font-weight:600;color:var(--ink)">${q.name}</div><div style="font-size:10px;color:var(--ink3)">${q.city}</div></td>
-    <td class="${isBest?'best-cell':i>=3?'worst-cell':''}" style="font-size:15px;font-weight:800">${q.price}</td>
-    <td style="font-weight:700">${(q.price*15000/1000).toFixed(0)}K ﷼</td>
-    <td style="font-weight:700;color:var(--green)">↓ ${saving}%</td>
-    <td>${q.del}</td>
-    <td>⭐ ${q.rate}</td>
-    <td style="color:var(--green);font-weight:700">${q.sfda}</td>
-    <td><button class="btn ${isBest?'bg_':'bo'} bxs" onclick="${isBest?'openAcceptModal()':'toast(\'عرض \'+\''+q.name+'\')'}">${isBest?'✓ قبول':'عرض'}</button></td>
-  </tr>`;
-}).join('')}</tbody>`;
+function acceptQuote(name){
+  if(confirm(`${lang==='ar'?'قبول عرض':'Accept quote from'} ${name}?`)){
+    toast(lang==='ar'?`✓ تم قبول عرض ${name} وإنشاء أمر الشراء`:`✓ Quote from ${name} accepted · PO created`);
+    setTimeout(()=>window.location.href='orders.html',1500);
+  }
+}
 
-// ACTIVITY
-const acts=[
-  {ic:'💰',bg:'#E3FCEF',t:'<strong>عرض سعر جديد</strong> من مستودع الداوا الطبي — 97.00 ﷼/علبة',time:'منذ 8 دقائق'},
-  {ic:'💰',bg:'#E3FCEF',t:'<strong>عرض سعر جديد</strong> من Gulf Medical Trading — 103.50 ﷼',time:'منذ 22 دقيقة'},
-  {ic:'👁',bg:'#EBF4FF',t:'<strong>17 مورد</strong> شاهدوا الطلبية حتى الآن',time:'منذ 35 دقيقة'},
-  {ic:'💰',bg:'#E3FCEF',t:'<strong>عرض سعر جديد</strong> من Saudi Pharma Co. — 99.50 ﷼',time:'منذ 48 دقيقة'},
-  {ic:'📋',bg:'#EBF4FF',t:'<strong>نُشرت الطلبية</strong> وأُخطر 1,458 مورد موثق',time:'منذ ساعة'},
-];
-document.getElementById('activityLog').innerHTML=acts.map(a=>`
-<div class="act"><div class="act-ic" style="background:${a.bg}">${a.ic}</div><div class="act-txt">${a.t}</div><div class="act-time">${a.time}</div></div>`).join('');
-
-// PRICE CHART
+/* CHART */
+const isDark=document.body.classList.contains('dark');
 new ApexCharts(document.getElementById('priceChart'),{
-  chart:{type:'bar',height:180,toolbar:{show:false},fontFamily:'IBM Plex Sans Arabic,sans-serif'},
-  series:[{name:'سعر الوحدة ﷼',data:quotes.map(q=>q.price)}],
-  colors:quotes.map(q=>q.best?'#00875A':'#CCE0F5'),
-  xaxis:{categories:quotes.map(q=>q.name.split(' ')[0]),labels:{style:{fontSize:'9px',colors:'#7A8BA8'}},axisBorder:{show:false},axisTicks:{show:false}},
-  yaxis:{labels:{style:{fontSize:'9px',colors:'#7A8BA8'},formatter:v=>v+'﷼'},min:80},
-  grid:{borderColor:'#EAEDF3',strokeDashArray:3},
-  plotOptions:{bar:{borderRadius:4,columnWidth:'60%'}},
-  dataLabels:{enabled:true,style:{fontSize:'9px',colors:['#fff']},formatter:v=>v},
-  annotations:{yaxis:[{y:124,borderColor:'#FF8B00',strokeDashArray:4,label:{text:'متوسط السوق',style:{fontSize:'9px',color:'#FF8B00',background:'#FFF4E5'}}}]},
+  chart:{type:'bar',height:180,toolbar:{show:false},fontFamily:'Cairo,sans-serif'},
+  series:[{name:lang==='ar'?'السعر':'Price',data:[97,99.5,102,105,108,111,124]}],
+  colors:['#0D9488','#0D9488','#0D9488','#94A3B8','#94A3B8','#94A3B8','#EF4444'],
+  plotOptions:{bar:{borderRadius:6,columnWidth:'60%'}},
+  xaxis:{categories:['داوا','Saudi P','MedSrc','4','5','6','سوق'],labels:{style:{fontSize:'9px',colors:'#94A3B8'}},axisBorder:{show:false},axisTicks:{show:false}},
+  yaxis:{labels:{style:{fontSize:'9px',colors:'#94A3B8'},formatter:v=>v+'﷼'},min:90,max:130},
+  grid:{borderColor:isDark?'#253347':'#F1F5F9',strokeDashArray:3},
+  annotations:{yaxis:[{y:124,borderColor:'#EF4444',label:{text:lang==='ar'?'متوسط السوق':'Market Avg',style:{color:'#EF4444',fontSize:'9px',background:'transparent'}}}]},
+  tooltip:{y:{formatter:v=>v+' ر.س'}},
 }).render();
-</script>
-
-<script>
-// WORKING SEARCH
-(function(){
-  const searchData = [
-    {type:'rfq',    label:'RFQ-24581 — أموكسيسيلين 500mg',     url:'rfq-detail.html',   icon:'📋'},
-    {type:'rfq',    label:'RFQ-24576 — قفازات جراحية L',         url:'rfq-detail.html',   icon:'📋'},
-    {type:'rfq',    label:'RFQ-24569 — فيتامين D3 1000IU',       url:'rfq-detail.html',   icon:'📋'},
-    {type:'order',  label:'PO-89238 — أموكسيسيلين 500mg',        url:'order-detail.html', icon:'📦'},
-    {type:'order',  label:'PO-89241 — مستلزمات جراحية',          url:'order-detail.html', icon:'📦'},
-    {type:'sup',    label:'مستودع الداوا الطبي — مورد · الرياض', url:'supplier.html',     icon:'🏭'},
-    {type:'sup',    label:'Saudi Pharma Co. — مورد · جدة',       url:'supplier.html',     icon:'🏭'},
-    {type:'sup',    label:'MedSource Arabia — مورد · الدمام',    url:'supplier.html',     icon:'🏭'},
-    {type:'buyer',  label:'مستشفى الملك فيصل — مشتري',          url:'buyer.html',        icon:'🏥'},
-    {type:'buyer',  label:'صيدلية الشفاء — مشتري',              url:'buyer.html',        icon:'🏥'},
-    {type:'inv',    label:'INV-2026-1042 — 630,375 ﷼',           url:'invoices.html',     icon:'🧾'},
-    {type:'page',   label:'التحليلات — Analytics',               url:'analytics.html',    icon:'📈'},
-    {type:'page',   label:'تتبع الشحنات — Delivery',             url:'delivery.html',     icon:'🚚'},
-    {type:'page',   label:'الإعدادات — Settings',                url:'settings.html',     icon:'⚙️'},
-  ];
-
-  // Build search dropdown HTML and inject into page
-  const dropHTML = `<div id="srchDrop" style="position:absolute;top:calc(100% + 6px);right:0;left:0;background:var(--w);border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh-lg);z-index:500;display:none;overflow:hidden;max-height:320px;overflow-y:auto">
-    <div id="srchList"></div>
-  </div>`;
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const searchWrap = document.querySelector('.srch');
-    if(!searchWrap) return;
-    searchWrap.style.position = 'relative';
-    searchWrap.insertAdjacentHTML('beforeend', dropHTML);
-    const inp = searchWrap.querySelector('input');
-    const drop = document.getElementById('srchDrop');
-    const list = document.getElementById('srchList');
-
-    inp.addEventListener('input', () => {
-      const q = inp.value.trim().toLowerCase();
-      if(q.length < 1){ drop.style.display='none'; return; }
-      const res = searchData.filter(d =>
-        d.label.toLowerCase().includes(q) ||
-        (q.match(/[a-z]/i) && d.label.toLowerCase().includes(q))
-      ).slice(0,8);
-      if(!res.length){ drop.style.display='none'; return; }
-      list.innerHTML = res.map(r => `
-        <div onclick="window.location.href='${r.url}'" style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--brd-l)" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
-          <span style="font-size:18px;flex-shrink:0">${r.icon}</span>
-          <div>
-            <div style="font-size:12px;font-weight:600;color:var(--ink)">${r.label.replace(new RegExp(inp.value,'gi'), m=>'<mark style="background:var(--blue-l);color:var(--blue);border-radius:3px;padding:0 2px">'+m+'</mark>')}</div>
-            <div style="font-size:10px;color:var(--ink3);margin-top:1px">${{rfq:'طلبية',order:'أمر شراء',sup:'مورد',buyer:'مشتري',inv:'فاتورة',page:'صفحة'}[r.type]}</div>
-          </div>
-        </div>`).join('');
-      drop.style.display='block';
-    });
-
-    inp.addEventListener('keydown', e => {
-      if(e.key==='Escape'){ drop.style.display='none'; inp.value=''; }
-      if(e.key==='Enter'){
-        const first = searchData.find(d => d.label.toLowerCase().includes(inp.value.toLowerCase()));
-        if(first) window.location.href=first.url;
-      }
-    });
-
-    document.addEventListener('click', e => {
-      if(!searchWrap.contains(e.target)) drop.style.display='none';
-    });
-  });
-})();
-</script>
-
-<script>
-// LOCALSTORAGE STATE MANAGER
-window.MF = window.MF || {};
-MF.state = {
-  get: (k, def={}) => { try{ return JSON.parse(localStorage.getItem('mf_'+k))||def; }catch(e){ return def; } },
-  set: (k,v) => { try{ localStorage.setItem('mf_'+k, JSON.stringify(v)); }catch(e){} },
-  push: (k,v,max=50) => {
-    const arr = MF.state.get(k,[]);
-    arr.unshift({...v, ts: Date.now()});
-    if(arr.length>max) arr.length=max;
-    MF.state.set(k,arr);
-  }
-};
-
-// Track page visit
-MF.state.push('visits', { page: location.pathname.split('/').pop() });
-
-// Load notification badge count from storage
-document.addEventListener('DOMContentLoaded', () => {
-  // Update notif count from localStorage
-  const notifs = MF.state.get('notifs', []);
-  const unread = notifs.filter(n=>!n.read).length;
-  const badge = document.querySelector('.ndot');
-  if(badge && unread === 0) badge.style.display = 'none';
-
-  // Show welcome toast if just logged in
-  if(sessionStorage.getItem('mf_just_login')){
-    sessionStorage.removeItem('mf_just_login');
-    const user = JSON.parse(localStorage.getItem('mf_user')||'{}');
-    if(user.name && typeof toast === 'function') toast('مرحباً ' + user.name + ' 👋');
-  }
-});
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script>
-// ── EXCEL EXPORT ENGINE ──
-window.MFExport = {
-
-  // Export any table element
-  table: function(tableId, filename) {
-    const tbl = document.getElementById(tableId);
-    if(!tbl){ toast('⚠️ لا توجد بيانات للتصدير'); return; }
-    const wb = XLSX.utils.table_to_book(tbl, {sheet:'Data', raw:false});
-    const ws = wb.Sheets['Data'];
-    // Style header row
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    for(let c = range.s.c; c <= range.e.c; c++){
-      const cell = ws[XLSX.utils.encode_cell({r:0,c})];
-      if(cell) cell.s = { font:{bold:true}, fill:{fgColor:{rgb:'0066CC'}}, font:{color:{rgb:'FFFFFF'},bold:true} };
-    }
-    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
-    toast('✅ تم تصدير ' + filename + '.xlsx');
-  },
-
-  // Export JSON array
-  json: function(data, headers, filename) {
-    if(!data||!data.length){ toast('⚠️ لا توجد بيانات'); return; }
-    const ws = XLSX.utils.json_to_sheet(data, { header: Object.keys(data[0]) });
-    // Add RTL header row
-    if(headers){
-      XLSX.utils.sheet_add_aoa(ws, [Object.values(headers)], {origin:'A1'});
-      XLSX.utils.sheet_add_json(ws, data, {origin:'A2', skipHeader:true});
-    }
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'ميدفلو');
-    ws['!cols'] = Object.keys(data[0]).map(()=>({wch:20}));
-    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
-    toast('✅ تم تصدير ' + filename + '.xlsx');
-  },
-
-  // Export multiple sheets
-  multi: function(sheets, filename) {
-    const wb = XLSX.utils.book_new();
-    sheets.forEach(s => {
-      const ws = XLSX.utils.json_to_sheet(s.data);
-      ws['!cols'] = Object.keys(s.data[0]||{}).map(()=>({wch:18}));
-      XLSX.utils.book_append_sheet(wb, ws, s.name);
-    });
-    XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
-    toast('✅ تم تصدير ' + filename + ' (' + sheets.length + ' أوراق)');
-  }
-};
 </script>
 </body>
 </html>

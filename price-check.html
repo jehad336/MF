@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>كم تدفع زيادة؟ — تحدي ميدفلو</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0D9488;--teal-d:#0F766E;--teal-l:#F0FDFA;--teal-m:#CCFBF1;--green:#16A34A;--green-l:#F0FDF4;--amber:#F59E0B;--amber-l:#FFFBEB;--red:#EF4444;--red-l:#FEF2F2;--ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;--bg:#F8FAFC;--brd:#E2E8F0;--brd-l:#F1F5F9;--font:'Cairo',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:linear-gradient(160deg,#0F172A,#134E4A);min-height:100vh;padding:20px 14px 40px;color:var(--ink);-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:var(--font);border:none}
+.wrap{max-width:480px;margin:0 auto}
+.brand{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;margin-bottom:14px}
+.blogo{width:28px;height:28px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.hero{text-align:center;color:#fff;margin-bottom:16px}
+.hero h1{font-size:24px;font-weight:900;line-height:1.4}
+.hero p{font-size:12.5px;opacity:.7;margin-top:5px}
+.card{background:#fff;border-radius:18px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.row{display:grid;grid-template-columns:1fr 108px;gap:8px;margin-bottom:9px}
+select,input{border:1.5px solid var(--brd);border-radius:11px;padding:10px 11px;font-size:12.5px;font-family:var(--font);background:var(--bg);outline:none;width:100%;color:var(--ink)}
+select:focus,input:focus{border-color:var(--teal);background:#fff}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:12px;font-size:14px;font-weight:800;margin-top:6px;transition:.12s}
+.bt{background:var(--teal);color:#fff}.bt:hover{background:var(--teal-d)}
+.bwa{background:#25D366;color:#fff}
+.bo{background:#fff;border:1.5px solid var(--brd);color:var(--ink2);font-size:12px;padding:10px}
+.hint{font-size:10px;color:var(--ink4);text-align:center;margin-top:9px}
+/* result */
+#result{display:none;margin-top:14px}
+.rcard{border-radius:18px;padding:22px 18px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.rpct{font-size:52px;font-weight:900;line-height:1}
+.rmsg{font-size:15px;font-weight:800;margin-top:6px}
+.rsub{font-size:11px;opacity:.85;margin-top:5px}
+.breakdown{background:#fff;border-radius:14px;margin-top:10px;padding:4px 14px}
+.bd-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--brd-l);font-size:11.5px}
+.bd-row:last-child{border-bottom:none}
+.friend{display:none;background:var(--amber-l);border:1.5px solid #FDE68A;border-radius:14px;padding:13px 15px;margin-bottom:12px;font-size:12.5px;color:var(--ink2);text-align:center}
+.foot{text-align:center;margin-top:16px;color:rgba(255,255,255,.55);font-size:10.5px}
+.foot a{color:#5EEAD4;font-weight:800;text-decoration:none}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;font-size:11.5px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:99}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><div class="blogo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><b style="font-size:13px">MedFlow · ميدفلو</b></div>
+
+  <div class="friend" id="friendBanner"></div>
+
+  <div class="hero">
+    <h1>كم تدفع زيادة؟ 🤔</h1>
+    <p>أدخل آخر أسعارك لـ 3 أصناف وشوف موقعك من متوسط السوق — دقيقة واحدة، بدون تسجيل</p>
+  </div>
+
+  <div class="card" id="form">
+    <div id="rows"></div>
+    <div style="margin:4px 0 8px"><input id="pname" placeholder="اسم منشأتك (اختياري — يظهر في بطاقة النتيجة)"></div>
+    <button class="btn bt" onclick="calc()">🎯 اكشف النتيجة</button>
+    <div class="hint">المتوسطات من عروض حقيقية على ميدفلو — منطقة مكة</div>
+  </div>
+
+  <div id="result">
+    <div class="rcard" id="rcard">
+      <div style="font-size:11px;opacity:.8" id="rwho"></div>
+      <div class="rpct" id="rpct"></div>
+      <div class="rmsg" id="rmsg"></div>
+      <div class="rsub" id="rsub"></div>
+    </div>
+    <div class="breakdown" id="bd"></div>
+    <button class="btn bwa" onclick="shareWA()">📢 شارك نتيجتك واتساب</button>
+    <button class="btn bt" onclick="location.href='login_v3.html'">سجّل وقارن كل طلبياتك مجاناً</button>
+    <div style="display:flex;gap:8px"><button class="btn bo" onclick="copyLink()">نسخ رابط التحدي</button><button class="btn bo" onclick="reset()">🔄 إعادة</button></div>
+  </div>
+
+  <div class="foot">تحدي مقدَّم من <b>ميدفلو</b> — منصة المشتريات الطبية B2B<br><a href="login_v3.html">قارن قبل ما تشتري ←</a></div>
+</div>
+<div id="toast"></div>
+
+<script>
+const ITEMS=[
+ ['أموكسيسيلين 500mg — علبة',95],
+ ['باراسيتامول 500mg — علبة',42],
+ ['أوميبرازول 20mg — علبة',28],
+ ['ميتفورمين 850mg — علبة',55],
+ ['فيتامين D3 1000IU — علبة',18],
+ ['أسبرين 100mg — علبة',12],
+ ['سيترازين 10mg — علبة',22],
+ ['إيبوبروفين 400mg — علبة',26],
+ ['قفازات نتريل M — كرتون',180],
+ ['كمامات جراحية — كرتون',95],
+];
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2800);}
+// rows
+document.getElementById('rows').innerHTML=[0,1,2].map(i=>`
+ <div class="row">
+  <select id="it${i}"><option value="">— اختر الصنف ${i+1} —</option>${ITEMS.map((it,j)=>`<option value="${j}">${it[0]}</option>`).join('')}</select>
+  <input id="pr${i}" type="number" step="0.01" min="0" placeholder="سعرك ر.س">
+ </div>`).join('');
+
+let lastPct=0;
+function calc(){
+  let mine=0,mkt=0,rows=[];
+  for(let i=0;i<3;i++){
+    const it=document.getElementById('it'+i).value;
+    const p=parseFloat(document.getElementById('pr'+i).value);
+    if(it!==''&&p>0){mine+=p;mkt+=ITEMS[it][1];rows.push([ITEMS[it][0],p,ITEMS[it][1]]);}
+  }
+  if(!rows.length){toast('أدخل صنفاً واحداً على الأقل مع سعره');return;}
+  const pct=Math.round((mine/mkt-1)*100);
+  lastPct=pct;
+  const name=document.getElementById('pname').value.trim();
+  render(pct,name,rows);
+  history.replaceState(null,'','#r='+btoa(unescape(encodeURIComponent(JSON.stringify({p:pct,n:name})))));
+}
+function render(pct,name,rows){
+  const rc=document.getElementById('rcard');
+  let bg,emoji,msg,sub;
+  if(pct>=8){bg='linear-gradient(135deg,#B91C1C,#EF4444)';emoji='😳';msg='تدفع زيادة عن متوسط السوق!';sub='على مشتريات مليون ريال سنوياً ≈ '+(pct*10000).toLocaleString()+' ر.س تضيع';}
+  else if(pct>=3){bg='linear-gradient(135deg,#B45309,#F59E0B)';emoji='⚠️';msg='أعلى من السوق بشوي';sub='فيه مجال واضح للتفاوض — المقارنة بتوفر لك';}
+  else if(pct>-3){bg='linear-gradient(135deg,#0F766E,#0D9488)';emoji='👌';msg='قريب من متوسط السوق';sub='جيد — والمقارنة المستمرة تخليك دايم بالمقدمة';}
+  else{bg='linear-gradient(135deg,#15803D,#16A34A)';emoji='🏆';msg='مفاوض محترف! أوفر من السوق';sub='شارك نتيجتك وخل الكل يعرف 😎';}
+  rc.style.background=bg;
+  document.getElementById('rwho').textContent=name?('🏥 '+name):'نتيجتك';
+  document.getElementById('rpct').textContent=emoji+' '+(pct>0?'+':'')+pct+'%';
+  document.getElementById('rmsg').textContent=msg;
+  document.getElementById('rsub').textContent=sub;
+  document.getElementById('bd').innerHTML=rows.map(r=>{
+    const d=r[1]-r[2];const c=d>0?'#EF4444':d<0?'#16A34A':'#64748B';
+    return`<div class="bd-row"><span style="font-weight:700">${r[0]}</span><span>سعرك ${r[1]} · السوق ${r[2]} <b style="color:${c}">(${d>0?'+':''}${d.toFixed(1)})</b></span></div>`;
+  }).join('');
+  document.getElementById('form').style.display='none';
+  document.getElementById('result').style.display='block';
+}
+function reset(){document.getElementById('form').style.display='block';document.getElementById('result').style.display='none';history.replaceState(null,'',' ');}
+function pageURL(){return location.origin+location.pathname;}
+function shareWA(){
+  const t=lastPct>0
+   ?'جربت تحدي ميدفلو 😳 طلعت أدفع زيادة '+lastPct+'% عن متوسط السوق!\nجرّب أنت — دقيقة وبدون تسجيل:\n'+pageURL()
+   :'جربت تحدي ميدفلو 🏆 أسعاري أوفر من السوق بـ'+Math.abs(lastPct)+'%!\nتقدر تغلبني؟ جرّب:\n'+pageURL();
+  window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+}
+function copyLink(){navigator.clipboard.writeText(pageURL()).then(()=>toast('✓ نُسخ الرابط'));}
+// وضع "صديقك تحداك"
+try{
+  if(location.hash.startsWith('#r=')){
+    const r=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(3)))));
+    const fb=document.getElementById('friendBanner');
+    fb.style.display='block';
+    fb.innerHTML='🔥 <b>'+(r.n||'صيدلية زميلة')+'</b> حصلت على <b>'+(r.p>0?'+':'')+r.p+'%</b> — تقدر تسوي أحسن؟ جرّب تحتها 👇';
+  }
+}catch(e){}
+</script>
+</body>
+</html>

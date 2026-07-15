@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MedFlow — داشبورد المشتري</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0D9488;--blue-d:#0F766E;--blue-l:#F0FDFA;--blue-m:#CCFBF1;--green:#16A34A;--green-l:#F0FDF4;--green-m:#BBF7D0;--amber:#F59E0B;--amber-l:#FFFBEB;--red:#EF4444;--red-l:#FFF5F5;--ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;--bg:#F8FAFC;--w:#fff;--s3:#F1F5F9;--brd:#E2E8F0;--brd-l:#F1F5F9;--sh:0 1px 3px rgba(15,23,42,.06);--sh-md:0 4px 12px rgba(15,23,42,.08);--r:10px;--rl:14px;--sw:220px;--th:52px;--font:'Cairo',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:var(--font);border:none}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);background:#fff;border-left:1px solid var(--brd-l);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--brd-l);gap:10px}
+.sb-logo{width:32px;height:32px;background:linear-gradient(135deg,#2DD4BF,#0D9488);border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(13,148,136,.25)}
+.sb-name{font-size:14px;font-weight:800;color:var(--ink)}
+.ng{padding:12px 10px 2px}
+.ngl{font-size:8px;font-weight:700;color:#CBD5E1;letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
+.na{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;color:var(--ink3);font-size:11.5px;font-weight:600;margin-bottom:1px;text-decoration:none;transition:all .12s}
+.na:hover{background:var(--bg)}
+.na.on{background:var(--blue-l);color:var(--blue)}
+.nico{width:15px;height:15px;opacity:.5}
+.na.on .nico{opacity:1}
+.nb{margin-right:auto;background:var(--amber);color:#fff;font-size:8px;font-weight:700;padding:1px 6px;border-radius:99px}
+.sb-ft{margin-top:auto;padding:10px;border-top:1px solid var(--brd-l)}
+.urow{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px}
+.uav{width:30px;height:30px;border-radius:9px;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--green)}
+.uname{font-size:11px;font-weight:700;color:var(--ink)}
+.urole{font-size:9px;color:var(--ink4)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:var(--th);background:#fff;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 18px;gap:9px;flex-shrink:0}
+.tb-t{font-size:13px;font-weight:800;color:var(--ink)}
+.tb-s{font-size:10px;color:var(--ink4);margin-top:1px}
+.sp{flex:1}
+.ib{width:32px;height:32px;border:1px solid var(--brd);border-radius:var(--r);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink3);cursor:pointer;position:relative}
+.ndot{position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
+.uchip{display:flex;align-items:center;gap:7px;padding:5px 11px;background:var(--bg);border:1px solid var(--brd);border-radius:99px}
+.ucav{width:22px;height:22px;border-radius:50%;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--green)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:var(--font)}
+.bb{background:var(--blue);color:#fff;box-shadow:0 4px 10px rgba(13,148,136,.2)}
+.bb:hover{background:var(--blue-d)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:18px 20px}
+
+/* KPI CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);padding:16px;box-shadow:var(--sh);display:flex;align-items:center;gap:12px}
+.kpi-ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kpi-val{font-size:18px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:2px}
+.kpi-lbl{font-size:10px;color:var(--ink4)}
+.kpi-sub{font-size:10px;font-weight:600;margin-top:1px}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:start}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh);margin-bottom:14px}
+.card:last-child{margin-bottom:0}
+.ch{padding:12px 16px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;justify-content:space-between}
+.ct{font-size:12px;font-weight:700;color:var(--ink)}
+.view-all{font-size:11px;color:var(--blue);font-weight:700;background:none;border:none;cursor:pointer}
+
+/* RFQ ROWS */
+.rfq-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--brd-l)}
+.rfq-row:last-child{border-bottom:none}
+.rfq-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rfq-id{font-size:10px;font-weight:700;color:var(--blue)}
+.rfq-meta{font-size:10px;color:var(--ink4)}
+.rfq-title{font-size:12px;font-weight:700;color:var(--ink)}
+.rfq-time{font-size:10px}
+.bdg{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:9.5px;font-weight:700;white-space:nowrap}
+.bg2{background:var(--green-l);color:var(--green)}
+.ba2{background:var(--amber-l);color:var(--amber)}
+.bb2{background:var(--blue-l);color:var(--blue)}
+.bgray{background:var(--s3);color:var(--ink4)}
+.btn-sm{padding:5px 11px;border-radius:8px;font-size:10px;font-weight:700;background:var(--blue);color:#fff;border:none;cursor:pointer}
+
+/* SAVINGS CHART */
+.chart-wrap{padding:16px}
+.chart-bars{display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:12px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar{border-radius:4px 4px 0 0;width:100%;transition:height .4s}
+.bar-lbl{font-size:9px;color:var(--ink4);text-align:center}
+.bar-lbl.on{color:var(--green);font-weight:700}
+
+/* WEEKLY DEAL */
+.deal-card{background:linear-gradient(135deg,#0F766E,#0D9488);border-radius:var(--rl);overflow:hidden;box-shadow:0 6px 20px rgba(13,148,136,.3)}
+.deal-head{padding:14px}
+.deal-badge{display:inline-flex;align-items:center;gap:4px;background:var(--amber);color:#fff;font-size:9px;font-weight:800;padding:3px 9px;border-radius:99px;margin-bottom:10px}
+.deal-title{font-size:13px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:4px}
+.deal-sup{font-size:10px;color:rgba(255,255,255,.6)}
+.deal-price-box{margin:0 14px 14px;background:rgba(255,255,255,.1);border-radius:10px;padding:12px}
+.deal-old{font-size:11px;color:rgba(255,255,255,.4);text-decoration:line-through}
+.deal-price{font-size:24px;font-weight:900;color:#fff;line-height:1}
+.deal-unit{font-size:9px;color:rgba(255,255,255,.5)}
+.deal-save{width:46px;height:46px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff}
+.deal-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:rgba(255,255,255,.6)}
+.deal-btn{display:block;width:calc(100% - 28px);margin:0 14px 14px;padding:10px;background:#fff;color:var(--blue);font-size:12px;font-weight:800;border-radius:9px;text-align:center;border:none;cursor:pointer;font-family:var(--font)}
+.deal-btn:hover{background:var(--blue-l)}
+.deal-timer{text-align:center;padding:0 14px 10px;font-size:10px;color:rgba(255,255,255,.5)}
+.deal-timer span{color:rgba(255,255,255,.9);font-weight:700}
+
+/* ESCROW STATUS */
+.esc-row{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--brd-l)}
+.esc-row:last-of-type{border-bottom:none}
+.esc-id{font-size:10px;font-weight:700;color:var(--blue);flex:1}
+.esc-amt{font-size:11px;font-weight:700;color:var(--ink);margin-left:8px}
+.esc-note{background:var(--blue-l);border-radius:9px;padding:9px 11px;font-size:10px;color:var(--ink2);line-height:1.6;margin-top:10px;display:flex;align-items:flex-start;gap:7px}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:var(--r);font-size:11.5px;font-weight:700;box-shadow:0 8px 24px rgba(15,23,42,.15);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+</style>
+</head>
+<script>(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login_v3.html';})();</script>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+    <div><div class="sb-name">ميدفلو</div><div style="font-size:8px;color:var(--ink4)">Medical Procurement</div></div>
+  </div>
+  <div class="ng"><div class="ngl">الرئيسية</div>
+    <a href="#" class="na on"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>لوحة التحكم</a>
+  </div>
+  <div class="ng"><div class="ngl">مشترياتي</div>
+    <a href="rfq.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>طلبياتي<span class="nb">5</span></a>
+    <a href="orders.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h22v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3Z"/><path d="m8 10 4 4 4-4"/></svg>أوامر الشراء</a>
+    <a href="invoices.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>الفواتير</a>
+  </div>
+  <div class="sb-ft">
+    <div class="urow"><div class="uav">ص</div><div><div class="uname">صيدلية الشفاء</div><div class="urole">مشتري · مكة</div></div></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div><div class="tb-t">لوحة التحكم</div><div class="tb-s" id="lt"></div></div>
+    <div class="sp"></div>
+    <button class="btn bb" onclick="window.location.href='rfq.html'">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      طلبية جديدة
+    </button>
+    <div class="ib">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="ndot"></span>
+    </div>
+    <div class="uchip"><div class="ucav">ص</div><span style="font-size:11px;font-weight:700;color:var(--ink)">الشفاء</span></div>
+  </header>
+
+  <div class="content">
+
+    <!-- KPI CARDS -->
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-ic" style="background:var(--blue-l)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
+        <div><div class="kpi-lbl">إجمالي الطلبيات</div><div class="kpi-val">47</div><div class="kpi-sub" style="color:var(--blue)">هذا الشهر</div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-ic" style="background:var(--amber-l)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.8" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+        <div><div class="kpi-lbl">عروض واصلة</div><div class="kpi-val">23</div><div class="kpi-sub" style="color:var(--amber)">تنتظر مراجعتك</div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-ic" style="background:var(--s3)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <div><div class="kpi-lbl">إجمالي الإنفاق</div><div class="kpi-val">284,500</div><div class="kpi-sub" style="color:var(--ink3)">ر.س هذا الشهر</div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-ic" style="background:var(--green-l)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+        <div><div class="kpi-lbl">التوفير المحقق</div><div class="kpi-val">38,200</div><div class="kpi-sub" style="color:var(--green)">ر.س مقارنة بالسوق</div></div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="grid">
+      <div>
+        <!-- طلبيات نشطة -->
+        <div class="card">
+          <div class="ch">
+            <div class="ct">طلبياتي النشطة</div>
+            <button class="view-all" onclick="window.location.href='rfq.html'">عرض الكل</button>
+          </div>
+          <div class="rfq-row">
+            <div class="rfq-ic" style="background:var(--blue-l)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:6px"><span class="rfq-id">RFQ-24590</span><span class="rfq-meta">· 8 أصناف</span></div>
+              <div class="rfq-title">طلبية أدوية شاملة</div>
+              <div class="rfq-time" style="color:var(--red)">ينتهي خلال 5 ساعات</div>
+            </div>
+            <span class="bdg ba2">3 عروض</span>
+            <span class="bdg bb2">مفتوحة</span>
+            <button class="btn-sm" onclick="window.location.href='rfq-buyer-view.html'">مراجعة العروض</button>
+          </div>
+          <div class="rfq-row">
+            <div class="rfq-ic" style="background:var(--blue-l)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:6px"><span class="rfq-id">RFQ-24587</span><span class="rfq-meta">· 3 أصناف</span></div>
+              <div class="rfq-title">مستلزمات جراحية</div>
+              <div class="rfq-time" style="color:var(--red)">ينتهي خلال 12 ساعة</div>
+            </div>
+            <span class="bdg ba2">1 عرض</span>
+            <span class="bdg bb2">مفتوحة</span>
+            <button class="btn-sm">مراجعة العروض</button>
+          </div>
+          <div class="rfq-row">
+            <div class="rfq-ic" style="background:var(--s3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink4)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:6px"><span class="rfq-id">RFQ-24580</span><span class="rfq-meta">· 12 صنف</span></div>
+              <div class="rfq-title">أدوية مزمنة</div>
+              <div class="rfq-time" style="color:var(--ink4)">منذ يومين</div>
+            </div>
+            <span class="bdg bg2">مكتملة</span>
+          </div>
+          <div class="rfq-row">
+            <div class="rfq-ic" style="background:var(--s3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink4)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:6px"><span class="rfq-id">RFQ-24571</span><span class="rfq-meta">· 6 أصناف</span></div>
+              <div class="rfq-title">فيتامينات ومكملات</div>
+              <div class="rfq-time" style="color:var(--ink4)">منذ 3 أيام</div>
+            </div>
+            <span class="bdg bgray">منتهية</span>
+          </div>
+        </div>
+
+        <!-- SAVINGS CHART -->
+        <div class="card">
+          <div class="ch">
+            <div><div class="ct">التوفير الشهري</div></div>
+            <span class="bdg bg2">↑ 23% هذا الشهر</span>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-bars" id="chartBars"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <!-- WEEKLY DEAL -->
+        <div class="deal-card" style="margin-bottom:14px">
+          <div class="deal-head">
+            <div class="deal-badge">⚡ عرض الأسبوع</div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between">
+              <div>
+                <div class="deal-title">باراسيتامول 500mg<br>50,000 علبة</div>
+                <div class="deal-sup">مستودع الجزيرة الطبي</div>
+              </div>
+              <div style="background:rgba(255,255,255,.15);border-radius:99px;padding:3px 10px;font-size:9px;color:#fff;font-weight:600;white-space:nowrap">ينتهي الأحد</div>
+            </div>
+          </div>
+          <div class="deal-price-box">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between">
+              <div>
+                <div class="deal-old">44 ر.س</div>
+                <div class="deal-price">38 ر.س</div>
+                <div class="deal-unit">للعلبة الواحدة</div>
+              </div>
+              <div class="deal-save">-14%</div>
+            </div>
+            <div class="deal-meta">
+              <span>الكمية المتاحة: 50,000 علبة</span>
+              <span>صلاحية: 2027-08-01</span>
+            </div>
+          </div>
+          <button class="deal-btn" onclick="toast('✓ تم إضافة الطلبية للسلة')">اطلب الآن</button>
+          <div class="deal-timer">عروض هذا الأسبوع: <span id="dealTimer">6 أيام 14:22:08</span></div>
+        </div>
+
+        <!-- ESCROW STATUS -->
+        <div class="card">
+          <div class="ch"><div class="ct">حالة Escrow</div></div>
+          <div style="padding:12px 16px">
+            <div class="esc-row"><span class="esc-id">RFQ-24580</span><span class="esc-amt">48,500 ر.س</span><span class="bdg ba2">في Escrow</span></div>
+            <div class="esc-row"><span class="esc-id">RFQ-24571</span><span class="esc-amt">22,000 ر.س</span><span class="bdg bg2">تم التسليم</span></div>
+            <div class="esc-row"><span class="esc-id">RFQ-24560</span><span class="esc-amt">31,200 ر.س</span><span class="bdg bgray">تم الصرف</span></div>
+            <div class="esc-note">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              أموالك محمية حتى تأكيد الاستلام ورفع فاتورة GLN
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// Time
+function uT(){const d=new Date();const da=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];const ma=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];const el=document.getElementById('lt');if(el)el.textContent=`${da[d.getDay()]} ${d.getDate()} ${ma[d.getMonth()]} · ${d.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})}`;}
+uT();setInterval(uT,30000);
+
+// Chart bars
+const data=[12000,18000,22000,15000,31000,38200];
+const months=['فبراير','مارس','أبريل','مايو','يونيو','يوليو'];
+const max=Math.max(...data);
+const bars=document.getElementById('chartBars');
+bars.innerHTML=data.map((v,i)=>{
+  const h=Math.round((v/max)*90);
+  const isLast=i===data.length-1;
+  return`<div class="bar-col">
+    <div class="bar" style="height:${h}px;background:${isLast?'var(--green)':'rgba(22,163,74,.2)'}"></div>
+    <div class="bar-lbl${isLast?' on':''}">${months[i]}</div>
+  </div>`;
+}).join('');
+
+// Deal timer
+let dealSecs=6*86400+14*3600+22*60+8;
+function tickDeal(){if(dealSecs<=0)return;dealSecs--;const d=Math.floor(dealSecs/86400);const h=Math.floor((dealSecs%86400)/3600);const m=Math.floor((dealSecs%3600)/60);const s=dealSecs%60;const el=document.getElementById('dealTimer');if(el)el.textContent=`${d} أيام ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+setInterval(tickDeal,1000);
+
+// Toast
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200);}
+</script>
+</body>
+</html>

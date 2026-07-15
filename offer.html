@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>عرض خاص — MedFlow</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0D9488;--teal-d:#0F766E;--teal-l:#F0FDFA;--teal-m:#CCFBF1;--green:#16A34A;--green-l:#F0FDF4;--amber:#F59E0B;--amber-l:#FFFBEB;--red:#EF4444;--ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;--bg:#F8FAFC;--brd:#E2E8F0;--brd-l:#F1F5F9;--font:'Cairo',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:linear-gradient(160deg,#0F172A 0%,#134E4A 100%);min-height:100vh;color:var(--ink);-webkit-font-smoothing:antialiased;padding:22px 14px 40px}
+button{cursor:pointer;font-family:var(--font);border:none}
+.card{max-width:480px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.hero{background:linear-gradient(135deg,#0F766E,#0D9488);padding:22px 20px 18px;text-align:center;color:#fff;position:relative}
+.brand{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+.blogo{width:28px;height:28px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.brand b{font-size:13px}
+.badge{display:inline-block;background:var(--amber);font-size:10px;font-weight:900;padding:4px 14px;border-radius:99px;margin-bottom:10px}
+.name{font-size:20px;font-weight:900;line-height:1.45}
+.sup{font-size:11px;opacity:.75;margin-top:5px}
+.timer{margin-top:12px;display:none;background:rgba(255,255,255,.12);border-radius:10px;padding:6px 12px;font-size:11px}
+.timer b{font-size:15px;letter-spacing:1px;direction:ltr;display:inline-block}
+.body{padding:18px}
+.price-row{display:flex;align-items:center;justify-content:space-between;background:var(--teal-l);border:1.5px solid var(--teal-m);border-radius:14px;padding:14px 16px}
+.old{font-size:12px;color:var(--ink4);text-decoration:line-through}
+.price{font-size:32px;font-weight:900;color:var(--teal-d);line-height:1.05}
+.save{width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;box-shadow:0 6px 16px rgba(22,163,74,.35)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.chip{background:var(--bg);border:1px solid var(--brd-l);border-radius:99px;padding:5px 13px;font-size:11px;font-weight:700;color:var(--ink3)}
+.note{margin-top:12px;background:var(--amber-l);border:1px solid #FDE68A;border-radius:11px;padding:10px 13px;font-size:12px;color:var(--ink2)}
+.suprow{display:flex;align-items:center;gap:10px;margin-top:14px;background:var(--bg);border:1px solid var(--brd-l);border-radius:12px;padding:11px 13px}
+.av{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2DD4BF,#0D9488);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:12px;font-size:14px;font-weight:800;margin-top:10px;transition:.12s}
+.bwa{background:#25D366;color:#fff;box-shadow:0 8px 20px rgba(37,211,102,.3)}
+.bt{background:var(--teal);color:#fff}
+.bo{background:#fff;border:1.5px solid var(--brd);color:var(--ink2);font-size:12px;padding:10px}
+.share{display:flex;gap:8px;margin-top:14px}
+.foot{text-align:center;margin-top:18px;color:rgba(255,255,255,.55);font-size:11px}
+.foot a{color:#5EEAD4;font-weight:800;text-decoration:none}
+.err{max-width:420px;margin:60px auto;background:#fff;border-radius:18px;padding:36px 24px;text-align:center}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;font-size:11.5px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:99}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div class="foot">عرض منشور عبر <b>ميدفلو</b> — منصة المشتريات الطبية B2B<br>
+<a href="login_v3.html">أنشئ عرضك القابل للمشاركة مجاناً ←</a></div>
+<div id="toast"></div>
+
+<script>
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2800);}
+let O=null;
+try{
+  const h=location.hash;
+  if(h.startsWith('#o='))O=JSON.parse(decodeURIComponent(escape(atob(h.slice(3)))));
+}catch(e){O=null;}
+
+const app=document.getElementById('app');
+if(!O||!O.n){
+  app.innerHTML='<div class="err"><div style="font-size:40px;margin-bottom:10px">🔗</div><div style="font-size:16px;font-weight:800">الرابط غير صالح أو منتهي</div><div style="font-size:12px;color:var(--ink4);margin-top:6px">اطلب من المورد إعادة إرسال رابط العرض</div></div>';
+}else{
+  const savePct=(O.op&&O.op>O.p)?Math.round((O.op-O.p)/O.op*100):0;
+  const chips=[];
+  chips.push('الكمية المتاحة: '+Number(O.q).toLocaleString());
+  if(O.bn)chips.push('بونص +'+Number(O.bn).toLocaleString()+' وحدة مجانية');
+  chips.push('الصلاحية: '+O.e);
+  chips.push('تشغيلة: '+O.b);
+  const init=(O.s||'م').slice(0,2);
+  app.innerHTML=`
+  <div class="card">
+    <div class="hero">
+      <div class="brand"><div class="blogo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><b>MedFlow · ميدفلو</b></div>
+      <div class="badge">⚡ عرض خاص لفترة محدودة</div>
+      <div class="name">${O.n}</div>
+      <div class="sup">من: ${O.s} · ${O.c||''}</div>
+      <div class="timer" id="tm">⏳ ينتهي خلال <b id="tv"></b></div>
+    </div>
+    <div class="body">
+      <div class="price-row">
+        <div>
+          ${O.op&&O.op>O.p?`<div class="old">${O.op.toLocaleString()} ر.س</div>`:''}
+          <div class="price">${O.p.toLocaleString()} <span style="font-size:14px">ر.س</span></div>
+          <div style="font-size:10px;color:var(--ink4)">للوحدة الواحدة</div>
+        </div>
+        ${savePct?`<div class="save">-${savePct}%</div>`:''}
+      </div>
+      <div class="chips">${chips.map(c=>'<span class="chip">'+c+'</span>').join('')}</div>
+      ${O.note?`<div class="note">📌 ${O.note}</div>`:''}
+      <div class="suprow">
+        <div class="av">${init}</div>
+        <div style="flex:1">
+          <div style="font-size:12.5px;font-weight:800">${O.s}</div>
+          <div style="font-size:10px;color:var(--green);font-weight:700">✓ مورد موثق SFDA على ميدفلو</div>
+        </div>
+      </div>
+      <button class="btn bwa" onclick="orderWA()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        اطلب الآن عبر واتساب
+      </button>
+      <button class="btn bt" onclick="location.href='login_v3.html'">سجّل واطلب عبر المنصة (Escrow محمي)</button>
+      <div class="share">
+        <button class="btn bo" style="margin-top:0" onclick="reshare()">↗️ شارك العرض</button>
+        <button class="btn bo" style="margin-top:0" onclick="copyURL()">📋 نسخ الرابط</button>
+      </div>
+    </div>
+  </div>`;
+  // countdown
+  if(O.vu){
+    const end=new Date(O.vu+'T23:59:59');
+    const tm=document.getElementById('tm'),tv=document.getElementById('tv');
+    function tick(){
+      const d=end-new Date();
+      if(d<=0){tv.textContent='انتهى';return;}
+      const days=Math.floor(d/86400000),h=Math.floor(d%86400000/3600000),m=Math.floor(d%3600000/60000);
+      tv.textContent=(days?days+' يوم ':'')+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+    }
+    tm.style.display='inline-block';tick();setInterval(tick,30000);
+  }
+}
+function orderWA(){
+  const txt='مرحباً 👋 شفت عرضكم على ميدفلو وأبغى أطلب:\n\n🩺 '+O.n+'\n💰 السعر: '+O.p+' ر.س للوحدة'+(O.bn?'\n🎁 البونص: +'+O.bn:'')+'\n📦 الكمية المطلوبة: ____\n\n(رابط العرض: '+location.href+')';
+  window.open('https://wa.me/'+O.ph+'?text='+encodeURIComponent(txt),'_blank');
+}
+function reshare(){
+  const txt='⚡ عرض خاص من '+O.s+'\n'+O.n+' — '+O.p+' ر.س'+(O.op?' بدل '+O.op:'')+'\nاطلب من الرابط:\n'+location.href;
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
+function copyURL(){navigator.clipboard.writeText(location.href).then(()=>toast('✓ نُسخ الرابط'));}
+</script>
+</body>
+</html>

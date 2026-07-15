@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>مزاد ميدفلو الأسبوعي ⚡</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0D9488;--teal-d:#0F766E;--teal-l:#F0FDFA;--teal-m:#CCFBF1;--green:#16A34A;--amber:#F59E0B;--red:#EF4444;--ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;--bg:#F8FAFC;--brd:#E2E8F0;--brd-l:#F1F5F9;--font:'Cairo',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:linear-gradient(160deg,#0F172A,#134E4A);min-height:100vh;padding:20px 14px 40px;-webkit-font-smoothing:antialiased;color:var(--ink)}
+button{cursor:pointer;font-family:var(--font);border:none}
+.wrap{max-width:480px;margin:0 auto}
+.brand{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;margin-bottom:12px}
+.blogo{width:28px;height:28px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.live{display:none;align-items:center;gap:6px;background:var(--red);color:#fff;font-size:10px;font-weight:900;padding:4px 12px;border-radius:99px;margin:0 auto 10px;width:fit-content}
+.dot{width:7px;height:7px;background:#fff;border-radius:50%;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.25}}
+.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.hd{background:linear-gradient(135deg,#0F766E,#0D9488);color:#fff;text-align:center;padding:18px 16px}
+.hd .badge{display:inline-block;background:var(--amber);font-size:10px;font-weight:900;padding:4px 13px;border-radius:99px;margin-bottom:9px}
+.hd h1{font-size:19px;font-weight:900;line-height:1.4}
+.hd p{font-size:11px;opacity:.75;margin-top:4px}
+.body{padding:18px}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.st{flex:1;background:var(--bg);border:1px solid var(--brd-l);border-radius:11px;padding:9px;text-align:center}
+.st b{display:block;font-size:15px;color:var(--ink)}
+.st span{font-size:9px;color:var(--ink4)}
+.price-box{background:var(--teal-l);border:2px solid var(--teal-m);border-radius:16px;text-align:center;padding:16px}
+.pb-lbl{font-size:10.5px;color:var(--ink3)}
+.pb-val{font-size:44px;font-weight:900;color:var(--teal-d);line-height:1.05;transition:.2s}
+.pb-val.drop{color:var(--red);transform:scale(1.06)}
+.pb-start{font-size:11px;color:var(--ink4);text-decoration:line-through}
+.next-drop{font-size:10.5px;color:var(--amber);font-weight:800;margin-top:5px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:12px;font-size:14px;font-weight:900;margin-top:10px;transition:.12s}
+.block{background:var(--red);color:#fff;box-shadow:0 8px 22px rgba(239,68,68,.35)}
+.bt{background:var(--teal);color:#fff}
+.bo{background:#fff;border:1.5px solid var(--brd);color:var(--ink2);font-size:12px;padding:10px}
+.bwa{background:#25D366;color:#fff}
+.feed{margin-top:12px;background:var(--bg);border:1px solid var(--brd-l);border-radius:12px;padding:10px 13px;max-height:118px;overflow:hidden}
+.feed div{font-size:10.5px;color:var(--ink3);padding:3px 0;animation:fi .4s}
+@keyframes fi{from{opacity:0;transform:translateY(-6px)}}
+.cd{display:flex;gap:8px;justify-content:center;margin:14px 0 4px}
+.cd div{background:var(--bg);border:1px solid var(--brd-l);border-radius:12px;min-width:64px;padding:10px 6px;text-align:center}
+.cd b{display:block;font-size:22px;font-weight:900;color:var(--teal-d)}
+.cd span{font-size:9px;color:var(--ink4)}
+.foot{text-align:center;margin-top:16px;color:rgba(255,255,255,.55);font-size:10.5px}
+.foot a{color:#5EEAD4;font-weight:800;text-decoration:none}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;font-size:11.5px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:99}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><div class="blogo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><b style="font-size:13px">مزاد ميدفلو الأسبوعي</b></div>
+  <div class="live" id="liveB"><span class="dot"></span> مباشر الآن</div>
+
+  <div class="card">
+    <div class="hd">
+      <div class="badge">⚡ السعر ينزل كل دقيقة</div>
+      <h1 id="itName">أموكسيسيلين 500mg — علبة 20 كبسولة</h1>
+      <p>مستودع الجزيرة الطبي · موثق SFDA ✓ · صلاحية 2027/09 · تشغيلة JZ-2026-B77</p>
+    </div>
+    <div class="body">
+
+      <!-- وضع الانتظار -->
+      <div id="waitView">
+        <div style="text-align:center;font-size:13px;font-weight:800;color:var(--ink2)">المزاد القادم: الخميس 8:00 مساءً 🕗</div>
+        <div class="cd"><div><b id="cd">0</b><span>يوم</span></div><div><b id="ch">00</b><span>ساعة</span></div><div><b id="cm">00</b><span>دقيقة</span></div><div><b id="cs">00</b><span>ثانية</span></div></div>
+        <div style="text-align:center;font-size:11px;color:var(--ink4)">يبدأ من <b>95 ر.س</b> وينزل حتى <b style="color:var(--red)">78 ر.س</b> — الكمية 20,000 علبة فقط</div>
+        <button class="btn bt" onclick="startDemo()">🎬 جرّب المزاد التجريبي الآن</button>
+        <button class="btn bo" onclick="location.href='login_v3.html'">🔔 ذكّرني — سجّل ليصلك التنبيه</button>
+      </div>
+
+      <!-- وضع المزاد الحي -->
+      <div id="liveView" style="display:none">
+        <div class="stats">
+          <div class="st"><b id="vQty">20,000</b><span>علبة متبقية</span></div>
+          <div class="st"><b id="vWatch">147</b><span>يشاهدون الآن 👀</span></div>
+          <div class="st"><b id="vLock">0</b><span>قفلوا السعر</span></div>
+        </div>
+        <div class="price-box">
+          <div class="pb-start">السعر الابتدائي: 95 ر.س</div>
+          <div class="pb-lbl">السعر الحالي</div>
+          <div class="pb-val" id="price">95.0</div>
+          <div class="next-drop">⬇️ ينزل 0.5 ر.س خلال <span id="dropIn">10</span> ث</div>
+        </div>
+        <button class="btn block" id="lockBtn" onclick="lockPrice()">🔒 اقفل السعر الآن</button>
+        <div class="feed" id="feed"></div>
+      </div>
+
+      <!-- بعد القفل -->
+      <div id="lockedView" style="display:none">
+        <div style="background:var(--teal-l);border:2px solid var(--teal-m);border-radius:16px;text-align:center;padding:18px">
+          <div style="font-size:34px">🎉</div>
+          <div style="font-size:15px;font-weight:900;color:var(--teal-d)">قفلت السعر عند <span id="lockedPrice"></span> ر.س!</div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:4px">وفّرت <b id="savedAmt"></b> عن السعر الابتدائي — أكمل الطلب لحجز الكمية</div>
+        </div>
+        <button class="btn bwa" onclick="orderWA()">أكمل الطلب عبر واتساب</button>
+        <button class="btn bt" onclick="location.href='login_v3.html'">أو أكمل عبر المنصة (Escrow)</button>
+      </div>
+
+      <button class="btn bo" onclick="shareWA()">↗️ شارك المزاد مع زملائك</button>
+    </div>
+  </div>
+  <div class="foot">كل خميس صنف جديد قرب انتهاء صلاحيته بسعر ينزل أمام عينك<br><a href="login_v3.html">ميدفلو — منصة المشتريات الطبية ←</a></div>
+</div>
+<div id="toast"></div>
+
+<script>
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2800);}
+/* عدّاد الخميس 8م */
+function nextThu(){const n=new Date();const d=new Date(n);d.setHours(20,0,0,0);let add=(4-n.getDay()+7)%7;if(add===0&&n>d)add=7;d.setDate(d.getDate()+add);return d;}
+const T=nextThu();
+setInterval(()=>{
+  const diff=T-new Date();if(diff<0)return;
+  document.getElementById('cd').textContent=Math.floor(diff/86400000);
+  document.getElementById('ch').textContent=String(Math.floor(diff%86400000/3600000)).padStart(2,'0');
+  document.getElementById('cm').textContent=String(Math.floor(diff%3600000/60000)).padStart(2,'0');
+  document.getElementById('cs').textContent=String(Math.floor(diff%60000/1000)).padStart(2,'0');
+},1000);
+
+/* المزاد التجريبي */
+let price=95,qty=20000,watch=147,locks=0,dropIn=10,timers=[];
+const NAMES=['صيدلية ن. — العزيزية','صيدلية الشفاء — المسفلة','مستشفى ب. الخاص','صيدلية د. — الشوقية','صيدلية م. — النسيم','مجمع ر. الطبي'];
+function startDemo(){
+  document.getElementById('waitView').style.display='none';
+  document.getElementById('liveView').style.display='block';
+  document.getElementById('liveB').style.display='flex';
+  timers.push(setInterval(()=>{ // عداد النزول
+    dropIn--;
+    if(dropIn<=0){dropIn=10;
+      if(price>78){price=Math.max(78,price-0.5);
+        const p=document.getElementById('price');p.textContent=price.toFixed(1);
+        p.classList.add('drop');setTimeout(()=>p.classList.remove('drop'),350);}
+    }
+    document.getElementById('dropIn').textContent=dropIn;
+  },1000));
+  timers.push(setInterval(()=>{ // مشترون وهميون + مشاهدون
+    watch+=Math.floor(Math.random()*7)-2;
+    document.getElementById('vWatch').textContent=Math.max(90,watch);
+    if(Math.random()<0.45&&qty>1500){
+      const buy=(Math.floor(Math.random()*8)+2)*250;qty-=buy;locks++;
+      document.getElementById('vQty').textContent=qty.toLocaleString();
+      document.getElementById('vLock').textContent=locks;
+      const f=document.getElementById('feed');
+      f.insertAdjacentHTML('afterbegin','<div>🔒 '+NAMES[Math.floor(Math.random()*NAMES.length)]+' قفلت <b>'+buy.toLocaleString()+'</b> علبة عند '+price.toFixed(1)+' ر.س</div>');
+      if(f.children.length>5)f.lastChild.remove();
+    }
+  },2600));
+}
+let myPrice=0;
+function lockPrice(){
+  myPrice=price;timers.forEach(clearInterval);
+  document.getElementById('liveView').style.display='none';
+  document.getElementById('lockedView').style.display='block';
+  document.getElementById('liveB').style.display='none';
+  document.getElementById('lockedPrice').textContent=myPrice.toFixed(1);
+  document.getElementById('savedAmt').textContent=((95-myPrice)).toFixed(1)+' ر.س/علبة';
+}
+function orderWA(){
+  const t='مرحباً 👋 قفلت السعر في مزاد ميدفلو:\n\n🩺 أموكسيسيلين 500mg\n💰 السعر المقفول: '+myPrice.toFixed(1)+' ر.س/علبة\n📦 الكمية المطلوبة: ____\n\n(المزاد الأسبوعي — '+location.origin+location.pathname+')';
+  window.open('https://wa.me/9665XXXXXXXX?text='+encodeURIComponent(t),'_blank');
+}
+function shareWA(){
+  const t='⚡ مزاد ميدفلو الأسبوعي — الخميس 8م\nأموكسيسيلين 500mg يبدأ من 95 وينزل حتى 78 ر.س أمام عينك!\nالكمية محدودة 20,000 علبة 👇\n'+location.origin+location.pathname;
+  window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+}
+</script>
+</body>
+</html>

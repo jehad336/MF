@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedFlow — طلبية متعددة الأصناف</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --blue:#0D9488;--blue-d:#0F766E;--blue-l:#F0FDFA;--blue-m:#CCFBF1;
+  --green:#16A34A;--green-l:#F0FDF4;--green-m:#BBF7D0;
+  --amber:#F59E0B;--amber-l:#FFFBEB;
+  --red:#EF4444;--red-l:#FFF5F5;
+  --purple:#8B5CF6;--purple-l:#F5F3FF;
+  --ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;
+  --bg:#F8FAFC;--w:#fff;--s2:#F8FAFC;--s3:#F1F5F9;
+  --brd:#E2E8F0;--brd-l:#F1F5F9;
+  --sh:0 1px 3px rgba(15,23,42,.06);--sh-md:0 4px 12px rgba(15,23,42,.08);--sh-lg:0 16px 32px rgba(15,23,42,.10);
+  --r:10px;--rl:14px;--rx:18px;--rf:9999px;--sw:220px;--th:52px;
+  --font:'Cairo',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--font);border:none}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--brd);border-radius:99px}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);background:#fff;border-left:1px solid var(--brd-l);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:200;transition:transform .3s}
+.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--brd-l);gap:10px;flex-shrink:0}
+.sb-logo{width:32px;height:32px;background:linear-gradient(135deg,#2DD4BF,#0D9488);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(13,148,136,.25)}
+.sb-name{font-size:14px;font-weight:800;color:var(--ink)}
+.sb-tag{font-size:8px;color:var(--ink4);margin-top:1px}
+.ng{padding:12px 10px 2px}
+.ngl{font-size:8px;font-weight:700;color:#CBD5E1;letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
+.na{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;color:var(--ink3);font-size:11.5px;font-weight:600;margin-bottom:1px;transition:all .12s}
+.na:hover{background:var(--bg);color:var(--ink2)}
+.na.on{background:var(--blue-l);color:var(--blue)}
+.nico{width:15px;height:15px;flex-shrink:0;opacity:.5}
+.na.on .nico{opacity:1}
+.nb{margin-right:auto;background:var(--blue);color:#fff;font-size:8px;font-weight:700;padding:1px 6px;border-radius:99px}
+.nb.am{background:var(--amber)}.nb.rd{background:var(--red)}
+.sb-ft{margin-top:auto;padding:10px;border-top:1px solid var(--brd-l)}
+.lang-pill{display:flex;background:var(--s3);border-radius:99px;padding:2px;gap:1px;margin-bottom:8px}
+.lp{padding:3px 10px;border-radius:99px;font-size:9px;font-weight:700;color:var(--ink4);cursor:pointer;text-align:center;flex:1;transition:all .15s}
+.lp.on{background:var(--blue);color:#fff}
+.urow{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer}
+.urow:hover{background:var(--bg)}
+.uav{width:30px;height:30px;border-radius:9px;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0}
+.uname{font-size:11px;font-weight:700;color:var(--ink)}
+.urole{font-size:9px;color:var(--ink4);margin-top:1px}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:var(--th);background:#fff;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 18px;gap:9px;flex-shrink:0}
+.tb-t{font-size:13px;font-weight:800;color:var(--ink)}
+.tb-s{font-size:10px;color:var(--ink4);margin-top:1px}
+.sp{flex:1}
+.ib{width:32px;height:32px;border:1px solid var(--brd);border-radius:var(--r);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink3);cursor:pointer;transition:all .12s;position:relative}
+.ib:hover{background:var(--bg)}
+.ndot{position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
+.ham{display:none;width:32px;height:32px;border-radius:var(--r);background:var(--bg);border:1px solid var(--brd);align-items:center;justify-content:center;cursor:pointer}
+.uchip{display:flex;align-items:center;gap:7px;padding:5px 11px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--rf);cursor:pointer}
+.ucav{width:22px;height:22px;border-radius:50%;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--blue)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:16px 20px;background:var(--bg)}
+
+/* BREADCRUMB */
+.bc{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink4);margin-bottom:14px}
+.bc a{color:var(--blue);font-weight:600}
+.bc-sep{color:var(--brd)}
+
+/* HERO CARD */
+.hero{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);padding:18px 20px;margin-bottom:14px;box-shadow:var(--sh)}
+.hero-top{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.hero-badge{display:inline-flex;align-items:center;gap:5px;background:var(--red-l);color:var(--red);font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--rf);margin-bottom:8px}
+.hero-id{font-size:11px;color:var(--blue);font-weight:700;margin-bottom:4px}
+.hero-title{font-size:18px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--ink4)}
+.hero-meta span{display:flex;align-items:center;gap:4px}
+.countdown{display:flex;align-items:center;gap:6px;background:var(--red-l);border:1px solid #FCA5A5;border-radius:var(--r);padding:8px 14px}
+.cd-lbl{font-size:10px;color:var(--red);font-weight:600}
+.cd-time{font-size:22px;font-weight:900;color:var(--red);letter-spacing:1px;direction:ltr}
+.hero-stats{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.hs{background:var(--bg);border:1px solid var(--brd-l);border-radius:var(--r);padding:10px 14px;flex:1;min-width:100px}
+.hs-val{font-size:16px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:2px}
+.hs-lbl{font-size:10px;color:var(--ink4)}
+
+/* MAIN GRID */
+.ga{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh);margin-bottom:14px}
+.card:last-child{margin-bottom:0}
+.ch{padding:12px 16px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ct{font-size:12px;font-weight:700;color:var(--ink)}
+.cs{font-size:10px;color:var(--ink4);margin-top:1px}
+
+/* ITEMS TABLE — عرض السعر المتعدد */
+.quote-tbl-wrap{overflow-x:auto}
+.quote-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.quote-tbl th{background:var(--bg);color:var(--ink4);font-weight:700;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;padding:9px 12px;text-align:right;border-bottom:1px solid var(--brd-l);white-space:nowrap}
+.quote-tbl td{padding:8px 10px;border-bottom:1px solid var(--brd-l);vertical-align:middle}
+.quote-tbl tr:last-child td{border-bottom:none}
+.quote-tbl tr.filled td{background:#FAFFFE}
+.item-name{font-weight:700;color:var(--ink);font-size:12px}
+.item-qty{font-size:11px;color:var(--ink4)}
+
+/* Input fields inside table */
+.tfc{border:1px solid var(--brd);border-radius:8px;padding:6px 9px;font-size:12px;color:var(--ink);background:var(--s2);outline:none;font-family:var(--font);width:100%;transition:all .12s}
+.tfc:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px var(--blue-l)}
+.tfc::placeholder{color:var(--ink4)}
+.tfc.ok{border-color:var(--green);background:var(--green-l)}
+
+/* Row total */
+.row-total{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;direction:ltr;text-align:left}
+.row-total.filled{color:var(--green)}
+
+/* Skip checkbox */
+.skip-chk{width:15px;height:15px;accent-color:var(--red);cursor:pointer}
+
+/* Progress bar */
+.prog-wrap{background:var(--bg);border:1px solid var(--brd-l);border-radius:var(--r);padding:12px 14px;margin:0 0 0}
+.prog-bar-bg{height:6px;background:var(--s3);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.prog-bar-fg{height:100%;border-radius:99px;background:var(--green);transition:width .3s}
+.prog-lbl{font-size:10px;color:var(--ink4)}
+.prog-count{font-size:11px;font-weight:700;color:var(--green)}
+
+/* SUMMARY CARD */
+.sum-card{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh);position:sticky;top:14px}
+.sum-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--brd-l)}
+.sum-row:last-child{border-bottom:none}
+.sum-lbl{font-size:11px;color:var(--ink3)}
+.sum-val{font-size:12px;font-weight:700;color:var(--ink);direction:ltr}
+.sum-total{font-size:16px;font-weight:800;color:var(--green)}
+.sum-note{font-size:10px;color:var(--ink4);margin-top:1px}
+
+/* GLOBAL FIELDS */
+.global-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px;border-bottom:1px solid var(--brd-l);background:var(--bg)}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fl{font-size:10.5px;font-weight:700;color:var(--ink)}
+.fc{border:1px solid var(--brd);border-radius:var(--r);padding:7px 10px;font-size:12px;color:var(--ink);background:#fff;outline:none;font-family:var(--font);width:100%;transition:all .12s}
+.fc:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px var(--blue-l)}
+.fc::placeholder{color:var(--ink4)}
+
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--rf);font-size:10px;font-weight:700;white-space:nowrap}
+.bg2{background:var(--green-l);color:var(--green)}
+.ba2{background:var(--amber-l);color:var(--amber)}
+.br2{background:var(--red-l);color:var(--red)}
+.bb2{background:var(--blue-l);color:var(--blue)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r);font-size:12px;font-weight:700;transition:all .12s;white-space:nowrap;border:none;font-family:var(--font)}
+.bb{background:var(--blue);color:#fff}.bb:hover{background:var(--blue-d);box-shadow:0 4px 10px rgba(13,148,136,.2)}
+.bg_{background:var(--green);color:#fff}.bg_:hover{background:#15803D}
+.bo{background:#fff;border:1px solid var(--brd);color:var(--ink2)}.bo:hover{background:var(--bg)}
+.bsm{padding:6px 12px;font-size:11px}
+
+/* SUBMIT BAR */
+.submit-bar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--brd-l);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 -4px 16px rgba(15,23,42,.06)}
+.sb-info{font-size:11px;color:var(--ink4)}
+.sb-total{font-size:15px;font-weight:800;color:var(--green)}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:var(--r);font-size:11.5px;font-weight:700;box-shadow:var(--sh-lg);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+
+/* MOB */
+.mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:#fff;border-top:1px solid var(--brd-l);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
+.mni{display:flex;justify-content:space-around}
+.mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:10px;cursor:pointer;text-decoration:none}
+.mna.on{background:var(--blue-l)}
+.mnic{width:20px;height:20px;color:var(--ink4)}
+.mna.on .mnic{color:var(--blue)}
+.mnlbl{font-size:9px;font-weight:600;color:var(--ink4)}
+.mna.on .mnlbl{color:var(--blue)}
+.mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:190;display:none}
+.mob-ov.on{display:block}
+
+/* DARK */
+body.dark{
+  --blue:#2DD4BF;--blue-d:#14B8A6;--blue-l:rgba(45,212,191,.12);--blue-m:rgba(45,212,191,.22);
+  --green:#34D399;--green-l:rgba(52,211,153,.12);--green-m:rgba(52,211,153,.25);
+  --amber:#FBBF24;--amber-l:rgba(251,191,36,.12);
+  --red:#F87171;--red-l:rgba(248,113,113,.12);
+  --ink:#F1F5F9;--ink2:#CBD5E1;--ink3:#94A3B8;--ink4:#64748B;
+  --bg:#0F172A;--w:#1E293B;--s2:#162032;--s3:#253347;
+  --brd:#2D3F55;--brd-l:#253347;
+}
+body.dark .sidebar,.dark .topbar,.dark .hero,.dark .card,.dark .sum-card,.dark .submit-bar{background:#1E293B;border-color:#253347}
+body.dark .quote-tbl th,.dark .global-fields{background:#162032}
+body.dark .quote-tbl td{border-bottom-color:#253347}
+body.dark .quote-tbl tr.filled td{background:rgba(52,211,153,.05)}
+body.dark .tfc{background:#162032;border-color:#2D3F55;color:#F1F5F9}
+body.dark .tfc.ok{background:rgba(52,211,153,.08);border-color:#34D399}
+body.dark .hs,.dark .prog-wrap{background:#162032;border-color:#253347}
+body.dark .fc{background:#162032;border-color:#2D3F55;color:#F1F5F9}
+body.dark .ib,.dark .uchip{background:#1E293B;border-color:#2D3F55}
+body.dark .uav,.dark .ucav{background:rgba(45,212,191,.15);color:#2DD4BF}
+body.dark .mob-nav{background:#1E293B;border-top-color:#253347}
+
+@media(max-width:900px){.ga{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;right:0;bottom:0;transform:translateX(100%);z-index:500}
+  .sidebar.on{transform:translateX(0)}
+  .main{width:100%}
+  .content{padding:12px;padding-bottom:80px}
+  .topbar{padding:0 12px}
+  .mob-nav{display:block}
+  .ham{display:flex}
+  .global-fields{grid-template-columns:1fr}
+}
+</style>
+</head>
+<script>(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login_v3.html';})();</script>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sb">
+  <div class="sb-brand">
+    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+    <div><div class="sb-name">ميدفلو</div><div class="sb-tag">Medical Procurement</div></div>
+  </div>
+  <div class="ng"><div class="ngl">الرئيسية</div>
+    <a href="dashboard_v3.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>لوحة التحكم</a>
+  </div>
+  <div class="ng"><div class="ngl">المشتريات</div>
+    <a href="rfq.html" class="na on"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>سوق الطلبيات<span class="nb">23</span></a>
+    <a href="orders.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h22v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3Z"/><path d="m8 10 4 4 4-4"/></svg>أوامر الشراء</a>
+    <a href="invoices.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>الفواتير<span class="nb am">5</span></a>
+  </div>
+  <div class="ng"><div class="ngl">الشبكة</div>
+    <a href="supplier.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>الموردون</a>
+  </div>
+  <div class="sb-ft">
+    <div class="lang-pill">
+      <div class="lp on" id="lpAR" onclick="setLang('ar')">ع</div>
+      <div class="lp" id="lpEN" onclick="setLang('en')">EN</div>
+    </div>
+    <div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مستودع · مكة</div></div></div>
+  </div>
+</aside>
+<div class="mob-ov" id="mo" onclick="cSB()"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <button class="ham" onclick="oSB()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+    <div><div class="tb-t">تفاصيل الطلبية</div><div class="tb-s" id="lt"></div></div>
+    <div class="sp"></div>
+    <button class="ib" onclick="tDk()"><svg id="dkIco" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+    <button class="ib"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="ndot"></span></button>
+    <div class="uchip"><div class="ucav">جه</div><span style="font-size:11px;font-weight:700;color:var(--ink)">جهاد</span></div>
+  </header>
+
+  <div class="content">
+
+    <!-- BREADCRUMB -->
+    <div class="bc">
+      <a href="rfq.html">سوق الطلبيات</a>
+      <span class="bc-sep">›</span>
+      <span>RFQ-24590 · طلبية متعددة الأصناف</span>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-top">
+        <div style="flex:1;min-width:0">
+          <div class="hero-badge">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            عاجلة
+          </div>
+          <div class="hero-id">RFQ-24590</div>
+          <div class="hero-title">طلبية أدوية شاملة — مستشفى الملك فيصل</div>
+          <div class="hero-meta">
+            <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>مستشفى الملك فيصل التخصصي</span>
+            <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><strong id="itemCountHero">8 أصناف</strong></span>
+            <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Escrow</span>
+            <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>8 يوليو 2026</span>
+          </div>
+        </div>
+        <div class="countdown">
+          <div>
+            <div class="cd-lbl">ينتهي خلال</div>
+            <div class="cd-time" id="cdTime">05:42:18</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-val" id="filledCount">0</div><div class="hs-lbl">أصناف أسعرتها</div></div>
+        <div class="hs"><div class="hs-val">8</div><div class="hs-lbl">إجمالي الأصناف</div></div>
+        <div class="hs"><div class="hs-val">14</div><div class="hs-lbl">مورد تقدّم</div></div>
+        <div class="hs"><div class="hs-val" id="heroTotal">—</div><div class="hs-lbl">قيمة عرضك (ر.س)</div></div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="ga">
+
+      <!-- LEFT: جدول الأصناف -->
+      <div>
+        <div class="card">
+          <div class="ch">
+            <div>
+              <div class="ct">أصناف الطلبية — قدّم سعرك لكل بند</div>
+              <div class="cs">يمكنك تخطي أي بند غير متوفر لديك</div>
+            </div>
+            <!-- progress -->
+            <div class="prog-wrap" style="min-width:160px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span class="prog-lbl">اكتمال العرض</span>
+                <span class="prog-count" id="progTxt">0/8</span>
+              </div>
+              <div class="prog-bar-bg"><div class="prog-bar-fg" id="progBar" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <!-- حقول مشتركة -->
+          <div class="global-fields">
+            <div class="fg">
+              <label class="fl">تاريخ انتهاء الصلاحية (للجميع)</label>
+              <input class="fc" id="gExpiry" type="date" min="2026-01-01" onchange="applyGlobal()">
+            </div>
+            <div class="fg">
+              <label class="fl">رقم التشغيلة (Batch) — للجميع</label>
+              <input class="fc" id="gBatch" placeholder="LOT-2026-A1234" onchange="applyGlobal()">
+            </div>
+            <div class="fg">
+              <label class="fl">خصم موحّد % <span style="font-size:9px;color:var(--ink4)">(اختياري)</span></label>
+              <input class="fc" id="gDiscount" type="number" placeholder="0" min="0" max="100" step="0.1" oninput="applyGlobal();calcTotals()">
+            </div>
+            <div class="fg">
+              <label class="fl">بونص (وحدات مجانية) <span style="font-size:9px;color:var(--ink4)">(اختياري)</span></label>
+              <input class="fc" id="gBonus" type="number" placeholder="0" min="0" oninput="calcTotals()">
+            </div>
+          </div>
+
+          <!-- الجدول -->
+          <div class="quote-tbl-wrap">
+            <table class="quote-tbl">
+              <thead>
+                <tr>
+                  <th style="width:28px">#</th>
+                  <th>اسم البند / الدواء</th>
+                  <th style="width:90px">الكمية المطلوبة</th>
+                  <th style="width:110px">الكمية المتاحة</th>
+                  <th style="width:110px">سعر الوحدة (ر.س)</th>
+                  <th style="width:80px">خصم %</th>
+                  <th style="width:90px">بونص (وحدة)</th>
+                  <th style="width:100px">تاريخ الانتهاء</th>
+                  <th style="width:100px">رقم التشغيلة</th>
+                  <th style="width:90px">إجمالي السطر</th>
+                  <th style="width:50px;text-align:center">تخطي</th>
+                </tr>
+              </thead>
+              <tbody id="quoteBody"></tbody>
+            </table>
+          </div>
+
+          <!-- SUBMIT BAR -->
+          <div class="submit-bar">
+            <div>
+              <div class="sb-info" id="sbInfo">أسعر الأصناف للمتابعة</div>
+              <div class="sb-total" id="sbTotal"></div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn bo bsm" onclick="window.location.href='rfq.html'">رجوع</button>
+              <button class="btn bo bsm" onclick="exportQuote()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                تصدير
+              </button>
+              <button class="btn bg_ bsm" id="submitBtn" onclick="submitQuote()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                إرسال العرض
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: ملخص -->
+      <div>
+        <div class="sum-card">
+          <div class="ch"><div class="ct">ملخص عرضك</div></div>
+          <div style="padding:14px 16px">
+            <div class="sum-row"><span class="sum-lbl">الأصناف المسعّرة</span><span class="sum-val" id="s_filled">0 / 8</span></div>
+            <div class="sum-row"><span class="sum-lbl">إجمالي الكميات</span><span class="sum-val" id="s_qty">—</span></div>
+            <div class="sum-row"><span class="sum-lbl">إجمالي قبل الخصم</span><span class="sum-val" id="s_gross">—</span></div>
+            <div class="sum-row"><span class="sum-lbl">الخصم</span><span class="sum-val" style="color:var(--green)" id="s_disc">—</span></div>
+            <div class="sum-row"><span class="sum-lbl">البونص</span><span class="sum-val" style="color:var(--green)" id="s_bonus">—</span></div>
+            <div class="sum-row" style="border-top:2px solid var(--brd-l);padding-top:12px;margin-top:4px">
+              <span class="sum-lbl" style="font-weight:700;color:var(--ink)">إجمالي العرض</span>
+              <span class="sum-val sum-total" id="s_total">—</span>
+            </div>
+            <div class="sum-row"><span class="sum-lbl">صافيك (بعد 2% عمولة)</span><span class="sum-val" style="color:var(--blue)" id="s_net">—</span></div>
+          </div>
+          <!-- Escrow note -->
+          <div style="margin:0 14px 14px;background:var(--blue-l);border:1px solid var(--blue-m);border-radius:var(--r);padding:10px 12px;font-size:11px;color:var(--ink2);line-height:1.6">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="2" stroke-linecap="round" style="display:inline;vertical-align:middle;margin-left:4px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            ستحصل على أموالك فور تأكيد المشتري للاستلام عبر Escrow
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<nav class="mob-nav">
+  <div class="mni">
+    <a href="dashboard_v3.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="mnlbl">الرئيسية</span></a>
+    <a href="rfq.html" class="mna on"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span class="mnlbl">طلبيات</span></a>
+    <a href="orders.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h22v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3Z"/><path d="m8 10 4 4 4-4"/></svg><span class="mnlbl">طلبات</span></a>
+    <a href="analytics.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="mnlbl">تحليلات</span></a>
+  </div>
+</nav>
+
+<div id="toast"></div>
+
+<script>
+(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login_v3.html';})();
+
+// Sidebar
+function oSB(){document.getElementById('sb').classList.add('on');document.getElementById('mo').classList.add('on');}
+function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');}
+
+// Dark
+if(localStorage.getItem('mf_dark')==='1')document.body.classList.add('dark');
+function tDk(){const on=document.body.classList.toggle('dark');localStorage.setItem('mf_dark',on?'1':'0');}
+
+// Toast
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200);}
+
+// Lang
+let lang=localStorage.getItem('mf_lang')||'ar';
+function setLang(l){lang=l;localStorage.setItem('mf_lang',l);document.documentElement.dataset.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.getElementById('lpAR').classList.toggle('on',l==='ar');document.getElementById('lpEN').classList.toggle('on',l==='en');}
+document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+if(lang==='en')setTimeout(()=>setLang('en'),0);
+
+// Time
+function uT(){const d=new Date();const da=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];const ma=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];const el=document.getElementById('lt');if(el)el.textContent=`${da[d.getDay()]} ${d.getDate()} ${ma[d.getMonth()]} · ${d.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})}`;}
+uT();setInterval(uT,30000);
+
+// ── DATA ──
+const ITEMS=[
+  {id:1,name:'أموكسيسيلين 500mg',qty:15000},
+  {id:2,name:'باراسيتامول 500mg',qty:20000},
+  {id:3,name:'أوميبرازول 20mg',qty:8000},
+  {id:4,name:'ميتفورمين 850mg',qty:12000},
+  {id:5,name:'فيتامين D3 1000IU',qty:6000},
+  {id:6,name:'أسبرين 100mg',qty:10000},
+  {id:7,name:'سيترازين 10mg',qty:5000},
+  {id:8,name:'أموكسيسيلين + كلافولانات 625mg',qty:4000},
+];
+
+// State per row
+const state=ITEMS.map(()=>({price:'',avail:'',expiry:'',batch:'',discount:'',bonus:'',skip:false}));
+
+// ── RENDER TABLE ──
+function renderTable(){
+  document.getElementById('quoteBody').innerHTML=ITEMS.map((item,i)=>{
+    const s=state[i];
+    const filled=!s.skip&&s.price&&s.avail;
+    const rowCls=filled?'filled':'';
+    const p=parseFloat(s.price)||0;
+    const q=parseInt(s.avail)||0;
+    // خصم السطر له الأولوية، وإلا يأخذ الخصم المشترك
+    const gDisc=parseFloat(document.getElementById('gDiscount').value)||0;
+    const rowDisc=s.discount!==''?(parseFloat(s.discount)||0):gDisc;
+    const total=filled?p*q:0;
+    const netTotal=total*(1-rowDisc/100);
+    return`<tr class="${rowCls}" id="row${i}">
+      <td style="color:var(--ink4);font-size:11px;text-align:center;font-weight:700">${i+1}</td>
+      <td>
+        <div class="item-name">${item.name}</div>
+        <div class="item-qty">${item.qty.toLocaleString()} وحدة مطلوبة</div>
+      </td>
+      <td style="text-align:center"><span class="bdg bb2">${item.qty.toLocaleString()}</span></td>
+      <td>
+        <input class="tfc${s.avail&&!s.skip?' ok':''}" type="number" value="${s.avail}" placeholder="${item.qty.toLocaleString()}"
+          min="1" ${s.skip?'disabled':''} oninput="state[${i}].avail=this.value;updRow(${i})">
+      </td>
+      <td>
+        <input class="tfc${s.price&&!s.skip?' ok':''}" type="number" value="${s.price}" placeholder="0.00"
+          step="0.01" min="0" ${s.skip?'disabled':''} oninput="state[${i}].price=this.value;updRow(${i})">
+      </td>
+      <td>
+        <div style="position:relative">
+          <input class="tfc" type="number" value="${s.discount}" placeholder="0"
+            min="0" max="100" step="0.1" ${s.skip?'disabled':''}
+            oninput="state[${i}].discount=this.value;updRow(${i})" style="padding-left:18px">
+          <span style="position:absolute;left:7px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--ink4);pointer-events:none">%</span>
+        </div>
+      </td>
+      <td>
+        <input class="tfc" type="number" value="${s.bonus}" placeholder="0"
+          min="0" ${s.skip?'disabled':''}
+          oninput="state[${i}].bonus=this.value;updRow(${i})">
+      </td>
+      <td>
+        <input class="tfc" type="date" value="${s.expiry}" min="2026-01-01"
+          ${s.skip?'disabled':''} onchange="state[${i}].expiry=this.value">
+      </td>
+      <td>
+        <input class="tfc" value="${s.batch}" placeholder="LOT-XXXX"
+          ${s.skip?'disabled':''} oninput="state[${i}].batch=this.value">
+      </td>
+      <td>
+        <span class="row-total${filled?' filled':''}">
+          ${filled?netTotal.toLocaleString('ar-SA',{maximumFractionDigits:0})+' ر.س':'—'}
+        </span>
+      </td>
+      <td style="text-align:center">
+        <input type="checkbox" class="skip-chk" title="تخطي هذا الصنف"
+          ${s.skip?'checked':''} onchange="state[${i}].skip=this.checked;renderTable();calcTotals()">
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updRow(i){
+  calcTotals();
+  // update row class live
+  const s=state[i];
+  const row=document.getElementById('row'+i);
+  if(row){row.classList.toggle('filled',!!(s.price&&s.avail&&!s.skip));}
+  // update tfc ok class
+  const tds=row?row.querySelectorAll('.tfc'):[];
+  if(tds[0])tds[0].classList.toggle('ok',!!(s.avail&&!s.skip));
+  if(tds[1])tds[1].classList.toggle('ok',!!(s.price&&!s.skip));
+}
+
+// Apply global fields to all rows
+function applyGlobal(){
+  const exp=document.getElementById('gExpiry').value;
+  const bat=document.getElementById('gBatch').value;
+  const disc=parseFloat(document.getElementById('gDiscount').value)||0;
+  state.forEach((s,i)=>{
+    if(exp&&!s.expiry){s.expiry=exp;}
+    if(bat&&!s.batch){s.batch=bat;}
+  });
+  renderTable();
+  calcTotals();
+}
+
+// ── CALC TOTALS ──
+function calcTotals(){
+  const disc=parseFloat(document.getElementById('gDiscount').value)||0;
+  const bonus=parseInt(document.getElementById('gBonus').value)||0;
+
+  let filled=0,grossTotal=0,totalDiscAmt=0,totalBonus=0,totalQty=0;
+  state.forEach((s,i)=>{
+    if(s.skip)return;
+    const p=parseFloat(s.price)||0;
+    const q=parseInt(s.avail)||0;
+    // خصم السطر أولاً، ثم الخصم المشترك
+    const rowDisc=parseFloat(s.discount)||disc;
+    const rowBonus=parseInt(s.bonus)||0;
+    if(p&&q){
+      filled++;
+      const lineGross=p*q;
+      const lineDisc=lineGross*rowDisc/100;
+      grossTotal+=lineGross;
+      totalDiscAmt+=lineDisc;
+      totalBonus+=rowBonus;
+      totalQty+=q;
+    }
+  });
+
+  const netTotal=grossTotal-totalDiscAmt;
+  const commission=netTotal*0.02;
+  const myNet=netTotal-commission;
+
+  const fmt=n=>n.toLocaleString('ar-SA',{maximumFractionDigits:0})+' ر.س';
+
+  // progress
+  const total=ITEMS.length;
+  const pct=Math.round(filled/total*100);
+  document.getElementById('progBar').style.width=pct+'%';
+  document.getElementById('progTxt').textContent=filled+'/'+total;
+  document.getElementById('filledCount').textContent=filled;
+  document.getElementById('s_filled').textContent=filled+' / '+total;
+  document.getElementById('s_qty').textContent=totalQty>0?totalQty.toLocaleString()+' وحدة':'—';
+
+  if(filled>0){
+    document.getElementById('s_gross').textContent=fmt(grossTotal);
+    const totalBonusAll=totalBonus+(bonus*filled);
+    document.getElementById('s_disc').textContent=totalDiscAmt>0?'- '+fmt(totalDiscAmt):'لا يوجد';
+    document.getElementById('s_bonus').textContent=totalBonusAll>0?totalBonusAll.toLocaleString()+' وحدة مجانية':'لا يوجد';
+    document.getElementById('s_total').textContent=fmt(netTotal);
+    document.getElementById('s_net').textContent=fmt(myNet);
+    document.getElementById('heroTotal').textContent=Math.round(netTotal).toLocaleString();
+    document.getElementById('sbTotal').textContent='إجمالي عرضك: '+fmt(netTotal);
+    document.getElementById('sbInfo').textContent=filled+' أصناف مسعّرة';
+  } else {
+    ['s_gross','s_disc','s_bonus','s_total','s_net'].forEach(id=>document.getElementById(id).textContent='—');
+    document.getElementById('heroTotal').textContent='—';
+    document.getElementById('sbTotal').textContent='';
+    document.getElementById('sbInfo').textContent='أسعر الأصناف للمتابعة';
+  }
+
+  // update row totals
+  renderTable();
+}
+
+// ── COUNTDOWN ──
+let secs=5*3600+42*60+18;
+function tick(){
+  if(secs<=0){document.getElementById('cdTime').textContent='00:00:00';return;}
+  secs--;
+  const h=Math.floor(secs/3600);
+  const m=Math.floor((secs%3600)/60);
+  const s=secs%60;
+  document.getElementById('cdTime').textContent=
+    String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+setInterval(tick,1000);
+
+// ── SUBMIT ──
+function submitQuote(){
+  const disc=parseFloat(document.getElementById('gDiscount').value)||0;
+  const filled=state.filter((s,i)=>!s.skip&&s.price&&s.avail);
+  if(!filled.length){toast('أدخل سعراً لصنف واحد على الأقل');return;}
+
+  const missing=filled.filter(s=>!s.expiry||!s.batch);
+  if(missing.length>0){
+    toast('أدخل تاريخ الانتهاء ورقم التشغيلة للأصناف المسعّرة');return;
+  }
+
+  let msg=`✓ تم إرسال عرضك — ${filled.length} صنف`;
+  if(disc>0)msg+=` · خصم ${disc}%`;
+  toast(msg);
+}
+
+// ── EXPORT ──
+function exportQuote(){
+  const disc=parseFloat(document.getElementById('gDiscount').value)||0;
+  const bonus=parseInt(document.getElementById('gBonus').value)||0;
+  const rows=ITEMS.map((item,i)=>{
+    const s=state[i];
+    if(s.skip)return null;
+    const p=parseFloat(s.price)||0;
+    const q=parseInt(s.avail)||0;
+    const total=p*q*(1-disc/100);
+    const rowDisc=s.discount!==''?(parseFloat(s.discount)||0):disc;
+    const rowBonus=parseInt(s.bonus)||0;
+    const lineTotal=(p*q*(1-rowDisc/100))||0;
+    return{'اسم البند':item.name,'الكمية المطلوبة':item.qty,'الكمية المتاحة':q||'','سعر الوحدة':p||'','خصم %':rowDisc||0,'بونص (وحدة)':rowBonus||0,'تاريخ الانتهاء':s.expiry||'','رقم التشغيلة':s.batch||'','إجمالي السطر':lineTotal||''};
+  }).filter(Boolean);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'عرض السعر');
+  XLSX.writeFile(wb,'MedFlow_Quote_RFQ24590_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  toast('✓ تم تصدير عرض السعر');
+}
+
+// Init
+renderTable();
+</script>
+</body>
+</html>

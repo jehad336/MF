@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MedFlow — أنشئ عرضاً وشاركه</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0D9488;--teal-d:#0F766E;--teal-l:#F0FDFA;--teal-m:#CCFBF1;--green:#16A34A;--green-l:#F0FDF4;--amber:#F59E0B;--amber-l:#FFFBEB;--red:#EF4444;--red-l:#FFF5F5;--ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;--bg:#F8FAFC;--brd:#E2E8F0;--brd-l:#F1F5F9;--r:10px;--rl:14px;--font:'Cairo',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:var(--font);border:none}
+.top{background:#fff;border-bottom:1px solid var(--brd-l);padding:12px 18px;display:flex;align-items:center;gap:10px}
+.logo{width:32px;height:32px;background:linear-gradient(135deg,#2DD4BF,#0D9488);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.top a{margin-right:auto;font-size:11.5px;color:var(--teal);font-weight:700;text-decoration:none}
+.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 60px;display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start}
+@media(max-width:860px){.wrap{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:0 1px 3px rgba(15,23,42,.05)}
+.ch{padding:13px 18px;border-bottom:1px solid var(--brd-l);font-size:13px;font-weight:800}
+.cb{padding:16px 18px}
+.fg{margin-bottom:12px}
+.fl{font-size:11px;font-weight:800;color:var(--ink);display:block;margin-bottom:5px}
+.fl span{font-weight:500;color:var(--ink4);font-size:9.5px}
+.fc{width:100%;border:1px solid var(--brd);border-radius:var(--r);padding:9px 12px;font-size:13px;font-family:var(--font);background:var(--bg);outline:none;color:var(--ink)}
+.fc:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px var(--teal-l)}
+.fgr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 18px;border-radius:var(--r);font-size:13px;font-weight:800;transition:.12s}
+.bt{background:var(--teal);color:#fff;width:100%}
+.bt:hover{background:var(--teal-d)}
+.bo{background:#fff;border:1.5px solid var(--brd);color:var(--ink2)}
+.bwa{background:#25D366;color:#fff}
+/* preview */
+.pv{border-radius:var(--rl);overflow:hidden;position:sticky;top:16px}
+.pv-hero{background:linear-gradient(135deg,#0F172A,#134E4A);padding:16px;text-align:center;color:#fff}
+.pv-badge{display:inline-block;background:var(--amber);font-size:9px;font-weight:900;padding:3px 11px;border-radius:99px;margin-bottom:8px}
+.pv-name{font-size:16px;font-weight:900;line-height:1.4}
+.pv-sup{font-size:10px;opacity:.65;margin-top:3px}
+.pv-body{background:#fff;padding:16px}
+.pv-price-row{display:flex;align-items:center;justify-content:space-between;background:var(--teal-l);border:1px solid var(--teal-m);border-radius:12px;padding:12px 14px}
+.pv-old{font-size:11px;color:var(--ink4);text-decoration:line-through}
+.pv-price{font-size:24px;font-weight:900;color:var(--teal-d);line-height:1.1}
+.pv-save{width:46px;height:46px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.chip{background:var(--bg);border:1px solid var(--brd-l);border-radius:99px;padding:4px 11px;font-size:10px;font-weight:700;color:var(--ink3)}
+#linkBox{display:none;margin-top:14px;background:var(--green-l);border:1px solid #BBF7D0;border-radius:12px;padding:13px}
+#linkUrl{width:100%;border:1px solid var(--brd);border-radius:8px;padding:8px 10px;font-size:10.5px;direction:ltr;background:#fff;color:var(--ink3);font-family:monospace}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;font-size:11.5px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:99}
+#toast.on{opacity:1}
+</style>
+</head>
+<script>(function(){if(!localStorage.getItem('mf_user'))localStorage.setItem('mf_user',JSON.stringify({name:'مستودع الجزيرة الطبي',role:'warehouse',email:'warehouse@demo.sa'}));})();</script>
+<body>
+<div class="top">
+  <div class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+  <div><div style="font-size:13px;font-weight:800">أنشئ عرضاً وشاركه</div><div style="font-size:9.5px;color:var(--ink4)">صنف منافس → رابط → أي أحد يشتري منه</div></div>
+  <a href="dashboard_v3.html">← رجوع للوحة التحكم</a>
+</div>
+
+<div class="wrap">
+  <!-- FORM -->
+  <div class="card">
+    <div class="ch">تفاصيل العرض</div>
+    <div class="cb">
+      <div class="fg"><label class="fl">اسم الصنف *</label><input class="fc" id="f_n" placeholder="مثال: باراسيتامول 500mg — علبة 20 قرص" oninput="pv()"></div>
+      <div class="fgr">
+        <div class="fg"><label class="fl">سعرك (ر.س) *</label><input class="fc" id="f_p" type="number" step="0.01" placeholder="38" oninput="pv()"></div>
+        <div class="fg"><label class="fl">السعر المعتاد بالسوق <span>(اختياري — لإظهار نسبة التوفير)</span></label><input class="fc" id="f_op" type="number" step="0.01" placeholder="44" oninput="pv()"></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label class="fl">الكمية المتاحة *</label><input class="fc" id="f_q" type="number" placeholder="50000" oninput="pv()"></div>
+        <div class="fg"><label class="fl">بونص <span>(وحدات مجانية)</span></label><input class="fc" id="f_bn" type="number" placeholder="0" oninput="pv()"></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label class="fl">تاريخ انتهاء الصلاحية *</label><input class="fc" id="f_e" type="date" min="2026-08-01" onchange="pv()"></div>
+        <div class="fg"><label class="fl">رقم التشغيلة *</label><input class="fc" id="f_b" placeholder="LOT-2026-A1234" oninput="pv()"></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label class="fl">العرض ساري حتى <span>(اختياري — يظهر عدّاد)</span></label><input class="fc" id="f_vu" type="date" onchange="pv()"></div>
+        <div class="fg"><label class="fl">واتساب استقبال الطلبات * <span>(بالصيغة الدولية بدون +)</span></label><input class="fc" id="f_ph" placeholder="9665XXXXXXXX" style="direction:ltr;text-align:left"></div>
+      </div>
+      <div class="fg"><label class="fl">ملاحظة <span>(اختياري)</span></label><input class="fc" id="f_note" placeholder="مثال: التوصيل مجاني داخل مكة للكميات فوق 5,000" oninput="pv()"></div>
+      <button class="btn bt" onclick="makeLink()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        إنشاء رابط العرض
+      </button>
+      <div id="linkBox">
+        <div style="font-size:11.5px;font-weight:800;color:var(--green);margin-bottom:7px">✓ الرابط جاهز — شاركه في أي مكان:</div>
+        <input id="linkUrl" readonly onclick="this.select()">
+        <div style="display:flex;gap:7px;margin-top:9px">
+          <button class="btn bwa" style="flex:1;padding:9px" onclick="shareWA()">مشاركة واتساب</button>
+          <button class="btn bo" style="padding:9px 14px" onclick="copyLink()">نسخ</button>
+          <button class="btn bo" style="padding:9px 14px" onclick="window.open(document.getElementById('linkUrl').value,'_blank')">معاينة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE PREVIEW -->
+  <div class="pv card">
+    <div class="pv-hero">
+      <div class="pv-badge">⚡ عرض خاص عبر ميدفلو</div>
+      <div class="pv-name" id="p_n">اسم الصنف</div>
+      <div class="pv-sup" id="p_s">المورد</div>
+    </div>
+    <div class="pv-body">
+      <div class="pv-price-row">
+        <div><div class="pv-old" id="p_op" style="display:none"></div><div class="pv-price"><span id="p_p">—</span> <span style="font-size:12px">ر.س</span></div><div style="font-size:9px;color:var(--ink4)">للوحدة</div></div>
+        <div class="pv-save" id="p_sv" style="display:none"></div>
+      </div>
+      <div class="chips" id="p_chips"></div>
+      <div id="p_note" style="display:none;margin-top:10px;background:var(--amber-l);border:1px solid #FDE68A;border-radius:9px;padding:8px 11px;font-size:10.5px;color:var(--ink2)"></div>
+      <div style="margin-top:12px;font-size:9.5px;color:var(--ink4);text-align:center">هكذا سيظهر عرضك لمن يفتح الرابط</div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+const U=JSON.parse(localStorage.getItem('mf_user')||'{}');
+const SUP=U.name||'مستودع الجزيرة الطبي';
+document.getElementById('p_s').textContent=SUP+' · مورد موثق SFDA ✓';
+function v(id){return document.getElementById(id).value.trim();}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2800);}
+
+function pv(){
+  document.getElementById('p_n').textContent=v('f_n')||'اسم الصنف';
+  const p=parseFloat(v('f_p')),op=parseFloat(v('f_op'));
+  document.getElementById('p_p').textContent=p?p.toLocaleString():'—';
+  const opEl=document.getElementById('p_op'),svEl=document.getElementById('p_sv');
+  if(op&&p&&op>p){opEl.style.display='block';opEl.textContent=op.toLocaleString()+' ر.س';
+    svEl.style.display='flex';svEl.textContent='-'+Math.round((op-p)/op*100)+'%';}
+  else{opEl.style.display='none';svEl.style.display='none';}
+  const chips=[];
+  if(v('f_q'))chips.push('الكمية: '+Number(v('f_q')).toLocaleString());
+  if(v('f_bn')&&v('f_bn')!=='0')chips.push('بونص +'+Number(v('f_bn')).toLocaleString());
+  if(v('f_e'))chips.push('صلاحية: '+v('f_e'));
+  if(v('f_b'))chips.push('تشغيلة: '+v('f_b'));
+  document.getElementById('p_chips').innerHTML=chips.map(c=>'<span class="chip">'+c+'</span>').join('');
+  const nt=document.getElementById('p_note');
+  if(v('f_note')){nt.style.display='block';nt.textContent='📌 '+v('f_note');}else nt.style.display='none';
+}
+
+function makeLink(){
+  if(!v('f_n')||!v('f_p')||!v('f_q')||!v('f_e')||!v('f_b')){toast('أكمل الحقول الإلزامية (*)');return;}
+  if(!v('f_ph')){toast('أدخل رقم واتساب لاستقبال الطلبات');return;}
+  const o={n:v('f_n'),p:parseFloat(v('f_p')),op:parseFloat(v('f_op'))||null,q:parseInt(v('f_q')),
+    bn:parseInt(v('f_bn'))||0,e:v('f_e'),b:v('f_b'),vu:v('f_vu')||null,ph:v('f_ph').replace(/\D/g,''),
+    note:v('f_note')||null,s:SUP,c:'مكة المكرمة'};
+  const enc=btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+  const url=new URL('offer.html',location.href).href+'#o='+enc;
+  document.getElementById('linkUrl').value=url;
+  document.getElementById('linkBox').style.display='block';
+  toast('✓ الرابط جاهز');
+}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('linkUrl').value).then(()=>toast('✓ نُسخ الرابط'));}
+function shareWA(){
+  const url=document.getElementById('linkUrl').value;
+  const txt='⚡ عرض خاص من '+SUP+'\n'+v('f_n')+' — '+v('f_p')+' ر.س\nاطلب مباشرة من الرابط:\n'+url;
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
+pv();
+</script>
+</body>
+</html>

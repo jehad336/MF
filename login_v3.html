@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedFlow — تسجيل الدخول</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Cairo',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{display:flex;min-height:100vh;color:#0F172A}
+
+/* LEFT — navy dark */
+.left{
+  width:50%;background:#0F172A;
+  display:flex;flex-direction:column;padding:44px;
+  position:relative;overflow:hidden;flex-shrink:0;
+}
+.left::before{content:'';position:absolute;top:-100px;right:-80px;width:420px;height:420px;border-radius:50%;background:rgba(13,148,136,.08);}
+.left::after{content:'';position:absolute;bottom:-120px;left:-60px;width:340px;height:340px;border-radius:50%;background:rgba(22,163,74,.06);}
+.lc{position:relative;z-index:1;flex:1;display:flex;flex-direction:column}
+
+/* Logo */
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:44px}
+.logo-ic{width:44px;height:44px;background:linear-gradient(135deg,#2DD4BF,#0D9488);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 16px rgba(13,148,136,.35)}
+.logo-name{font-size:22px;font-weight:800;color:#fff}
+.logo-tag{font-size:9px;color:rgba(255,255,255,.28);letter-spacing:.5px;text-transform:uppercase;margin-top:1px}
+
+/* Headline */
+.hl{margin-bottom:36px}
+.hl-title{font-size:28px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:10px;letter-spacing:-.3px}
+.hl-title span{color:#2DD4BF}
+.hl-sub{font-size:13px;color:rgba(255,255,255,.4);line-height:1.75;max-width:340px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:30px}
+.stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px}
+.stat-val{font-size:22px;font-weight:800;color:#fff;line-height:1;margin-bottom:3px}
+.stat-lbl{font-size:9px;color:rgba(255,255,255,.3);font-weight:500}
+
+/* Features */
+.feats{display:flex;flex-direction:column;gap:11px;margin-bottom:auto}
+.feat{display:flex;align-items:flex-start;gap:11px}
+.feat-ic{width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feat-txt{font-size:12px;color:rgba(255,255,255,.4);line-height:1.6;padding-top:5px}
+.feat-txt strong{color:rgba(255,255,255,.8);font-weight:700}
+
+/* Clients */
+.clients{margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06)}
+.clients-lbl{font-size:9px;color:rgba(255,255,255,.22);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
+.clients-row{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);border-radius:99px;padding:4px 11px;font-size:11px;color:rgba(255,255,255,.35);font-weight:500}
+
+/* RIGHT — white */
+.right{flex:1;display:flex;align-items:center;justify-content:center;padding:36px 28px;background:#F3F5FA}
+.form-wrap{width:100%;max-width:390px}
+
+/* Lang */
+.lang-row{display:flex;justify-content:flex-end;margin-bottom:18px}
+.lang-pill{display:flex;background:#F1F5F9;border-radius:99px;padding:2px;gap:1px}
+.lp{padding:4px 12px;border-radius:99px;font-size:9.5px;font-weight:700;color:#64748B;cursor:pointer;transition:all .15s}
+.lp.on{background:#0D9488;color:#fff}
+
+/* Title */
+.form-title{font-size:22px;font-weight:800;color:#0F172A;margin-bottom:5px}
+.form-sub{font-size:12.5px;color:#94A3B8;margin-bottom:22px;line-height:1.6}
+
+/* Role tabs */
+.role-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:20px;background:#F8FAFC;border:1px solid #E6EAF2;border-radius:14px;padding:4px}
+.role-tab{padding:9px 6px;border-radius:11px;cursor:pointer;text-align:center;transition:all .15s}
+.role-tab.on{background:#fff;box-shadow:0 1px 4px rgba(15,23,42,.08)}
+.role-tab-ic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 4px}
+.role-tab-lbl{font-size:11px;font-weight:700;color:#94A3B8}
+.role-tab.on .role-tab-lbl{color:#0D9488}
+
+/* Error */
+.err{background:#FEF2F2;border:1px solid #FCA5A5;border-radius:11px;padding:10px 13px;font-size:12px;color:#DC2626;font-weight:600;margin-bottom:12px;display:none;align-items:center;gap:8px}
+.err.on{display:flex}
+
+/* Fields */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fl{font-size:11px;font-weight:700;color:#0F172A}
+.fi{position:relative}
+.fi-ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#94A3B8;pointer-events:none;display:flex}
+.fc{border:1px solid #E6EAF2;border-radius:11px;padding:10px 40px 10px 12px;font-size:13px;color:#0F172A;background:#F8FAFC;outline:none;font-family:'Cairo',sans-serif;width:100%;transition:all .15s}
+.fc:focus{border-color:#0D9488;background:#fff;box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+.fc::placeholder{color:#94A3B8}
+.eye-btn{position:absolute;left:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94A3B8;display:flex;padding:0}
+.eye-btn:hover{color:#475569}
+
+/* Remember */
+.rem-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.check-row{display:flex;align-items:center;gap:7px;cursor:pointer}
+.check-row input{width:15px;height:15px;accent-color:#0D9488;cursor:pointer}
+.check-lbl{font-size:12px;color:#475569}
+.forgot{font-size:12px;color:#0D9488;font-weight:700;background:none;border:none;cursor:pointer;font-family:'Cairo',sans-serif;padding:0}
+.forgot:hover{text-decoration:underline}
+
+/* Login btn */
+.btn-login{width:100%;padding:12px;border-radius:11px;background:#0D9488;color:#fff;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'Cairo',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;box-shadow:0 6px 16px rgba(13,148,136,.25);transition:all .15s}
+.btn-login:hover{background:#0F766E}
+.btn-login:active{transform:scale(.99)}
+.btn-login.loading{opacity:.7;pointer-events:none}
+
+/* Divider */
+.div-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.div-row::before,.div-row::after{content:'';flex:1;height:1px;background:#E6EAF2}
+.div-txt{font-size:11px;color:#94A3B8;white-space:nowrap}
+
+/* Demo accounts */
+.demo-accs{display:flex;flex-direction:column;gap:7px}
+.demo-acc{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:12px;background:#F8FAFC;border:1.5px solid #E6EAF2;cursor:pointer;transition:all .12s}
+.demo-acc:hover{border-color:#0D9488;background:#F0FDFA}
+.da-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.da-email{font-size:11px;font-weight:700;color:#0F172A}
+.da-role{font-size:10px;color:#64748B;margin-top:1px}
+
+/* Success overlay */
+.sov{position:fixed;inset:0;background:#0D9488;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s}
+.sov.on{opacity:1;pointer-events:all}
+.sov-ic{width:72px;height:72px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.sov-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px}
+.sov-sub{font-size:13px;color:rgba(255,255,255,.6)}
+
+@media(max-width:768px){
+  body{flex-direction:column}
+  .left{width:100%;padding:28px 20px;min-height:auto}
+  .hl-title{font-size:22px}
+  .stats,.feats,.clients{display:none}
+  .right{padding:24px 20px;align-items:flex-start}
+  .form-wrap{max-width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<div class="sov" id="sov">
+  <div class="sov-ic">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  </div>
+  <div class="sov-title" id="sovTitle">مرحباً بك في ميدفلو</div>
+  <div class="sov-sub" id="sovSub">جارٍ تحميل لوحة التحكم...</div>
+</div>
+
+<!-- LEFT — Navy -->
+<div class="left">
+  <div class="lc">
+    <div class="logo">
+      <img src="assets/logo-dark.png" alt="MedFlow ميدفلو" style="height:52px;display:block" onerror="this.style.display='none';document.getElementById('lgFb').style.display='flex'">
+      <div class="logo-ic" id="lgFb" style="display:none">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-name" data-ar="ميدفلو" data-en="MedFlow">ميدفلو</div>
+        <div class="logo-tag">Medical Procurement</div>
+      </div>
+    </div>
+
+    <div class="hl">
+      <div class="hl-title">
+        <span data-ar="منصة المشتريات الطبية" data-en="Saudi Arabia's">منصة المشتريات الطبية</span><br>
+        <span data-ar="الأذكى في المملكة" data-en="Smartest Medical Procurement">الأذكى في المملكة</span>
+      </div>
+      <div class="hl-sub" data-ar="ربط الموردين والمستشفيات والصيدليات عبر سوق RFQ واحد مع حماية Escrow وامتثال كامل لـ SFDA" data-en="Connecting suppliers, hospitals and pharmacies via a single RFQ marketplace with Escrow protection and full SFDA compliance">ربط الموردين والمستشفيات والصيدليات عبر سوق RFQ واحد مع حماية Escrow وامتثال كامل لـ SFDA</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="cnt1">0</div><div class="stat-lbl" data-ar="مورد موثق" data-en="Verified Suppliers">مورد موثق</div></div>
+      <div class="stat"><div class="stat-val" id="cnt2">0</div><div class="stat-lbl" data-ar="طلبية شهرياً" data-en="RFQs/month">طلبية شهرياً</div></div>
+      <div class="stat"><div class="stat-val" id="cnt3">0%</div><div class="stat-lbl" data-ar="متوسط التوفير" data-en="Avg. Savings">متوسط التوفير</div></div>
+    </div>
+
+    <div class="feats">
+      <div class="feat">
+        <div class="feat-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="feat-txt"><strong data-ar="Escrow آمن" data-en="Secure Escrow">Escrow آمن</strong> — <span data-ar="المبلغ محجوز حتى تأكيد الاستلام ورفع فاتورة GLN" data-en="Amount held until delivery confirmation and GLN invoice upload">المبلغ محجوز حتى تأكيد الاستلام ورفع فاتورة GLN</span></div>
+      </div>
+      <div class="feat">
+        <div class="feat-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.8" stroke-linecap="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="feat-txt"><strong data-ar="RFQ في دقائق" data-en="RFQ in Minutes">RFQ في دقائق</strong> — <span data-ar="أرسل طلبيتك لـ 1,458 مورد وتلقَّ عروضاً خلال ساعات" data-en="Broadcast to 1,458 suppliers and receive quotes within hours">أرسل طلبيتك لـ 1,458 مورد وتلقَّ عروضاً خلال ساعات</span></div>
+      </div>
+      <div class="feat">
+        <div class="feat-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="feat-txt"><strong data-ar="امتثال SFDA كامل" data-en="Full SFDA Compliance">امتثال SFDA كامل</strong> — <span data-ar="جميع المنتجات موثقة وتراخيصها سارية تلقائياً" data-en="All products verified with active licenses automatically">جميع المنتجات موثقة وتراخيصها سارية تلقائياً</span></div>
+      </div>
+    </div>
+
+    <div class="clients">
+      <div class="clients-lbl" data-ar="يثق بنا" data-en="TRUSTED BY">يثق بنا</div>
+      <div class="clients-row">
+        <div class="chip" data-ar="مستشفى الملك فيصل" data-en="King Faisal Hospital">مستشفى الملك فيصل</div>
+        <div class="chip" data-ar="صيدليات النهدي" data-en="Al-Nahdi Pharmacies">صيدليات النهدي</div>
+        <div class="chip" data-ar="+308 آخرين" data-en="+308 others">+308 آخرين</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT — White -->
+<div class="right">
+  <div class="form-wrap">
+    <div class="lang-row">
+      <div class="lang-pill">
+        <div class="lp on" id="lpAR" onclick="setLang('ar')">ع</div>
+        <div class="lp" id="lpEN" onclick="setLang('en')">EN</div>
+      </div>
+    </div>
+
+    <div class="form-title" data-ar="تسجيل الدخول" data-en="Sign In">تسجيل الدخول</div>
+    <div class="form-sub" data-ar="أدخل بياناتك للوصول إلى منصتك" data-en="Enter your credentials to access your platform">أدخل بياناتك للوصول إلى منصتك</div>
+
+    <!-- Role Tabs -->
+    <div class="role-tabs">
+      <div class="role-tab on" onclick="setRole('warehouse',this)">
+        <div class="role-tab-ic" style="background:#F0FDFA">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+        </div>
+        <div class="role-tab-lbl" data-ar="مستودع" data-en="Warehouse">مستودع</div>
+      </div>
+      <div class="role-tab" onclick="setRole('buyer',this)">
+        <div class="role-tab-ic" style="background:#ECFDF3">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="role-tab-lbl" data-ar="مشتري" data-en="Buyer">مشتري</div>
+      </div>
+      <div class="role-tab" onclick="setRole('admin',this)">
+        <div class="role-tab-ic" style="background:#F5F3FF">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        </div>
+        <div class="role-tab-lbl" data-ar="إدارة" data-en="Admin">إدارة</div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="err" id="errBox">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="errMsg"></span>
+    </div>
+
+    <!-- Email -->
+    <div class="fg">
+      <label class="fl" data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+      <div class="fi">
+        <span class="fi-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+        <input class="fc" id="emailIn" type="email" placeholder="example@medflow.sa" autocomplete="email">
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="fg">
+      <label class="fl" data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+      <div class="fi">
+        <span class="fi-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <input class="fc" id="passIn" type="password" placeholder="••••••••" autocomplete="current-password">
+        <button class="eye-btn" onclick="togglePass()" type="button">
+          <svg id="eyeIco" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="rem-row">
+      <label class="check-row"><input type="checkbox" id="remChk"><span class="check-lbl" data-ar="تذكرني" data-en="Remember me">تذكرني</span></label>
+      <button class="forgot" data-ar="نسيت كلمة المرور؟" data-en="Forgot password?">نسيت كلمة المرور؟</button>
+    </div>
+
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      <span id="btnTxt" data-ar="تسجيل الدخول" data-en="Sign In">تسجيل الدخول</span>
+    </button>
+
+    <div class="div-row"><span class="div-txt" data-ar="أو جرّب الحسابات التجريبية" data-en="or try demo accounts">أو جرّب الحسابات التجريبية</span></div>
+
+    <div class="demo-accs">
+      <div class="demo-acc" onclick="quickLogin('warehouse@demo.sa','demo123','warehouse')">
+        <div class="da-ic" style="background:#F0FDFA"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+        <div style="flex:1"><div class="da-email">warehouse@demo.sa</div><div class="da-role" data-ar="مستودع طبي · مكة المكرمة" data-en="Medical Warehouse · Mecca">مستودع طبي · مكة المكرمة</div></div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="demo-acc" onclick="quickLogin('buyer@demo.sa','demo123','buyer')">
+        <div class="da-ic" style="background:#ECFDF3"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div style="flex:1"><div class="da-email">buyer@demo.sa</div><div class="da-role" data-ar="مشتري · مستشفى / صيدلية" data-en="Buyer · Hospital / Pharmacy">مشتري · مستشفى / صيدلية</div></div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="demo-acc" onclick="quickLogin('admin@medflow.sa','admin123','admin')">
+        <div class="da-ic" style="background:#F5F3FF"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
+        <div style="flex:1"><div class="da-email">admin@medflow.sa</div><div class="da-role" data-ar="مدير المنصة · صلاحيات كاملة" data-en="Platform Admin · Full Access">مدير المنصة · صلاحيات كاملة</div></div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const users={
+  'warehouse@demo.sa':{pass:'demo123',role:'warehouse',name:'جهاد اللهيبي',nameEn:'Jehad Al-Luhebi'},
+  'buyer@demo.sa':    {pass:'demo123',role:'buyer',    name:'صيدلية الشفاء',nameEn:'Al-Shifa Pharmacy'},
+  'admin@medflow.sa': {pass:'admin123',role:'admin',   name:'مدير ميدفلو',  nameEn:'MedFlow Admin'},
+};
+let lang=localStorage.getItem('mf_lang')||'ar';
+let role='warehouse';
+
+function setLang(l){
+  lang=l;localStorage.setItem('mf_lang',l);
+  document.documentElement.dataset.lang=l;
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  document.querySelectorAll('[data-ar][data-en]').forEach(el=>el.textContent=l==='ar'?el.dataset.ar:el.dataset.en);
+  document.getElementById('lpAR').classList.toggle('on',l==='ar');
+  document.getElementById('lpEN').classList.toggle('on',l==='en');
+}
+document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+if(lang==='en')setTimeout(()=>setLang('en'),0);
+
+function setRole(r,el){role=r;document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');hideErr();}
+function togglePass(){const i=document.getElementById('passIn');const show=i.type==='password';i.type=show?'text':'password';document.getElementById('eyeIco').innerHTML=show?'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>':'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';}
+function showErr(m){document.getElementById('errMsg').textContent=m;document.getElementById('errBox').classList.add('on');}
+function hideErr(){document.getElementById('errBox').classList.remove('on');}
+
+function quickLogin(email,pass,r){
+  document.getElementById('emailIn').value=email;
+  document.getElementById('passIn').value=pass;
+  const tabs=document.querySelectorAll('.role-tab');
+  const map={warehouse:0,buyer:1,admin:2};
+  tabs.forEach(t=>t.classList.remove('on'));
+  tabs[map[r]]?.classList.add('on');
+  role=r;hideErr();setTimeout(doLogin,150);
+}
+
+function doLogin(){
+  const email=document.getElementById('emailIn').value.trim().toLowerCase();
+  const pass=document.getElementById('passIn').value;
+  hideErr();
+  if(!email){showErr(lang==='ar'?'أدخل البريد الإلكتروني':'Please enter your email');return;}
+  if(!pass){showErr(lang==='ar'?'أدخل كلمة المرور':'Please enter your password');return;}
+  const btn=document.getElementById('loginBtn');
+  btn.classList.add('loading');
+  document.getElementById('btnTxt').textContent=lang==='ar'?'جارٍ التحقق...':'Signing in...';
+  setTimeout(()=>{
+    const u=users[email];
+    if(!u||pass!==u.pass){
+      btn.classList.remove('loading');
+      document.getElementById('btnTxt').textContent=lang==='ar'?'تسجيل الدخول':'Sign In';
+      showErr(lang==='ar'?'البريد الإلكتروني أو كلمة المرور غير صحيحة':'Incorrect email or password');
+      return;
+    }
+    localStorage.setItem('mf_user',JSON.stringify({email,role:u.role,name:lang==='ar'?u.name:u.nameEn}));
+    localStorage.setItem('mf_lang',lang);
+    if(document.getElementById('remChk').checked)localStorage.setItem('mf_remember','1');
+    const sov=document.getElementById('sov');
+    document.getElementById('sovTitle').textContent=lang==='ar'?`مرحباً ${u.name}`:`Welcome, ${u.nameEn}`;
+    document.getElementById('sovSub').textContent=lang==='ar'?'جارٍ تحميل لوحة التحكم...':'Loading your dashboard...';
+    sov.classList.add('on');
+    setTimeout(()=>window.location.href=(u.role==='buyer'?'buyer-dashboard.html':'dashboard_v3.html'),1200);
+  },700);
+}
+
+// Counters
+function animCount(id,target,suffix,dur){
+  const el=document.getElementById(id);let v=0,step=target/(dur/16);
+  const tm=setInterval(()=>{v+=step;if(v>=target){v=target;clearInterval(tm);}el.textContent=Math.round(v).toLocaleString()+suffix;},16);
+}
+setTimeout(()=>{animCount('cnt1',1458,'',1200);animCount('cnt2',312,'',1000);animCount('cnt3',22,'%',800);},300);
+
+// Remember
+if(localStorage.getItem('mf_remember')==='1'){
+  const u=JSON.parse(localStorage.getItem('mf_user')||'null');
+  if(u){document.getElementById('emailIn').value=u.email||'';document.getElementById('remChk').checked=true;}
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+if(localStorage.getItem('mf_dark')==='1')document.body.style.filter='';
+</script>
+</body>
+</html>
