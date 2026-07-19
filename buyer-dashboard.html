@@ -117,6 +117,15 @@ button{cursor:pointer;font-family:var(--font);border:none}
 /* TOAST */
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:var(--r);font-size:11.5px;font-weight:700;box-shadow:0 8px 24px rgba(15,23,42,.15);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none}
 #toast.on{opacity:1}
+.bimg{height:40px;display:block}.bimg-d{display:none}body.dark .bimg-l{display:none}body.dark .bimg-d{display:block}
+.mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:#fff;border-top:1px solid var(--brd-l);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
+.mni{display:flex;justify-content:space-around}
+.mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:10px;cursor:pointer;text-decoration:none}
+.mna.on{background:var(--blue-l)}
+.mnic{width:20px;height:20px;color:var(--ink4)}
+.mna.on .mnic{color:var(--blue)}
+.mnlbl{font-size:9px;font-weight:600;color:var(--ink4)}
+.mna.on .mnlbl{color:var(--blue)}
 </style>
 </head>
 <script>(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login_v3.html';})();</script>
@@ -126,8 +135,7 @@ button{cursor:pointer;font-family:var(--font);border:none}
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sb-brand">
-    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
-    <div><div class="sb-name">ميدفلو</div><div style="font-size:8px;color:var(--ink4)">Medical Procurement</div></div>
+    <img class="bimg bimg-l" src="assets/logo.png" alt="MedFlow ميدفلو"><img class="bimg bimg-d" src="assets/logo-dark.png" alt="MedFlow ميدفلو">
   </div>
   <div class="ng"><div class="ngl">الرئيسية</div>
     <a href="#" class="na on"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>لوحة التحكم</a>
@@ -323,5 +331,14 @@ setInterval(tickDeal,1000);
 // Toast
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200);}
 </script>
+<nav class="mob-nav">
+  <div class="mni">
+    <a href="dashboard_v3.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="mnlbl">الرئيسية</span></a>
+    <a href="rfq.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span class="mnlbl">طلبيات</span></a>
+    <a href="orders.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h22v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3Z"/><path d="m8 10 4 4 4-4"/></svg><span class="mnlbl">طلبات</span></a>
+    <a href="supplier.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="mnlbl">موردون</span></a>
+    <a href="analytics.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="mnlbl">تحليلات</span></a>
+  </div>
+</nav>
 </body>
 </html>

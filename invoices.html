@@ -177,6 +177,7 @@ body.dark .uav,.dark .ucav{background:rgba(45,212,191,.15);color:#2DD4BF}
   .ham{display:flex}
 }
 @media(max-width:480px){.sgrid{grid-template-columns:1fr 1fr}}
+.bimg{height:40px;display:block}.bimg-d{display:none}body.dark .bimg-l{display:none}body.dark .bimg-d{display:block}
 </style>
 
 <style>
@@ -275,8 +276,7 @@ body.dark .uav,.dark .ucav{background:rgba(45,212,191,.15);color:#2DD4BF}
 
 <aside class="sidebar" id="sb">
   <div class="sb-brand">
-    <div class="sb-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
-    <div><div class="sb-name">ميدفلو</div><div class="sb-tag">Medical Procurement</div></div>
+    <img class="bimg bimg-l" src="assets/logo.png" alt="MedFlow ميدفلو"><img class="bimg bimg-d" src="assets/logo-dark.png" alt="MedFlow ميدفلو">
   </div>
   <div class="ng"><div class="ngl">الرئيسية</div>
     <a href="dashboard_v3.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>لوحة التحكم</a>
@@ -297,10 +297,7 @@ body.dark .uav,.dark .ucav{background:rgba(45,212,191,.15);color:#2DD4BF}
     <a href="settings.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>الإعدادات</a>
   </div>
   <div class="sb-ft">
-    <div class="lang-pill">
-      <div class="lp on" id="lpAR" onclick="setLang('ar')">ع</div>
-      <div class="lp" id="lpEN" onclick="setLang('en')">EN</div>
-    </div>
+    
     <div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مدير المستودع · مكة</div></div></div>
   </div>
 </aside>
@@ -345,11 +342,20 @@ function oSB(){document.getElementById('sb').classList.add('on');document.getEle
 function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');}
 function tDk(){const on=document.body.classList.toggle('dark');localStorage.setItem('mf_dark',on?'1':'0');}
 if(localStorage.getItem('mf_dark')==='1')document.body.classList.add('dark');
-let lang=localStorage.getItem('mf_lang')||'ar';
+let lang='ar';localStorage.removeItem('mf_lang');document.documentElement.dir='rtl';
 function setLang(l){lang=l;localStorage.setItem('mf_lang',l);document.documentElement.dataset.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelectorAll('[data-ar][data-en]').forEach(el=>el.textContent=l==='ar'?el.dataset.ar:el.dataset.en);document.getElementById('lpAR').classList.toggle('on',l==='ar');document.getElementById('lpEN').classList.toggle('on',l==='en');}
 function uT(){const d=new Date();const da=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];const ma=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];const el=document.getElementById('lt');if(el)el.textContent=`${da[d.getDay()]} ${d.getDate()} ${ma[d.getMonth()]} · ${d.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})}`;}
 uT();setInterval(uT,30000);
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600);}
 </script>
+<nav class="mob-nav">
+  <div class="mni">
+    <a href="dashboard_v3.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="mnlbl">الرئيسية</span></a>
+    <a href="rfq.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span class="mnlbl">طلبيات</span></a>
+    <a href="orders.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h22v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3Z"/><path d="m8 10 4 4 4-4"/></svg><span class="mnlbl">طلبات</span></a>
+    <a href="supplier.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="mnlbl">موردون</span></a>
+    <a href="analytics.html" class="mna"><svg class="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="mnlbl">تحليلات</span></a>
+  </div>
+</nav>
 </body>
 </html>

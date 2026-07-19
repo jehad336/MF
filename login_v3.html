@@ -204,10 +204,6 @@ body{display:flex;min-height:100vh;color:#0F172A}
 <div class="right">
   <div class="form-wrap">
     <div class="lang-row">
-      <div class="lang-pill">
-        <div class="lp on" id="lpAR" onclick="setLang('ar')">ع</div>
-        <div class="lp" id="lpEN" onclick="setLang('en')">EN</div>
-      </div>
     </div>
 
     <div class="form-title" data-ar="تسجيل الدخول" data-en="Sign In">تسجيل الدخول</div>
@@ -300,7 +296,7 @@ const users={
   'buyer@demo.sa':    {pass:'demo123',role:'buyer',    name:'صيدلية الشفاء',nameEn:'Al-Shifa Pharmacy'},
   'admin@medflow.sa': {pass:'admin123',role:'admin',   name:'مدير ميدفلو',  nameEn:'MedFlow Admin'},
 };
-let lang=localStorage.getItem('mf_lang')||'ar';
+let lang='ar';localStorage.removeItem('mf_lang');
 let role='warehouse';
 
 function setLang(l){
@@ -311,7 +307,7 @@ function setLang(l){
   document.getElementById('lpAR').classList.toggle('on',l==='ar');
   document.getElementById('lpEN').classList.toggle('on',l==='en');
 }
-document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+document.documentElement.dir='rtl';
 if(lang==='en')setTimeout(()=>setLang('en'),0);
 
 function setRole(r,el){role=r;document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');hideErr();}

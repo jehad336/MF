@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ميدفلو — خريطة الصفحات المرجعية</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0D9488;--teal-d:#0F766E;--teal-l:#F0FDFA;--teal-m:#CCFBF1;--green:#16A34A;--green-l:#F0FDF4;--amber:#F59E0B;--amber-l:#FFFBEB;--purple:#8B5CF6;--purple-l:#F5F3FF;--red:#EF4444;--ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;--bg:#F8FAFC;--brd:#E2E8F0;--brd-l:#F1F5F9;--font:'Cairo',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.75}
+.page{max-width:960px;margin:0 auto;padding:32px 20px}
+.hd{text-align:center;background:#fff;border:1px solid var(--brd-l);border-radius:18px;padding:26px 20px;margin-bottom:20px}
+.hd h1{font-size:23px;font-weight:900;margin-top:12px}
+.hd p{font-size:12px;color:var(--ink3);margin-top:4px}
+.sec{background:#fff;border:1px solid var(--brd-l);border-radius:15px;padding:24px 26px;margin-bottom:18px}
+.sec h2{font-size:16px;font-weight:900;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.n{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;background:var(--teal);color:#fff;border-radius:8px;font-size:12px;font-weight:800}
+/* flow */
+.flow-title{font-size:12px;font-weight:900;color:var(--teal-d);margin:16px 0 8px;display:flex;align-items:center;gap:7px}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.node{background:var(--teal-l);border:1.5px solid var(--teal-m);border-radius:10px;padding:7px 13px;font-size:11px;font-weight:800;color:var(--teal-d);white-space:nowrap}
+.node.pub{background:var(--amber-l);border-color:#FDE68A;color:#B45309}
+.node.buy{background:var(--purple-l);border-color:#DDD6FE;color:#6D28D9}
+.node small{display:block;font-size:8px;font-weight:600;color:var(--ink4);direction:ltr;text-align:right}
+.ar{color:var(--ink4);font-size:14px;font-weight:900}
+.fn{font-size:10px;color:var(--ink4);margin:4px 0 0}
+/* legend */
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:10.5px;color:var(--ink3);margin-top:12px}
+.leg span{display:flex;align-items:center;gap:5px}
+.dot{width:11px;height:11px;border-radius:4px;display:inline-block}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{background:var(--bg);color:var(--ink3);font-weight:700;font-size:9.5px;padding:8px 9px;text-align:right;border-bottom:2px solid var(--brd)}
+td{padding:8px 9px;border-bottom:1px solid var(--brd-l);color:var(--ink2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td b{color:var(--ink)}
+.file{direction:ltr;text-align:left;font-family:monospace;font-size:10px;color:var(--teal-d);white-space:nowrap}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:9px;font-weight:800;white-space:nowrap}
+.t-sup{background:var(--teal-l);color:var(--teal-d)}
+.t-buy{background:var(--purple-l);color:#6D28D9}
+.t-pub{background:var(--amber-l);color:#B45309}
+.t-sh{background:#F1F5F9;color:#64748B}
+.callout{background:var(--teal-l);border:1px solid var(--teal-m);border-radius:11px;padding:12px 15px;font-size:11.5px;color:var(--ink2);margin-top:12px}
+@media print{.sec,table{break-inside:avoid}.page{padding:0}}
+</style>
+</head>
+<body><div class="page">
+
+<div class="hd">
+  <img src="assets/logo.png" alt="MedFlow" style="height:52px">
+  <h1>خريطة الصفحات المرجعية — منصة ميدفلو</h1>
+  <p>21 صفحة · 4 مسارات مستخدم · مرجع التنقل والربط الكامل · يوليو 2026</p>
+</div>
+
+<!-- 1: المسارات -->
+<div class="sec">
+  <h2><span class="n">1</span>خريطة التدفق — كيف يتحرك المستخدم</h2>
+
+  <div class="flow-title">🚪 مسار الدخول</div>
+  <div class="flow">
+    <div class="node pub">شاشة الانتقال<small>index.html</small></div><span class="ar">←</span>
+    <div class="node pub">تسجيل الدخول<small>login_v3.html</small></div><span class="ar">←</span>
+    <div class="node">لوحة المورد<small>dashboard_v3.html</small></div>
+    <span class="ar">أو</span>
+    <div class="node buy">لوحة المشتري<small>buyer-dashboard.html</small></div>
+  </div>
+  <div class="fn">التوجيه تلقائي حسب الدور: warehouse/admin ← لوحة المورد · buyer ← لوحة المشتري</div>
+
+  <div class="flow-title">📦 مسار المورد — من الطلبية إلى التحصيل</div>
+  <div class="flow">
+    <div class="node">لوحة المورد</div><span class="ar">←</span>
+    <div class="node">سوق الطلبيات<small>rfq.html</small></div><span class="ar">←</span>
+    <div class="node">تسعير متعدد<small>rfq-multi-detail.html</small></div><span class="ar">←</span>
+    <div class="node">أوامر الشراء<small>orders.html</small></div><span class="ar">←</span>
+    <div class="node">تفاصيل + Escrow<small>order-detail.html</small></div><span class="ar">←</span>
+    <div class="node">الفواتير<small>invoices.html</small></div>
+  </div>
+  <div class="flow" style="margin-top:4px">
+    <span style="font-size:10px;color:var(--ink4)">فرعي:</span>
+    <div class="node">تسعير صنف واحد<small>rfq-detail.html</small></div>
+    <div class="node">تتبع الشحنات<small>delivery.html</small></div>
+    <div class="node">تحليلاتي<small>analytics.html</small></div>
+  </div>
+
+  <div class="flow-title">🛒 مسار المشتري — من النشر إلى الاستلام</div>
+  <div class="flow">
+    <div class="node buy">لوحة المشتري</div><span class="ar">←</span>
+    <div class="node buy">نشر طلبية (3 أنماط)<small>rfq.html</small></div><span class="ar">←</span>
+    <div class="node pub">نافذة النجاح + دعوة المورد الغائب</div><span class="ar">←</span>
+    <div class="node buy">مقارنة العروض<small>rfq-buyer-view.html</small></div><span class="ar">←</span>
+    <div class="node buy">الترسية + Escrow<small>order-detail.html</small></div>
+  </div>
+
+  <div class="flow-title">⚡ مسار النمو الفيروسي — صفحات عامة بدون تسجيل</div>
+  <div class="flow">
+    <div class="node">إنشاء عرض<small>offer-create.html</small></div><span class="ar">←</span>
+    <div class="node pub">صفحة العرض العامة<small>offer.html</small></div><span class="ar">←</span>
+    <span style="font-size:10px;color:var(--ink4)">واتساب/طلب مباشر ← تسجيل</span>
+  </div>
+  <div class="flow">
+    <div class="node pub">تحدي كم تدفع زيادة؟<small>price-check.html</small></div>
+    <div class="node pub">المزاد الأسبوعي<small>auction.html</small></div>
+    <span class="ar">←</span><span style="font-size:10px;color:var(--ink4)">مشاركة النتيجة/التنبيه ← تسجيل</span>
+  </div>
+
+  <div class="leg">
+    <span><i class="dot" style="background:var(--teal-l);border:1.5px solid var(--teal-m)"></i> صفحات المورد</span>
+    <span><i class="dot" style="background:var(--purple-l);border:1.5px solid #DDD6FE"></i> صفحات المشتري</span>
+    <span><i class="dot" style="background:var(--amber-l);border:1.5px solid #FDE68A"></i> عامة بدون تسجيل</span>
+  </div>
+</div>
+
+<!-- 2: الجدول المرجعي -->
+<div class="sec">
+  <h2><span class="n">2</span>الجدول المرجعي الكامل — 21 صفحة</h2>
+  <div style="overflow-x:auto">
+  <table>
+    <tr><th>#</th><th>الصفحة</th><th>الملف</th><th>الفئة</th><th>الغرض والمحتوى</th><th>توصل إليها من</th></tr>
+    <tr><td>1</td><td><b>شاشة الانتقال</b></td><td class="file">index.html</td><td><span class="tag t-pub">عامة</span></td><td>هوية + تحويل تلقائي (ثانية) لتسجيل الدخول — تجعل رابط الموقع الرئيسي يعمل</td><td>رابط الموقع مباشرة</td></tr>
+    <tr><td>2</td><td><b>تسجيل الدخول</b></td><td class="file">login_v3.html</td><td><span class="tag t-pub">عامة</span></td><td>3 بطاقات حسابات تجريبية + توجيه حسب الدور + الشعار الحقيقي</td><td>index · كل صفحات الحماية · أزرار "سجّل" بالصفحات العامة</td></tr>
+    <tr><td>3</td><td><b>لوحة المورد</b></td><td class="file">dashboard_v3.html</td><td><span class="tag t-sup">مورد</span></td><td>KPIs · طلبيات جديدة · إشعارات · الوصول لكل الأقسام</td><td>الدخول (warehouse/admin) · السايدبار · القائمة السفلية</td></tr>
+    <tr><td>4</td><td><b>لوحة المشتري</b></td><td class="file">buyer-dashboard.html</td><td><span class="tag t-buy">مشتري</span></td><td>عرض الأسبوع بالعداد · KPIs الإنفاق والتوفير · حالة Escrow · رسم المشتريات</td><td>الدخول (buyer)</td></tr>
+    <tr><td>5</td><td><b>سوق الطلبيات</b></td><td class="file">rfq.html</td><td><span class="tag t-sh">مشترك</span></td><td>قائمة RFQs بفلاتر · إنشاء طلبية (صنف/متعدد/Excel) · <b>نافذة نجاح + دعوة المورد الغائب واتساب</b></td><td>السايدبار · القائمة السفلية · اللوحتين</td></tr>
+    <tr><td>6</td><td><b>تسعير صنف واحد</b></td><td class="file">rfq-detail.html</td><td><span class="tag t-sup">مورد</span></td><td>تفاصيل الطلب + نموذج العرض (سعر/كمية/انتهاء/تشغيلة + خصم/بونص)</td><td>rfq (طلبية بصنف واحد)</td></tr>
+    <tr><td>7</td><td><b>التسعير المتعدد</b></td><td class="file">rfq-multi-detail.html</td><td><span class="tag t-sup">مورد</span></td><td>جدول أصناف · حقول مشتركة + لكل سطر · تخطي أصناف · ملخص حي · تصدير Excel</td><td>rfq (زر "عرض سعر")</td></tr>
+    <tr><td>8</td><td><b>مقارنة العروض</b></td><td class="file">rfq-buyer-view.html</td><td><span class="tag t-buy">مشتري</span></td><td>بطاقات الموردين · تمييز أفضل سعر لكل صنف · اختيار مورد واحد للكل · ترسية</td><td>لوحة المشتري · إشعار "عرض جديد"</td></tr>
+    <tr><td>9</td><td><b>أوامر الشراء</b></td><td class="file">orders.html</td><td><span class="tag t-sh">مشترك</span></td><td>قائمة الأوامر بالحالات والفلاتر والبحث</td><td>السايدبار · القائمة السفلية</td></tr>
+    <tr><td>10</td><td><b>تفاصيل الأمر</b></td><td class="file">order-detail.html</td><td><span class="tag t-sh">مشترك</span></td><td>الأصناف · <b>متتبع Escrow البصري</b> (حجز ← شحن ← استلام ← تحرير) · المستندات</td><td>orders · rfq-buyer-view بعد الترسية</td></tr>
+    <tr><td>11</td><td><b>الفواتير</b></td><td class="file">invoices.html</td><td><span class="tag t-sh">مشترك</span></td><td>فواتير GLN بجدول وحالات (مدفوعة/Escrow/متأخرة) + إحصائيات + جاهزية ZATCA</td><td>السايدبار</td></tr>
+    <tr><td>12</td><td><b>تتبع الشحنات</b></td><td class="file">delivery.html</td><td><span class="tag t-sh">مشترك</span></td><td>بطاقات شحنات بخط زمني 4 مراحل · ETA · زر واتساب السائق ⚠️</td><td>السايدبار</td></tr>
+    <tr><td>13</td><td><b>الموردون</b></td><td class="file">supplier.html</td><td><span class="tag t-buy">مشتري</span></td><td>دليل مستودعات ببحث حي · توثيق SFDA وتقييم واستجابة · <b>بطاقة "ادعُ موردك"</b></td><td>السايدبار · القائمة السفلية</td></tr>
+    <tr><td>14</td><td><b>التحليلات</b></td><td class="file">analytics.html</td><td><span class="tag t-sh">مشترك</span></td><td>رسم 6 أشهر · دونات معدل الفوز · أعلى 5 أصناف · نصيحة ذكية</td><td>السايدبار · القائمة السفلية</td></tr>
+    <tr><td>15</td><td><b>الرسائل</b></td><td class="file">messages.html</td><td><span class="tag t-sh">مشترك</span></td><td>محادثات + فقاعات + إرسال فوري (يتفعل Realtime مع الباكند)</td><td>السايدبار · supplier "مراسلة"</td></tr>
+    <tr><td>16</td><td><b>الإشعارات</b></td><td class="file">notifications.html</td><td><span class="tag t-sh">مشترك</span></td><td>مصنفة (عروض/مدفوعات/نظام) · غير مقروء · تحديد الكل</td><td>🔔 بالشريط العلوي بكل الصفحات</td></tr>
+    <tr><td>17</td><td><b>الإعدادات</b></td><td class="file">settings.html</td><td><span class="tag t-sh">مشترك</span></td><td>بيانات المنشأة (SFDA/GLN) تُحفظ فعلياً · تفضيلات الإشعارات · تسجيل الخروج</td><td>السايدبار</td></tr>
+    <tr><td>18</td><td><b>إنشاء عرض</b></td><td class="file">offer-create.html</td><td><span class="tag t-sup">مورد</span></td><td>نموذج العرض + معاينة حية + <b>توليد رابط ذاتي التشغيل</b> + مشاركة واتساب</td><td>لوحة المورد · مباشرة</td></tr>
+    <tr><td>19</td><td><b>صفحة العرض العامة</b></td><td class="file">offer.html</td><td><span class="tag t-pub">عامة</span></td><td>بطاقة العرض بالخصم والعداد · طلب واتساب مباشر · إعادة مشاركة · <b>البيانات داخل الرابط (بدون سيرفر)</b></td><td>رابط المشاركة فقط</td></tr>
+    <tr><td>20</td><td><b>تحدي الأسعار</b></td><td class="file">price-check.html</td><td><span class="tag t-pub">عامة</span></td><td>"كم تدفع زيادة؟" · 3 أصناف · بطاقة نتيجة ملونة قابلة للمشاركة · وضع "صديقك تحداك"</td><td>حملات واتساب/سوشال</td></tr>
+    <tr><td>21</td><td><b>المزاد الأسبوعي</b></td><td class="file">auction.html</td><td><span class="tag t-pub">عامة</span></td><td>عداد الخميس 8م · <b>وضع تجريبي حي</b> (سعر ينزل + مشترون + قفل السعر) · طلب واتساب ⚠️</td><td>حملات + تنبيهات</td></tr>
+  </table>
+  </div>
+  <div class="leg" style="margin-top:10px">
+    <span><i class="dot" style="background:var(--teal-l)"></i> مورد (4)</span>
+    <span><i class="dot" style="background:var(--purple-l)"></i> مشتري (3)</span>
+    <span><i class="dot" style="background:#F1F5F9"></i> مشترك (9)</span>
+    <span><i class="dot" style="background:var(--amber-l)"></i> عامة (5)</span>
+  </div>
+</div>
+
+<!-- 3: عناصر مشتركة -->
+<div class="sec">
+  <h2><span class="n">3</span>العناصر الموحدة في كل صفحات التطبيق (15 صفحة)</h2>
+  <table>
+    <tr><th>العنصر</th><th>الوصف</th></tr>
+    <tr><td><b>السايدبار</b></td><td>الشعار الحقيقي (نسخة فاتحة/داكنة تلقائياً) + مجموعات: الرئيسية · الطلبيات · العمليات (أوامر/فواتير/شحنات) · الأدوات (موردون/تحليلات/رسائل) · الإعدادات</td></tr>
+    <tr><td><b>القائمة السفلية (جوال)</b></td><td>5 اختصارات ثابتة: الرئيسية · طلبيات · طلبات · موردون · تحليلات — مع تمييز الصفحة النشطة</td></tr>
+    <tr><td><b>الشريط العلوي</b></td><td>عنوان الصفحة + التاريخ الحي · زر الوضع الداكن 🌙 · جرس الإشعارات · شريحة المستخدم</td></tr>
+    <tr><td><b>الحارس</b></td><td>أي صفحة تطبيق بدون جلسة ← تحويل لتسجيل الدخول (login_v3.html)</td></tr>
+    <tr><td><b>الهوية</b></td><td>تركواز الشعار #0D9488 · كحلي #0F172A · خط Cairo · RTL ثابت · favicon القلب</td></tr>
+  </table>
+</div>
+
+<!-- 4: ملاحظات تشغيلية -->
+<div class="sec">
+  <h2><span class="n">4</span>ملاحظات تشغيلية سريعة</h2>
+  <table>
+    <tr><th>البند</th><th>التفصيل</th></tr>
+    <tr><td>الحسابات التجريبية</td><td class="file">warehouse@demo.sa / demo123 · buyer@demo.sa / demo123 · admin@medflow.sa / admin123</td></tr>
+    <tr><td>⚠️ أرقام واتساب placeholder</td><td>auction.html (طلب المزاد) و delivery.html (السائق): <span class="file">9665XXXXXXXX</span> — تُستبدل برقمك</td></tr>
+    <tr><td>صفحات تعمل بلا سيرفر</td><td>offer.html و price-check.html (وضع التحدي): البيانات مشفرة داخل الرابط نفسه</td></tr>
+    <tr><td>جاهز للباكند</td><td>الرسائل (Realtime) · التحليلات (بيانات حية) · الفواتير (ZATCA) · Escrow (مزود الدفع) — البنية جاهزة للربط</td></tr>
+  </table>
+  <div class="callout">📌 <b>هذه الوثيقة نفسها داخل الحزمة باسم map.html</b> — افتحها من موقعك مباشرة كمرجع دائم لك أو لأي مطور ينضم لاحقاً.</div>
+</div>
+
+<div style="text-align:center;padding:14px;color:var(--ink4);font-size:10px">ميدفلو — خريطة الصفحات المرجعية · 21 صفحة · يوليو 2026</div>
+</div></body></html>
