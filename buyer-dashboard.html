@@ -1,123 +1,141 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MedFlow — داشبورد المشتري</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedFlow — لوحة المشتري</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
-:root{--blue:#0D9488;--blue-d:#0F766E;--blue-l:#F0FDFA;--blue-m:#CCFBF1;--green:#16A34A;--green-l:#F0FDF4;--green-m:#BBF7D0;--amber:#F59E0B;--amber-l:#FFFBEB;--red:#EF4444;--red-l:#FFF5F5;--ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;--bg:#F8FAFC;--w:#fff;--s3:#F1F5F9;--brd:#E2E8F0;--brd-l:#F1F5F9;--sh:0 1px 3px rgba(15,23,42,.06);--sh-md:0 4px 12px rgba(15,23,42,.08);--r:10px;--rl:14px;--sw:220px;--th:52px;--font:'Cairo',sans-serif}
+:root{
+  --blue:#0D9488;--blue-d:#0F766E;--blue-l:#F0FDFA;--blue-m:#CCFBF1;
+  --green:#16A34A;--green-l:#F0FDF4;--amber:#F59E0B;--amber-l:#FFFBEB;
+  --red:#EF4444;--red-l:#FFF5F5;--purple:#8B5CF6;--purple-l:#F5F3FF;
+  --ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;
+  --bg:#F8FAFC;--w:#fff;--s2:#F8FAFC;--s3:#F1F5F9;
+  --brd:#E2E8F0;--brd-l:#F1F5F9;
+  --sh:0 1px 3px rgba(15,23,42,.06);--sh-md:0 4px 12px rgba(15,23,42,.08);--sh-lg:0 16px 32px rgba(15,23,42,.10);
+  --r:10px;--rl:14px;--rx:18px;--rf:9999px;--sw:220px;--th:52px;
+  --font:'Cairo',system-ui,sans-serif;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
 button{cursor:pointer;font-family:var(--font);border:none}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--brd);border-radius:99px}
 .app{display:flex;height:100vh;overflow:hidden}
-
-/* SIDEBAR */
-.sidebar{width:var(--sw);background:#fff;border-left:1px solid var(--brd-l);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
-.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--brd-l);gap:10px}
-.sb-logo{width:32px;height:32px;background:linear-gradient(135deg,#2DD4BF,#0D9488);border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(13,148,136,.25)}
+.sidebar{width:var(--sw);background:#fff;border-left:1px solid var(--brd-l);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:200}
+.sb-brand{height:var(--th);display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--brd-l);gap:10px;flex-shrink:0}
+.sb-logo{width:32px;height:32px;background:linear-gradient(135deg,#2DD4BF,#0D9488);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(13,148,136,.25)}
 .sb-name{font-size:14px;font-weight:800;color:var(--ink)}
+.sb-tag{font-size:8px;color:var(--ink4);margin-top:1px}
 .ng{padding:12px 10px 2px}
 .ngl{font-size:8px;font-weight:700;color:#CBD5E1;letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
-.na{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;color:var(--ink3);font-size:11.5px;font-weight:600;margin-bottom:1px;text-decoration:none;transition:all .12s}
-.na:hover{background:var(--bg)}
+.na{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;color:var(--ink3);font-size:11.5px;font-weight:600;margin-bottom:1px;transition:all .12s}
+.na:hover{background:var(--bg);color:var(--ink2)}
 .na.on{background:var(--blue-l);color:var(--blue)}
-.nico{width:15px;height:15px;opacity:.5}
+.nico{width:15px;height:15px;flex-shrink:0;opacity:.5}
 .na.on .nico{opacity:1}
-.nb{margin-right:auto;background:var(--amber);color:#fff;font-size:8px;font-weight:700;padding:1px 6px;border-radius:99px}
+.nb{margin-right:auto;background:var(--blue);color:#fff;font-size:8px;font-weight:700;padding:1px 6px;border-radius:99px}
+.nb.am{background:var(--amber)}.nb.rd{background:var(--red)}
 .sb-ft{margin-top:auto;padding:10px;border-top:1px solid var(--brd-l)}
-.urow{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px}
-.uav{width:30px;height:30px;border-radius:9px;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--green)}
+.lang-pill{display:flex;background:var(--s3);border-radius:99px;padding:2px;gap:1px;margin-bottom:8px}
+.lp{padding:3px 10px;border-radius:99px;font-size:9px;font-weight:700;color:var(--ink4);cursor:pointer;text-align:center;flex:1;transition:all .15s}
+.lp.on{background:var(--blue);color:#fff}
+.urow{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer}
+.urow:hover{background:var(--bg)}
+.uav{width:30px;height:30px;border-radius:9px;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0}
 .uname{font-size:11px;font-weight:700;color:var(--ink)}
-.urole{font-size:9px;color:var(--ink4)}
-
-/* MAIN */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.urole{font-size:9px;color:var(--ink4);margin-top:1px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 .topbar{height:var(--th);background:#fff;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;padding:0 18px;gap:9px;flex-shrink:0}
 .tb-t{font-size:13px;font-weight:800;color:var(--ink)}
 .tb-s{font-size:10px;color:var(--ink4);margin-top:1px}
 .sp{flex:1}
-.ib{width:32px;height:32px;border:1px solid var(--brd);border-radius:var(--r);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink3);cursor:pointer;position:relative}
+.srch{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--rf);padding:6px 13px;width:220px;transition:all .15s}
+.srch:focus-within{background:#fff;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
+.srch input{border:none;background:transparent;font-size:11.5px;color:var(--ink);outline:none;width:100%;font-family:var(--font)}
+.srch input::placeholder{color:var(--ink4)}
+.ib{width:32px;height:32px;border:1px solid var(--brd);border-radius:var(--r);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink3);cursor:pointer;transition:all .12s;position:relative}
+.ib:hover{background:var(--bg)}
 .ndot{position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
-.uchip{display:flex;align-items:center;gap:7px;padding:5px 11px;background:var(--bg);border:1px solid var(--brd);border-radius:99px}
-.ucav{width:22px;height:22px;border-radius:50%;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--green)}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:var(--font)}
-.bb{background:var(--blue);color:#fff;box-shadow:0 4px 10px rgba(13,148,136,.2)}
-.bb:hover{background:var(--blue-d)}
-
-/* CONTENT */
-.content{flex:1;overflow-y:auto;padding:18px 20px}
-
-/* KPI CARDS */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-.kpi{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);padding:16px;box-shadow:var(--sh);display:flex;align-items:center;gap:12px}
-.kpi-ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.kpi-val{font-size:18px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:2px}
-.kpi-lbl{font-size:10px;color:var(--ink4)}
-.kpi-sub{font-size:10px;font-weight:600;margin-top:1px}
-
-/* GRID */
-.grid{display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:start}
-
-/* CARD */
-.card{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh);margin-bottom:14px}
-.card:last-child{margin-bottom:0}
-.ch{padding:12px 16px;border-bottom:1px solid var(--brd-l);display:flex;align-items:center;justify-content:space-between}
-.ct{font-size:12px;font-weight:700;color:var(--ink)}
-.view-all{font-size:11px;color:var(--blue);font-weight:700;background:none;border:none;cursor:pointer}
-
-/* RFQ ROWS */
-.rfq-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--brd-l)}
-.rfq-row:last-child{border-bottom:none}
-.rfq-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.rfq-id{font-size:10px;font-weight:700;color:var(--blue)}
-.rfq-meta{font-size:10px;color:var(--ink4)}
-.rfq-title{font-size:12px;font-weight:700;color:var(--ink)}
-.rfq-time{font-size:10px}
-.bdg{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:9.5px;font-weight:700;white-space:nowrap}
-.bg2{background:var(--green-l);color:var(--green)}
-.ba2{background:var(--amber-l);color:var(--amber)}
-.bb2{background:var(--blue-l);color:var(--blue)}
-.bgray{background:var(--s3);color:var(--ink4)}
-.btn-sm{padding:5px 11px;border-radius:8px;font-size:10px;font-weight:700;background:var(--blue);color:#fff;border:none;cursor:pointer}
-
-/* SAVINGS CHART */
-.chart-wrap{padding:16px}
-.chart-bars{display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:12px}
-.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
-.bar{border-radius:4px 4px 0 0;width:100%;transition:height .4s}
-.bar-lbl{font-size:9px;color:var(--ink4);text-align:center}
-.bar-lbl.on{color:var(--green);font-weight:700}
-
-/* WEEKLY DEAL */
-.deal-card{background:linear-gradient(135deg,#0F766E,#0D9488);border-radius:var(--rl);overflow:hidden;box-shadow:0 6px 20px rgba(13,148,136,.3)}
-.deal-head{padding:14px}
-.deal-badge{display:inline-flex;align-items:center;gap:4px;background:var(--amber);color:#fff;font-size:9px;font-weight:800;padding:3px 9px;border-radius:99px;margin-bottom:10px}
-.deal-title{font-size:13px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:4px}
-.deal-sup{font-size:10px;color:rgba(255,255,255,.6)}
-.deal-price-box{margin:0 14px 14px;background:rgba(255,255,255,.1);border-radius:10px;padding:12px}
-.deal-old{font-size:11px;color:rgba(255,255,255,.4);text-decoration:line-through}
-.deal-price{font-size:24px;font-weight:900;color:#fff;line-height:1}
-.deal-unit{font-size:9px;color:rgba(255,255,255,.5)}
-.deal-save{width:46px;height:46px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff}
-.deal-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:rgba(255,255,255,.6)}
-.deal-btn{display:block;width:calc(100% - 28px);margin:0 14px 14px;padding:10px;background:#fff;color:var(--blue);font-size:12px;font-weight:800;border-radius:9px;text-align:center;border:none;cursor:pointer;font-family:var(--font)}
-.deal-btn:hover{background:var(--blue-l)}
-.deal-timer{text-align:center;padding:0 14px 10px;font-size:10px;color:rgba(255,255,255,.5)}
-.deal-timer span{color:rgba(255,255,255,.9);font-weight:700}
-
-/* ESCROW STATUS */
-.esc-row{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--brd-l)}
-.esc-row:last-of-type{border-bottom:none}
-.esc-id{font-size:10px;font-weight:700;color:var(--blue);flex:1}
-.esc-amt{font-size:11px;font-weight:700;color:var(--ink);margin-left:8px}
-.esc-note{background:var(--blue-l);border-radius:9px;padding:9px 11px;font-size:10px;color:var(--ink2);line-height:1.6;margin-top:10px;display:flex;align-items:flex-start;gap:7px}
-
+.live{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:var(--green)}
+.live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:bl 1.5s ease infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
+.ham{display:none;width:32px;height:32px;border-radius:var(--r);background:var(--bg);border:1px solid var(--brd);align-items:center;justify-content:center;cursor:pointer}
+.uchip{display:flex;align-items:center;gap:7px;padding:5px 11px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--rf);cursor:pointer}
+.ucav{width:22px;height:22px;border-radius:50%;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--blue)}
+.content{flex:1;overflow-y:auto;padding:16px 20px;background:var(--bg)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:11.5px;font-weight:700;transition:all .12s;white-space:nowrap;border:none;font-family:var(--font)}
+.bb{background:var(--blue);color:#fff}.bb:hover{background:var(--blue-d)}
+.bo{background:#fff;border:1px solid var(--brd);color:var(--ink2)}.bo:hover{background:var(--bg)}
+.bg_{background:var(--green);color:#fff}
+.bsm{padding:5px 10px;font-size:10.5px}
+.bxs{padding:3px 8px;font-size:10px}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.ph-t{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:2px}
+.ph-s{font-size:11px;color:var(--ink4)}
+.ph-a{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.scard{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);padding:13px 14px;position:relative;overflow:hidden;box-shadow:var(--sh)}
+.scard-bar{position:absolute;bottom:0;left:0;right:0;height:3px}
+.scard-ic{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+.scard-val{font-size:18px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:3px}
+.scard-lbl{font-size:10px;color:var(--ink4);font-weight:500;margin-bottom:5px}
+.scard-chg{display:inline-flex;align-items:center;gap:2px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:99px}
+.cup{background:var(--green-l);color:var(--green)}.cdn{background:var(--red-l);color:var(--red)}.cam{background:var(--amber-l);color:var(--amber)}
+.tabs{display:flex;border-bottom:1px solid var(--brd-l);margin-bottom:14px;gap:2px;overflow-x:auto}
+.tab{padding:9px 15px;font-size:11.5px;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--ink2)}
+.tab.on{color:var(--blue);font-weight:700;border-bottom-color:var(--blue)}
+.tbdg{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:99px;background:var(--blue);color:#fff}
+.tbdg.am{background:var(--amber)}.tbdg.rd{background:var(--red)}.tbdg.gn{background:var(--green)}
+.fbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.fsel{border:1px solid var(--brd);border-radius:var(--r);padding:6px 11px;font-size:11px;color:var(--ink2);background:#fff;outline:none;font-family:var(--font);cursor:pointer}
+.fsel:focus{border-color:var(--blue)}
+.fsrch{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:6px 12px;flex:1;max-width:300px}
+.fsrch input{border:none;background:transparent;font-size:11.5px;color:var(--ink);outline:none;width:100%;font-family:var(--font)}
+/* ORDER CARDS */
+.ocards{display:flex;flex-direction:column;gap:10px}
+.ocard{background:#fff;border:1px solid var(--brd-l);border-radius:var(--rl);box-shadow:var(--sh);overflow:hidden;transition:box-shadow .15s;cursor:pointer}
+.ocard:hover{box-shadow:var(--sh-md);border-color:var(--brd)}
+.ocard-top{padding:14px 16px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid var(--brd-l)}
+.ocard-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ocard-id{font-size:10px;color:var(--blue);font-weight:700;margin-bottom:2px}
+.ocard-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.ocard-meta{font-size:10px;color:var(--ink4);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ocard-meta span{display:flex;align-items:center;gap:3px}
+.ocard-val{font-size:16px;font-weight:800;color:var(--ink);direction:ltr;text-align:left;white-space:nowrap}
+.ocard-sub{font-size:9px;color:var(--ink4);margin-top:2px;text-align:left}
+/* STEPPER */
+.stepper{padding:12px 16px;display:flex;align-items:center;overflow-x:auto}
+.step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;min-width:60px}
+.step::before{content:'';position:absolute;top:12px;right:50%;width:100%;height:2px;background:var(--brd-l);z-index:0}
+.step:first-child::before{display:none}
+.step-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;border:2px solid var(--brd);background:#fff;position:relative;z-index:1;flex-shrink:0}
+.step.done .step-dot{background:var(--green);border-color:var(--green);color:#fff}
+.step.done::before{background:var(--green)}
+.step.curr .step-dot{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--blue-l)}
+.step-lbl{font-size:9px;font-weight:600;color:var(--ink4);margin-top:5px;text-align:center;line-height:1.3}
+.step.done .step-lbl,.step.curr .step-lbl{color:var(--ink);font-weight:700}
+/* ESCROW INLINE */
+.escrow-inline{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--blue-l);border-top:1px solid var(--blue-m)}
+.ei-ico{width:28px;height:28px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ei-lbl{font-size:11px;font-weight:700;color:var(--ink);flex:1}
+.ei-val{font-size:13px;font-weight:800;color:var(--blue)}
+.ei-stat{font-size:9px;color:var(--blue);opacity:.7;margin-top:1px}
+/* BADGE */
+.bdg{display:inline-flex;align-items:center;padding:3px 9px;border-radius:var(--rf);font-size:10px;font-weight:700;white-space:nowrap}
+.bg2{background:var(--green-l);color:var(--green)}.ba2{background:var(--amber-l);color:var(--amber)}
+.br2{background:var(--red-l);color:var(--red)}.bb2{background:var(--blue-l);color:var(--blue)}
+.bp2{background:var(--purple-l);color:var(--purple)}.bx2{background:var(--s3);color:var(--ink3)}
 /* TOAST */
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:var(--r);font-size:11.5px;font-weight:700;box-shadow:0 8px 24px rgba(15,23,42,.15);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:var(--r);font-size:11.5px;font-weight:700;box-shadow:var(--sh-lg);z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 #toast.on{opacity:1}
-.bimg{height:40px;display:block}.bimg-d{display:none}body.dark .bimg-l{display:none}body.dark .bimg-d{display:block}
+/* MOB */
 .mob-nav{display:none;position:fixed;bottom:0;right:0;left:0;background:#fff;border-top:1px solid var(--brd-l);z-index:300;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
 .mni{display:flex;justify-content:space-around}
 .mna{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:10px;cursor:pointer;text-decoration:none}
@@ -126,210 +144,197 @@ button{cursor:pointer;font-family:var(--font);border:none}
 .mna.on .mnic{color:var(--blue)}
 .mnlbl{font-size:9px;font-weight:600;color:var(--ink4)}
 .mna.on .mnlbl{color:var(--blue)}
+.mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:190;display:none}
+.mob-ov.on{display:block}
+/* DARK */
+body.dark{
+  --blue:#2DD4BF;--blue-d:#14B8A6;--blue-l:rgba(45,212,191,.12);--blue-m:rgba(45,212,191,.22);
+  --green:#34D399;--green-l:rgba(52,211,153,.12);--amber:#FBBF24;--amber-l:rgba(251,191,36,.12);
+  --red:#F87171;--red-l:rgba(248,113,113,.12);--purple:#A78BFA;--purple-l:rgba(167,139,250,.12);
+  --ink:#F1F5F9;--ink2:#CBD5E1;--ink3:#94A3B8;--ink4:#64748B;
+  --bg:#0F172A;--w:#1E293B;--s2:#162032;--s3:#253347;
+  --brd:#2D3F55;--brd-l:#253347;
+  --sh:0 1px 3px rgba(0,0,0,.4);--sh-lg:0 16px 32px rgba(0,0,0,.5);
+}
+body.dark .sidebar,.dark .topbar,.dark .ocard,.dark .scard{background:#1E293B;border-color:#253347}
+body.dark .ocard-top{border-bottom-color:#253347}
+body.dark .stepper{border-top-color:#253347}
+body.dark .escrow-inline{background:rgba(45,212,191,.08);border-top-color:rgba(45,212,191,.2)}
+body.dark .step-dot{background:#1E293B;border-color:#2D3F55}
+body.dark .fsel,.dark .fsrch{background:#1E293B;border-color:#2D3F55;color:#F1F5F9}
+body.dark .ib,.dark .uchip{background:#1E293B;border-color:#2D3F55}
+body.dark .mob-nav{background:#1E293B;border-top-color:#253347}
+body.dark .uav,.dark .ucav{background:rgba(45,212,191,.15);color:#2DD4BF}
+@media(max-width:1200px){.sgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.sgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;right:0;bottom:0;transform:translateX(100%);z-index:500;transition:transform .3s}
+  .sidebar.on{transform:translateX(0)}
+  .main{width:100%}
+  .content{padding:12px;padding-bottom:72px}
+  .topbar{padding:0 12px}
+  .srch,.live{display:none}
+  .mob-nav{display:block}
+  .ham{display:flex}
+}
+@media(max-width:480px){.sgrid{grid-template-columns:1fr 1fr}}
+.bimg{height:40px;display:block}.bimg-d{display:none}body.dark .bimg-l{display:none}body.dark .bimg-d{display:block}
 </style>
-</head>
-<script>(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u)window.location.href='login_v3.html';})();</script>
+<style>
+.pgwrap{max-width:1100px}
+.card{background:var(--card,#fff);border:1px solid var(--brd-l);border-radius:14px;padding:18px;margin-bottom:14px}
+.card h3{font-size:13.5px;font-weight:800;margin:0 0 12px}
+.stats4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.stt{background:var(--card,#fff);border:1px solid var(--brd-l);border-radius:13px;padding:14px;display:flex;gap:11px;align-items:center}
+.stt .ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.stt b{display:block;font-size:19px;font-weight:900;color:var(--ink)}
+.stt span{font-size:9.5px;color:var(--ink4)}
+.deal{background:linear-gradient(135deg,#0F766E,#0D9488);border-radius:16px;padding:18px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden}
+.deal::after{content:'';position:absolute;left:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.07)}
+.deal .bdg{display:inline-block;background:#F59E0B;font-size:9px;font-weight:900;padding:3px 11px;border-radius:99px;margin-bottom:8px}
+.deal h4{font-size:16px;font-weight:900;margin:0 0 3px}
+.deal p{font-size:11px;opacity:.8;margin:0}
+.deal .row{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}
+.deal .pr{font-size:26px;font-weight:900}
+.deal .old{font-size:11px;opacity:.6;text-decoration:line-through}
+.deal .cnt{background:rgba(255,255,255,.14);border-radius:10px;padding:6px 13px;font-size:11px;font-weight:800;direction:ltr}
+.deal .btn2{margin-right:auto;background:#fff;color:#0F766E;border:none;border-radius:10px;padding:10px 18px;font-size:12px;font-weight:900;font-family:inherit;cursor:pointer}
+.g2{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}
+@media(max-width:860px){.g2{grid-template-columns:1fr}}
+.bars{display:flex;align-items:flex-end;gap:11px;height:140px;padding:4px 2px 0}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bar .bfill{width:100%;max-width:42px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#2DD4BF,#0D9488)}
+.bar .bv{font-size:8.5px;font-weight:800;color:var(--teal-d,#0F766E)}
+.bar .bl{font-size:8.5px;color:var(--ink4)}
+.esc{display:flex;flex-direction:column;gap:9px}
+.esc .er{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--brd-l);border-radius:11px;padding:10px 13px}
+.esc .er b{font-size:12px}
+.esc .er small{font-size:9.5px;color:var(--ink4);display:block}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:9.5px;font-weight:800}
+.c-g{background:#F0FDF4;color:#16A34A}.c-a{background:#FFFBEB;color:#B45309}.c-t{background:#F0FDFA;color:#0F766E}.c-r{background:#FEF2F2;color:#DC2626}
+.rfqi{display:flex;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--brd-l);cursor:pointer}
+.rfqi:last-child{border-bottom:none}
+.rfqi:hover{background:var(--bg);border-radius:10px}
+.rfqi .ic2{width:40px;height:40px;border-radius:12px;background:var(--teal-l,#F0FDFA);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.rfqi .tt{font-size:12.5px;font-weight:800;color:var(--ink)}
+.rfqi .ss{font-size:10.5px;color:var(--ink4)}
+.rfqi .off{margin-right:auto;text-align:center}
+.rfqi .off b{display:block;font-size:16px;font-weight:900;color:var(--teal-d,#0F766E)}
+.rfqi .off span{font-size:8.5px;color:var(--ink4)}
+#toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%);background:var(--ink,#0F172A);color:#fff;padding:9px 16px;border-radius:10px;font-size:11.5px;font-weight:700;opacity:0;transition:.2s;pointer-events:none;z-index:999}
+#toast.on{opacity:1}
+</style></head>
+<script>(function(){const u=JSON.parse(localStorage.getItem('mf_user')||'null');if(!u){window.location.href='login_v3.html';}})();</script>
 <body>
 <div class="app">
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
+<aside class="sidebar" id="sb">
   <div class="sb-brand">
-    <img class="bimg bimg-l" src="assets/logo.png" alt="MedFlow ميدفلو"><img class="bimg bimg-d" src="assets/logo-dark.png" alt="MedFlow ميدفلو">
+    <img class="bimg bimg-l" src="assets/logo.png" alt="MedFlow ميدفلو" onerror="this.style.display='none';var s=this.parentElement.querySelector('.lgfb');if(s)s.style.display='flex'"><img class="bimg bimg-d" src="assets/logo-dark.png" alt="MedFlow ميدفلو" onerror="this.style.display='none';var s=this.parentElement.querySelector('.lgfb');if(s)s.style.display='flex'"><span class="lgfb" style="display:none;align-items:center;gap:8px"><span style="width:34px;height:34px;background:linear-gradient(135deg,#2DD4BF,#0D9488);border-radius:10px;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><b style="font-size:14px;color:inherit">ميدفلو</b></span>
   </div>
   <div class="ng"><div class="ngl">الرئيسية</div>
-    <a href="#" class="na on"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>لوحة التحكم</a>
+    <a href="dashboard_v3.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>لوحة التحكم</a>
+    <a href="analytics.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>التحليلات</a>
   </div>
-  <div class="ng"><div class="ngl">مشترياتي</div>
-    <a href="rfq.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>طلبياتي<span class="nb">5</span></a>
+  <div class="ng"><div class="ngl">المشتريات</div>
+    <a href="rfq.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>سوق الطلبيات<span class="nb">23</span></a>
     <a href="orders.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h22v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3Z"/><path d="m8 10 4 4 4-4"/></svg>أوامر الشراء</a>
-    <a href="invoices.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>الفواتير</a>
+    <a href="invoices.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>الفواتير<span class="nb am">5</span></a>
+    <a href="delivery.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>تتبع الشحنات</a>
+  </div>
+  <div class="ng"><div class="ngl">الشبكة</div>
+    <a href="supplier.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>الموردون</a>
+    <a href="buyer-dashboard.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>المشترون</a>
+  </div>
+  <div class="ng"><div class="ngl">النظام</div>
+    <a href="messages.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>الرسائل<span class="nb rd">3</span></a>
+    <a href="settings.html" class="na"><svg class="nico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>الإعدادات</a>
   </div>
   <div class="sb-ft">
-    <div class="urow"><div class="uav">ص</div><div><div class="uname">صيدلية الشفاء</div><div class="urole">مشتري · مكة</div></div></div>
+    
+    <div class="urow"><div class="uav">جه</div><div><div class="uname">جهاد اللهيبي</div><div class="urole">مدير المستودع · مكة</div></div></div>
   </div>
 </aside>
+<div class="mob-ov" id="mo" onclick="cSB()"></div>
 
-<!-- MAIN -->
 <div class="main">
   <header class="topbar">
-    <div><div class="tb-t">لوحة التحكم</div><div class="tb-s" id="lt"></div></div>
-    <div class="sp"></div>
-    <button class="btn bb" onclick="window.location.href='rfq.html'">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      طلبية جديدة
-    </button>
-    <div class="ib">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-      <span class="ndot"></span>
+<button class="ham" onclick="oSB()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+<div><div class="tb-t">لوحة المشتري</div><div class="tb-s" id="lt"></div></div>
+<div class="sp"></div>
+<button class="ib" onclick="tDk()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+<button class="ib" onclick="location.href='notifications.html'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="ndot"></span></button>
+<button class="ib" style="width:auto;padding:0 14px;background:var(--teal,#0D9488);color:#fff;border:none;font-weight:800;font-size:11px" onclick="location.href='rfq.html'">+ طلبية جديدة</button>
+<div class="uchip"><div class="ucav">صي</div><span style="font-size:11px;font-weight:700;color:var(--ink)">صيدلية الشفاء</span></div>
+</header>
+
+<div class="content"><div class="pgwrap">
+
+<div class="deal">
+  <div class="bdg">⚡ عرض الأسبوع</div>
+  <h4>باراسيتامول 500mg — علبة 20 قرص</h4>
+  <p>مستودع الجزيرة الطبي · موثق SFDA ✓ · صلاحية 2027/08 · الكمية 50,000 علبة</p>
+  <div class="row">
+    <div><span class="old">44 ر.س</span><div class="pr">38 <span style="font-size:12px">ر.س</span></div></div>
+    <div class="cnt">⏳ ينتهي خلال <b id="wd">—</b></div>
+    <button class="btn2" onclick="location.href='rfq.html'">اطلب الآن</button>
+  </div>
+</div>
+
+<div class="stats4">
+  <div class="stt"><div class="ic" style="background:#F0FDFA">📋</div><div><b>47</b><span>إجمالي الطلبيات هذا الشهر</span></div></div>
+  <div class="stt"><div class="ic" style="background:#F0FDF4">💰</div><div><b>284,500</b><span>إجمالي المشتريات (ر.س)</span></div></div>
+  <div class="stt"><div class="ic" style="background:#FFFBEB">📉</div><div><b>31,200</b><span>وفّرتها بالمقارنة (ر.س)</span></div></div>
+  <div class="stt"><div class="ic" style="background:#F5F3FF">🔒</div><div><b>48,750</b><span>محجوز في Escrow (ر.س)</span></div></div>
+</div>
+
+<div class="g2">
+  <div class="card">
+    <h3>مشترياتك — آخر 6 أشهر (ألف ر.س)</h3>
+    <div class="bars">
+      <div class="bar"><div class="bv">32</div><div class="bfill" style="height:44px"></div><div class="bl">فبراير</div></div>
+      <div class="bar"><div class="bv">41</div><div class="bfill" style="height:57px"></div><div class="bl">مارس</div></div>
+      <div class="bar"><div class="bv">55</div><div class="bfill" style="height:76px"></div><div class="bl">أبريل</div></div>
+      <div class="bar"><div class="bv">63</div><div class="bfill" style="height:87px"></div><div class="bl">مايو</div></div>
+      <div class="bar"><div class="bv">78</div><div class="bfill" style="height:108px"></div><div class="bl">يونيو</div></div>
+      <div class="bar"><div class="bv">47</div><div class="bfill" style="height:65px"></div><div class="bl">يوليو</div></div>
     </div>
-    <div class="uchip"><div class="ucav">ص</div><span style="font-size:11px;font-weight:700;color:var(--ink)">الشفاء</span></div>
-  </header>
-
-  <div class="content">
-
-    <!-- KPI CARDS -->
-    <div class="kpi-row">
-      <div class="kpi">
-        <div class="kpi-ic" style="background:var(--blue-l)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
-        <div><div class="kpi-lbl">إجمالي الطلبيات</div><div class="kpi-val">47</div><div class="kpi-sub" style="color:var(--blue)">هذا الشهر</div></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-ic" style="background:var(--amber-l)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.8" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
-        <div><div class="kpi-lbl">عروض واصلة</div><div class="kpi-val">23</div><div class="kpi-sub" style="color:var(--amber)">تنتظر مراجعتك</div></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-ic" style="background:var(--s3)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-        <div><div class="kpi-lbl">إجمالي الإنفاق</div><div class="kpi-val">284,500</div><div class="kpi-sub" style="color:var(--ink3)">ر.س هذا الشهر</div></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-ic" style="background:var(--green-l)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-        <div><div class="kpi-lbl">التوفير المحقق</div><div class="kpi-val">38,200</div><div class="kpi-sub" style="color:var(--green)">ر.س مقارنة بالسوق</div></div>
-      </div>
-    </div>
-
-    <!-- MAIN GRID -->
-    <div class="grid">
-      <div>
-        <!-- طلبيات نشطة -->
-        <div class="card">
-          <div class="ch">
-            <div class="ct">طلبياتي النشطة</div>
-            <button class="view-all" onclick="window.location.href='rfq.html'">عرض الكل</button>
-          </div>
-          <div class="rfq-row">
-            <div class="rfq-ic" style="background:var(--blue-l)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
-            <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:6px"><span class="rfq-id">RFQ-24590</span><span class="rfq-meta">· 8 أصناف</span></div>
-              <div class="rfq-title">طلبية أدوية شاملة</div>
-              <div class="rfq-time" style="color:var(--red)">ينتهي خلال 5 ساعات</div>
-            </div>
-            <span class="bdg ba2">3 عروض</span>
-            <span class="bdg bb2">مفتوحة</span>
-            <button class="btn-sm" onclick="window.location.href='rfq-buyer-view.html'">مراجعة العروض</button>
-          </div>
-          <div class="rfq-row">
-            <div class="rfq-ic" style="background:var(--blue-l)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
-            <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:6px"><span class="rfq-id">RFQ-24587</span><span class="rfq-meta">· 3 أصناف</span></div>
-              <div class="rfq-title">مستلزمات جراحية</div>
-              <div class="rfq-time" style="color:var(--red)">ينتهي خلال 12 ساعة</div>
-            </div>
-            <span class="bdg ba2">1 عرض</span>
-            <span class="bdg bb2">مفتوحة</span>
-            <button class="btn-sm">مراجعة العروض</button>
-          </div>
-          <div class="rfq-row">
-            <div class="rfq-ic" style="background:var(--s3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink4)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
-            <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:6px"><span class="rfq-id">RFQ-24580</span><span class="rfq-meta">· 12 صنف</span></div>
-              <div class="rfq-title">أدوية مزمنة</div>
-              <div class="rfq-time" style="color:var(--ink4)">منذ يومين</div>
-            </div>
-            <span class="bdg bg2">مكتملة</span>
-          </div>
-          <div class="rfq-row">
-            <div class="rfq-ic" style="background:var(--s3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink4)" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
-            <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:6px"><span class="rfq-id">RFQ-24571</span><span class="rfq-meta">· 6 أصناف</span></div>
-              <div class="rfq-title">فيتامينات ومكملات</div>
-              <div class="rfq-time" style="color:var(--ink4)">منذ 3 أيام</div>
-            </div>
-            <span class="bdg bgray">منتهية</span>
-          </div>
-        </div>
-
-        <!-- SAVINGS CHART -->
-        <div class="card">
-          <div class="ch">
-            <div><div class="ct">التوفير الشهري</div></div>
-            <span class="bdg bg2">↑ 23% هذا الشهر</span>
-          </div>
-          <div class="chart-wrap">
-            <div class="chart-bars" id="chartBars"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT -->
-      <div>
-        <!-- WEEKLY DEAL -->
-        <div class="deal-card" style="margin-bottom:14px">
-          <div class="deal-head">
-            <div class="deal-badge">⚡ عرض الأسبوع</div>
-            <div style="display:flex;align-items:flex-start;justify-content:space-between">
-              <div>
-                <div class="deal-title">باراسيتامول 500mg<br>50,000 علبة</div>
-                <div class="deal-sup">مستودع الجزيرة الطبي</div>
-              </div>
-              <div style="background:rgba(255,255,255,.15);border-radius:99px;padding:3px 10px;font-size:9px;color:#fff;font-weight:600;white-space:nowrap">ينتهي الأحد</div>
-            </div>
-          </div>
-          <div class="deal-price-box">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between">
-              <div>
-                <div class="deal-old">44 ر.س</div>
-                <div class="deal-price">38 ر.س</div>
-                <div class="deal-unit">للعلبة الواحدة</div>
-              </div>
-              <div class="deal-save">-14%</div>
-            </div>
-            <div class="deal-meta">
-              <span>الكمية المتاحة: 50,000 علبة</span>
-              <span>صلاحية: 2027-08-01</span>
-            </div>
-          </div>
-          <button class="deal-btn" onclick="toast('✓ تم إضافة الطلبية للسلة')">اطلب الآن</button>
-          <div class="deal-timer">عروض هذا الأسبوع: <span id="dealTimer">6 أيام 14:22:08</span></div>
-        </div>
-
-        <!-- ESCROW STATUS -->
-        <div class="card">
-          <div class="ch"><div class="ct">حالة Escrow</div></div>
-          <div style="padding:12px 16px">
-            <div class="esc-row"><span class="esc-id">RFQ-24580</span><span class="esc-amt">48,500 ر.س</span><span class="bdg ba2">في Escrow</span></div>
-            <div class="esc-row"><span class="esc-id">RFQ-24571</span><span class="esc-amt">22,000 ر.س</span><span class="bdg bg2">تم التسليم</span></div>
-            <div class="esc-row"><span class="esc-id">RFQ-24560</span><span class="esc-amt">31,200 ر.س</span><span class="bdg bgray">تم الصرف</span></div>
-            <div class="esc-note">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              أموالك محمية حتى تأكيد الاستلام ورفع فاتورة GLN
-            </div>
-          </div>
-        </div>
-      </div>
+  </div>
+  <div class="card">
+    <h3>حالة Escrow</h3>
+    <div class="esc">
+      <div class="er"><span style="font-size:16px">🔒</span><div style="flex:1"><b>PO-1042 — 48,750 ر.س</b><small>محجوز · بانتظار تأكيد الاستلام</small></div><span class="chip c-t">نشط</span></div>
+      <div class="er"><span style="font-size:16px">✅</span><div style="flex:1"><b>PO-1038 — 22,400 ر.س</b><small>حُرّر للمورد بعد الاستلام · 07/05</small></div><span class="chip c-g">مكتمل</span></div>
+      <div class="er"><span style="font-size:16px">🚚</span><div style="flex:1"><b>PO-1040 — 36,900 ر.س</b><small>الشحنة في الطريق · غداً 11 ص</small></div><span class="chip c-a">شحن</span></div>
     </div>
   </div>
 </div>
+
+<div class="card">
+  <div style="display:flex;align-items:center;margin-bottom:6px"><h3 style="margin:0">طلبياتي النشطة</h3>
+  <a href="rfq.html" style="margin-right:auto;font-size:10.5px;color:var(--teal,#0D9488);font-weight:800;text-decoration:none">عرض الكل ←</a></div>
+  <div class="rfqi" onclick="location.href='rfq-buyer-view.html'"><div class="ic2">📋</div><div><div class="tt">RFQ-24590 · طلبية أدوية شاملة</div><div class="ss">8 أصناف · <span style="color:#DC2626;font-weight:700">ينتهي خلال 5 ساعات</span></div></div><div class="off"><b>4</b><span>عروض</span></div></div>
+  <div class="rfqi" onclick="location.href='rfq-buyer-view.html'"><div class="ic2">🩺</div><div><div class="tt">RFQ-24587 · مستلزمات جراحية</div><div class="ss">3 أصناف · <span style="color:#B45309;font-weight:700">ينتهي خلال 12 ساعة</span></div></div><div class="off"><b>2</b><span>عروض</span></div></div>
+  <div class="rfqi" onclick="location.href='rfq-buyer-view.html'"><div class="ic2">💊</div><div><div class="tt">RFQ-24580 · أدوية مزمنة</div><div class="ss">12 صنفاً · منذ يومين</div></div><div class="off"><b>6</b><span>عروض</span></div></div>
+  <div class="rfqi" onclick="location.href='rfq-buyer-view.html'"><div class="ic2">🧤</div><div><div class="tt">RFQ-24571 · قفازات وكمامات</div><div class="ss">6 أصناف · منذ 3 أيام</div></div><div class="off"><b>5</b><span>عروض</span></div></div>
 </div>
 
+</div></div>
+</div>
+</div>
 <div id="toast"></div>
-
 <script>
-// Time
-function uT(){const d=new Date();const da=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];const ma=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];const el=document.getElementById('lt');if(el)el.textContent=`${da[d.getDay()]} ${d.getDate()} ${ma[d.getMonth()]} · ${d.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})}`;}
+function oSB(){document.getElementById('sb').classList.add('on');document.getElementById('mo').classList.add('on');}
+function cSB(){document.getElementById('sb').classList.remove('on');document.getElementById('mo').classList.remove('on');}
+function tDk(){const on=document.body.classList.toggle('dark');localStorage.setItem('mf_dark',on?'1':'0');}
+if(localStorage.getItem('mf_dark')==='1')document.body.classList.add('dark');
+function uT(){const d=new Date();const da=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];const ma=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];const el=document.getElementById('lt');if(el)el.textContent=da[d.getDay()]+' '+d.getDate()+' '+ma[d.getMonth()]+' · '+d.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});}
 uT();setInterval(uT,30000);
-
-// Chart bars
-const data=[12000,18000,22000,15000,31000,38200];
-const months=['فبراير','مارس','أبريل','مايو','يونيو','يوليو'];
-const max=Math.max(...data);
-const bars=document.getElementById('chartBars');
-bars.innerHTML=data.map((v,i)=>{
-  const h=Math.round((v/max)*90);
-  const isLast=i===data.length-1;
-  return`<div class="bar-col">
-    <div class="bar" style="height:${h}px;background:${isLast?'var(--green)':'rgba(22,163,74,.2)'}"></div>
-    <div class="bar-lbl${isLast?' on':''}">${months[i]}</div>
-  </div>`;
-}).join('');
-
-// Deal timer
-let dealSecs=6*86400+14*3600+22*60+8;
-function tickDeal(){if(dealSecs<=0)return;dealSecs--;const d=Math.floor(dealSecs/86400);const h=Math.floor((dealSecs%86400)/3600);const m=Math.floor((dealSecs%3600)/60);const s=dealSecs%60;const el=document.getElementById('dealTimer');if(el)el.textContent=`${d} أيام ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
-setInterval(tickDeal,1000);
-
-// Toast
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200);}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600);}
+/* عداد عرض الأسبوع — حتى الأحد 11:59م */
+function nextSun(){const n=new Date();const d=new Date(n);d.setHours(23,59,59,0);let add=(0-n.getDay()+7)%7;if(add===0&&n>d)add=7;d.setDate(d.getDate()+add);return d;}
+const WEND=nextSun();
+setInterval(()=>{const df=WEND-new Date();if(df<0)return;const h=Math.floor(df/3600000),m=Math.floor(df%3600000/60000);document.getElementById('wd').textContent=(h>=24?Math.floor(h/24)+'ي ':'')+(h%24)+'س '+m+'د';},1000);
 </script>
 <nav class="mob-nav">
   <div class="mni">
